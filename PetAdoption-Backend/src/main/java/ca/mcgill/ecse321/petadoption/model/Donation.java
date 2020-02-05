@@ -7,6 +7,17 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class Donation{
+private AppUser donor;
+   
+   @ManyToOne(optional=false)
+   public AppUser getDonor() {
+      return this.donor;
+   }
+   
+   public void setDonor(AppUser donor) {
+      this.donor = donor;
+   }
+   
    private Integer amount;
 
 public void setAmount(Integer value) {
@@ -29,18 +40,9 @@ public void setTransactionNumber(Integer value) {
     this.transactionNumber = value;
 }
 @Id
+@GenerateValue
 public Integer getTransactionNumber() {
     return this.transactionNumber;
 }
-   private Person donor;
-   
-   @ManyToOne(optional=false)
-   public Person getDonor() {
-      return this.donor;
-   }
-   
-   public void setDonor(Person donor) {
-      this.donor = donor;
-   }
    
    }

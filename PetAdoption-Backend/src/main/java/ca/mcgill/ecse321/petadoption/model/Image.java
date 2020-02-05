@@ -28,6 +28,7 @@ public void setId(Integer value) {
     this.id = value;
 }
 @Id
+@GenerateValue
 public Integer getId() {
     return this.id;
 }

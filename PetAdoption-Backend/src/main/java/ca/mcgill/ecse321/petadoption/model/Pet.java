@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import java.util.Set;
 import javax.persistence.OneToMany;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Pet{
@@ -64,7 +65,19 @@ public void setId(Integer value) {
     this.id = value;
 }
 @Id
+@GeneratedValue
 public Integer getId() {
     return this.id;
 }
-}
+   private Advertisement advertisement;
+   
+   @OneToOne(optional=false)
+   public Advertisement getAdvertisement() {
+      return this.advertisement;
+   }
+   
+   public void setAdvertisement(Advertisement advertisement) {
+      this.advertisement = advertisement;
+   }
+   
+   }

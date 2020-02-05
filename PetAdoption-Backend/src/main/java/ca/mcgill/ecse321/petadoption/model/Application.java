@@ -1,7 +1,7 @@
 package ca.mcgill.ecse321.petadoption.model;
 
 import javax.persistence.Entity;
-import java.sql.Date;
+import ca.mcgill.ecse321.petadoption.model.java.sql.Date;
 import javax.persistence.ManyToOne;
 import javax.persistence.Id;
 
@@ -31,17 +31,6 @@ public void setNote(String value) {
 public String getNote() {
     return this.note;
 }
-private Person applicant;
-
-@ManyToOne(optional=false)
-public Person getApplicant() {
-   return this.applicant;
-}
-
-public void setApplicant(Person applicant) {
-   this.applicant = applicant;
-}
-
 private Advertisement advertisement;
 
 @ManyToOne(optional=false)
@@ -59,7 +48,19 @@ public void setId(Integer value) {
     this.id = value;
 }
 @Id
+@GeneratedValue
 public Integer getId() {
     return this.id;
 }
-}
+   private AppUser applicant;
+   
+   @ManyToOne(optional=false)
+   public AppUser getApplicant() {
+      return this.applicant;
+   }
+   
+   public void setApplicant(AppUser applicant) {
+      this.applicant = applicant;
+   }
+   
+   }
