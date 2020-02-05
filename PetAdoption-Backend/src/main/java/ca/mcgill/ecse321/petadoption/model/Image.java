@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.petadoption.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
@@ -28,7 +29,7 @@ public void setId(Integer value) {
     this.id = value;
 }
 @Id
-@GenerateValue
+@GeneratedValue
 public Integer getId() {
     return this.id;
 }

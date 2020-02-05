@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.petadoption.model;
 
 import javax.persistence.Entity;
 import java.sql.Date;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
@@ -40,7 +41,7 @@ public void setTransactionNumber(Integer value) {
     this.transactionNumber = value;
 }
 @Id
-@GenerateValue
+@GeneratedValue
 public Integer getTransactionNumber() {
     return this.transactionNumber;
 }
