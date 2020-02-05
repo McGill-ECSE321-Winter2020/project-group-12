@@ -1,13 +1,8 @@
 package ca.mcgill.ecse321.petadoption.model;
 
-import javax.persistence.Entity;
-import ca.mcgill.ecse321.petadoption.model.java.sql.Date;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.sql.Date;
 import java.util.Set;
-import javax.persistence.OneToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.CascadeType;
-import javax.persistence.OneToOne;
 
 @Entity
 public class Advertisement{
