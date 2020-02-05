@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.petadoption.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Set;
 import javax.persistence.OneToMany;
