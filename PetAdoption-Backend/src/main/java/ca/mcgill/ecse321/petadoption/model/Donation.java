@@ -9,6 +9,9 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Donation{
     private AppUser donor;
+    private Integer amount;
+    private Date dateOfPayment;
+    private Long transactionNumber;
 
     @ManyToOne(optional=false)
     public AppUser getDonor() {
@@ -19,7 +22,6 @@ public class Donation{
       this.donor = donor;
     }
 
-    private Integer amount;
 
     public void setAmount(Integer value) {
         this.amount = value;
@@ -27,7 +29,6 @@ public class Donation{
     public Integer getAmount() {
         return this.amount;
     }
-    private Date dateOfPayment;
 
     public void setDateOfPayment(Date value) {
         this.dateOfPayment = value;
@@ -35,14 +36,13 @@ public class Donation{
     public Date getDateOfPayment() {
         return this.dateOfPayment;
     }
-    private Integer transactionNumber;
 
-    public void setTransactionNumber(Integer value) {
+    public void setTransactionNumber(Long value) {
         this.transactionNumber = value;
     }
     @Id
     @GeneratedValue
-    public Integer getTransactionNumber() {
+    public Long getTransactionNumber() {
         return this.transactionNumber;
     }
 

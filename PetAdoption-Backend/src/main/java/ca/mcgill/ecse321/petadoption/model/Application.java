@@ -6,6 +6,14 @@ import java.sql.Date;
 @Entity
 public class Application{
     private Date dateOfSubmission;
+    private String note;
+    private Advertisement advertisement;
+    private AppUser applicant;
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
 
     public void setDateOfSubmission(Date value) {
         this.dateOfSubmission = value;
@@ -14,8 +22,7 @@ public class Application{
         return this.dateOfSubmission;
     }
 
-    @Enumerated(EnumType.STRING)
-    private Status status;
+
 
     public void setStatus(Status value) {
         this.status = value;
@@ -23,7 +30,6 @@ public class Application{
     public Status getStatus() {
         return this.status;
     }
-    private String note;
 
     public void setNote(String value) {
         this.note = value;
@@ -31,7 +37,6 @@ public class Application{
     public String getNote() {
         return this.note;
     }
-    private Advertisement advertisement;
 
     @ManyToOne(optional=false)
     public Advertisement getAdvertisement() {
@@ -42,17 +47,15 @@ public class Application{
        this.advertisement = advertisement;
     }
 
-    private Integer id;
 
-    public void setId(Integer value) {
+    public void setId(Long value) {
         this.id = value;
     }
     @Id
     @GeneratedValue
-    public Integer getId() {
+    public Long getId() {
         return this.id;
     }
-    private AppUser applicant;
 
     @ManyToOne(optional=false)
     public AppUser getApplicant() {

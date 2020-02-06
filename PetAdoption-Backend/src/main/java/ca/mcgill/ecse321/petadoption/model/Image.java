@@ -8,6 +8,9 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Image{
     private String name;
+    private String link;
+    private Long id;
+    private Advertisement advertisement;
 
     public void setName(String value) {
         this.name = value;
@@ -15,7 +18,6 @@ public class Image{
     public String getName() {
         return this.name;
     }
-    private String link;
 
     public void setLink(String value) {
         this.link = value;
@@ -23,18 +25,16 @@ public class Image{
     public String getLink() {
         return this.link;
     }
-    private Integer id;
 
-    public void setId(Integer value) {
+    public void setId(Long value) {
         this.id = value;
     }
     @Id
     @GeneratedValue
-    public Integer getId() {
+    public Long getId() {
         return this.id;
     }
 
-    private Advertisement advertisement;
 
     @ManyToOne(optional=false)
     public Advertisement getAdvertisement() {

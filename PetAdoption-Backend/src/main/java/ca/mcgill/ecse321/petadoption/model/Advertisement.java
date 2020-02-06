@@ -7,6 +7,20 @@ import java.util.Set;
 @Entity
 public class Advertisement{
    private Date datePosted;
+   private Long id;
+   private boolean isExpired;
+   private Set<Application> applications;
+   private AppUser postedBy;
+   private String pet_name;
+   private Integer pet_age;
+   private String pet_description;
+   private Set<Image> pet_images;
+
+   @Enumerated(EnumType.STRING)
+   private Species pet_species;
+
+   @Enumerated(EnumType.STRING)
+   private Sex pet_sex;
 
    public void setDatePosted(Date value) {
        this.datePosted = value;
@@ -14,17 +28,15 @@ public class Advertisement{
    public Date getDatePosted() {
        return this.datePosted;
    }
-   private Integer id;
 
-   public void setId(Integer value) {
+   public void setId(Long value) {
        this.id = value;
    }
    @Id
    @GeneratedValue
-   public Integer getId() {
+   public Long getId() {
        return this.id;
    }
-   private boolean isExpired;
 
    public void setIsExpired(boolean value) {
        this.isExpired = value;
@@ -32,18 +44,16 @@ public class Advertisement{
    public boolean isIsExpired() {
        return this.isExpired;
    }
-   private Set<Application> applications;
 
    @OneToMany(mappedBy="advertisement" )
    public Set<Application> getApplications() {
       return this.applications;
    }
 
-   public void setApplications(Set<Application> applicationss) {
-      this.applications = applicationss;
+   public void setApplications(Set<Application> applications) {
+      this.applications = applications;
    }
 
-   private AppUser postedBy;
 
    @ManyToOne(optional=false)
    public AppUser getPostedBy() {
@@ -55,7 +65,6 @@ public class Advertisement{
    }
 
 
-   private String pet_name;
 
    public void setName(String value) {
       this.pet_name = value;
@@ -63,7 +72,6 @@ public class Advertisement{
    public String getName() {
       return this.pet_name;
    }
-   private Integer pet_age;
 
    public void setAge(Integer value) {
       this.pet_age = value;
@@ -71,7 +79,6 @@ public class Advertisement{
    public Integer getAge() {
       return this.pet_age;
    }
-   private String pet_description;
 
    public void setDescription(String value) {
       this.pet_description = value;
@@ -80,8 +87,6 @@ public class Advertisement{
       return this.pet_description;
    }
 
-   @Enumerated(EnumType.STRING)
-   private Sex pet_sex;
 
    public void setSex(Sex value) {
       this.pet_sex = value;
@@ -90,8 +95,6 @@ public class Advertisement{
       return this.pet_sex;
    }
 
-   @Enumerated(EnumType.STRING)
-   private Species pet_species;
 
    public void setSpecies(Species value) {
       this.pet_species = value;
@@ -99,9 +102,8 @@ public class Advertisement{
    public Species getSpecies() {
       return this.pet_species;
    }
-   private Set<Image> pet_images;
 
-   @OneToMany(mappedBy="advertisement" )
+   @OneToMany(mappedBy="advertisement")
    public Set<Image> getImages() {
       return this.pet_images;
    }

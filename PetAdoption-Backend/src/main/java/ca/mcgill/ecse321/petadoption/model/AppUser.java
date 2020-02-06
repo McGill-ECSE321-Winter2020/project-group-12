@@ -1,109 +1,116 @@
 package ca.mcgill.ecse321.petadoption.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Set;
-import javax.persistence.OneToMany;
 
 @Entity
-public class AppUser{
+public class AppUser {
     private Set<Donation> donations;
+    private String name;
+    private String email;
+    private String password;
+    private String biography;
+    private String homeDescription;
+    private Integer age;
+    private boolean isAdmin;
+    private Set<Advertisement> advertisements;
+    private Set<Application> applications;
 
-    @OneToMany(mappedBy="donor" )
+    @Enumerated(EnumType.STRING)
+    private Sex sex;
+
+    @OneToMany(mappedBy = "donor")
     public Set<Donation> getDonations() {
-      return this.donations;
+        return this.donations;
     }
 
     public void setDonations(Set<Donation> donations) {
-      this.donations = donations;
+        this.donations = donations;
     }
 
-    private String name;
 
     public void setName(String value) {
-    this.name = value;
+        this.name = value;
     }
+
     public String getName() {
-    return this.name;
+        return this.name;
     }
-    private String email;
 
     public void setEmail(String value) {
-    this.email = value;
+        this.email = value;
     }
+
     @Id
     public String getEmail() {
-    return this.email;
+        return this.email;
     }
-    private String password;
 
     public void setPassword(String value) {
-    this.password = value;
+        this.password = value;
     }
+
     public String getPassword() {
-    return this.password;
+        return this.password;
     }
-    private String biography;
 
     public void setBiography(String value) {
-    this.biography = value;
+        this.biography = value;
     }
+
     public String getBiography() {
-    return this.biography;
+        return this.biography;
     }
-    private String homeDescription;
 
     public void setHomeDescription(String value) {
-    this.homeDescription = value;
+        this.homeDescription = value;
     }
+
     public String getHomeDescription() {
-    return this.homeDescription;
+        return this.homeDescription;
     }
-    private Integer age;
 
     public void setAge(Integer value) {
-    this.age = value;
+        this.age = value;
     }
+
     public Integer getAge() {
-    return this.age;
+        return this.age;
     }
-    private Sex sex;
 
     public void setSex(Sex value) {
-    this.sex = value;
+        this.sex = value;
     }
+
     public Sex getSex() {
-    return this.sex;
+        return this.sex;
     }
-    private boolean isAdmin;
 
     public void setIsAdmin(boolean value) {
-    this.isAdmin = value;
+        this.isAdmin = value;
     }
-    public boolean isIsAdmin() {
-    return this.isAdmin;
-    }
-    private Set<Advertisement> advertisements;
 
-    @OneToMany(mappedBy="postedBy" )
+    public boolean isIsAdmin() {
+        return this.isAdmin;
+    }
+
+    @OneToMany(mappedBy = "postedBy")
     public Set<Advertisement> getAdvertisements() {
-      return this.advertisements;
+        return this.advertisements;
     }
 
     public void setAdvertisements(Set<Advertisement> advertisements) {
-      this.advertisements = advertisements;
+        this.advertisements = advertisements;
     }
 
-    private Set<Application> applications;
 
-    @OneToMany(mappedBy="applicant" )
+    @OneToMany(mappedBy = "applicant")
     public Set<Application> getApplications() {
-      return this.applications;
+        return this.applications;
     }
 
     public void setApplications(Set<Application> applications) {
-      this.applications = applications;
+        this.applications = applications;
     }
 
 }
