@@ -67,7 +67,7 @@ public class PetAdoptionService {
     }
 
     @Transactional
-    public Advertisement getAdvertisement(Integer id){
+    public Advertisement getAdvertisement(Long id){
         return advertisementRepository.findAdvertisementById(id);
     }
 
@@ -83,7 +83,7 @@ public class PetAdoptionService {
     }
 
     @Transactional
-    public Application getApplication(Integer id){
+    public Application getApplication(Long id){
         return applicationRepository.findApplicationById(id);
     }
 
@@ -98,7 +98,7 @@ public class PetAdoptionService {
     }
 
     @Transactional
-    public Donation getDonation(Integer transaction_number){
+    public Donation getDonation(Long transaction_number){
         return donationRepository.findDonationByTransactionNumber(transaction_number);
     }
 
@@ -113,7 +113,7 @@ public class PetAdoptionService {
     }
 
     @Transactional
-    public Image getImage(Integer id){
+    public Image getImage(Long id){
         return imageRepository.findImageById(id);
     }
 }

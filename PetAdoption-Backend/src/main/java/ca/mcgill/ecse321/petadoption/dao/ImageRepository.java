@@ -4,7 +4,7 @@ import ca.mcgill.ecse321.petadoption.model.Image;
 import org.springframework.data.repository.CrudRepository;
 
 
-public interface ImageRepository extends CrudRepository<Image, Integer>{
+public interface ImageRepository extends CrudRepository<Image, Long>{
 
-    Image findImageById(Integer id);
+    Image findImageById(Long id);
 }

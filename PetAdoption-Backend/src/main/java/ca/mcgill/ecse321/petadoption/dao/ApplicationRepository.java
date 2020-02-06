@@ -5,8 +5,8 @@ import ca.mcgill.ecse321.petadoption.model.Application;
 import org.springframework.data.repository.CrudRepository;
 
 
-public interface ApplicationRepository extends CrudRepository<Application, Integer> {
+public interface ApplicationRepository extends CrudRepository<Application, Long> {
 
-    Application findApplicationById(Integer id);
+    Application findApplicationById(Long id);
 
 }
