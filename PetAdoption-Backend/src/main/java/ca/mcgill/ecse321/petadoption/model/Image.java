@@ -7,41 +7,42 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class Image{
-   private String name;
+    private String name;
 
-public void setName(String value) {
-    this.name = value;
-}
-public String getName() {
-    return this.name;
-}
-private String link;
+    public void setName(String value) {
+        this.name = value;
+    }
+    public String getName() {
+        return this.name;
+    }
+    private String link;
 
-public void setLink(String value) {
-    this.link = value;
-}
-public String getLink() {
-    return this.link;
-}
-private Integer id;
+    public void setLink(String value) {
+        this.link = value;
+    }
+    public String getLink() {
+        return this.link;
+    }
+    private Integer id;
 
-public void setId(Integer value) {
-    this.id = value;
+    public void setId(Integer value) {
+        this.id = value;
+    }
+    @Id
+    @GeneratedValue
+    public Integer getId() {
+        return this.id;
+    }
+
+    private Advertisement advertisement;
+
+    @ManyToOne(optional=false)
+    public Advertisement getAdvertisement() {
+      return this.advertisement;
+    }
+
+    public void setAdvertisement(Advertisement advertisement) {
+      this.advertisement = advertisement;
+    }
+
 }
-@Id
-@GeneratedValue
-public Integer getId() {
-    return this.id;
-}
-   private Pet pet;
-   
-   @ManyToOne(optional=false)
-   public Pet getPet() {
-      return this.pet;
-   }
-   
-   public void setPet(Pet pet) {
-      this.pet = pet;
-   }
-   
-   }

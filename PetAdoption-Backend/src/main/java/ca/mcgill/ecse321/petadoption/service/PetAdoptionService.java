@@ -23,9 +23,6 @@ public class PetAdoptionService {
     AppUserRepository appUserRepository;
 
     @Autowired
-    PetRepository petRepository;
-
-    @Autowired
     DonationRepository donationRepository;
 
     @Autowired
@@ -52,27 +49,19 @@ public class PetAdoptionService {
         return appUserRepository.findAppUserByEmail(email);
     }
 
-    @Transactional
-    public Pet createPet(String name, Integer age, String description, Sex sex, Species species){
-        Pet new_pet = new Pet();
-        new_pet.setName(name);
-        new_pet.setAge(age);
-        new_pet.setDescription(description);
-        new_pet.setSex(sex);
-        new_pet.setSpecies(species);
-        petRepository.save(new_pet);
-        return new_pet;
-}
-    @Transactional
-    public Pet getPet(Integer id) {
-        return petRepository.findPetById(id);
-    }
+
 
     @Transactional
-    public Advertisement createAdvertisement(Date date_posted, Boolean is_expired){
+    public Advertisement createAdvertisement(Date date_posted, Boolean is_expired,
+                                             String name, Integer age, String description, Sex sex, Species species){
         Advertisement new_advertisement = new Advertisement();
         new_advertisement.setDatePosted(date_posted); //requires java.sql.date
         new_advertisement.setIsExpired(is_expired);
+        new_advertisement.setName(name);
+        new_advertisement.setAge(age);
+        new_advertisement.setDescription(description);
+        new_advertisement.setSex(sex);
+        new_advertisement.setSpecies(species);
         advertisementRepository.save(new_advertisement);
         return new_advertisement;
     }
@@ -114,11 +103,11 @@ public class PetAdoptionService {
     }
 
     @Transactional
-    public Image createImage(String name, String link, Pet pet){
+    public Image createImage(String name, String link, Advertisement advertisement){
         Image new_image = new Image();
         new_image.setName(name);
         new_image.setLink(link);
-        new_image.setPet(pet);
+        new_image.setAdvertisement(advertisement);
         imageRepository.save(new_image);
         return new_image;
     }
