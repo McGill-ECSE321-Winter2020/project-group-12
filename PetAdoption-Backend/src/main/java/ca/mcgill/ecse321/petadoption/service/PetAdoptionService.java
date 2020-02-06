@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import java.sql.Date;
+
 @Service
 public class PetAdoptionService {
 
@@ -50,4 +52,79 @@ public class PetAdoptionService {
         return appUserRepository.findAppUserByEmail(email);
     }
 
+    @Transactional
+    public Pet createPet(String name, Integer age, String description, Sex sex, Species species){
+        Pet new_pet = new Pet();
+        new_pet.setName(name);
+        new_pet.setAge(age);
+        new_pet.setDescription(description);
+        new_pet.setSex(sex);
+        new_pet.setSpecies(species);
+        petRepository.save(new_pet);
+        return new_pet;
+}
+    @Transactional
+    public Pet getPet(Integer id) {
+        return petRepository.findPetById(id);
+    }
+
+    @Transactional
+    public Advertisement createAdvertisement(Date date_posted, Boolean is_expired){
+        Advertisement new_advertisement = new Advertisement();
+        new_advertisement.setDatePosted(date_posted); //requires java.sql.date
+        new_advertisement.setIsExpired(is_expired);
+        advertisementRepository.save(new_advertisement);
+        return new_advertisement;
+    }
+
+    @Transactional
+    public Advertisement getAdvertisement(Integer id){
+        return advertisementRepository.findAdvertisementById(id);
+    }
+
+    @Transactional
+    public Application createApplication(Date date_of_submission, Status status, String note, Advertisement ad){
+        Application new_application = new Application();
+        new_application.setDateOfSubmission(date_of_submission);
+        new_application.setStatus(status);
+        new_application.setNote(note);
+        new_application.setAdvertisement(ad);
+        applicationRepository.save(new_application);
+        return new_application;
+    }
+
+    @Transactional
+    public Application getApplication(Integer id){
+        return applicationRepository.findApplicationById(id);
+    }
+
+    @Transactional
+    public Donation createDonation(AppUser donor, Integer amount, Date date_of_payment){
+        Donation new_donation = new Donation();
+        new_donation.setDonor(donor);
+        new_donation.setAmount(amount);
+        new_donation.setDateOfPayment(date_of_payment);
+        donationRepository.save(new_donation);
+        return new_donation;
+    }
+
+    @Transactional
+    public Donation getDonation(Integer transaction_number){
+        return donationRepository.findDonationByTransactionNumber(transaction_number);
+    }
+
+    @Transactional
+    public Image createImage(String name, String link, Pet pet){
+        Image new_image = new Image();
+        new_image.setName(name);
+        new_image.setLink(link);
+        new_image.setPet(pet);
+        imageRepository.save(new_image);
+        return new_image;
+    }
+
+    @Transactional
+    public Image getImage(Integer id){
+        return imageRepository.findImageById(id);
+    }
 }
