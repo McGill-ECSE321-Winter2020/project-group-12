@@ -1,11 +1,7 @@
 package ca.mcgill.ecse321.petadoption.model;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.sql.Date;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.ManyToOne;
-import javax.persistence.Id;
 
 @Entity
 public class Application{
@@ -17,6 +13,8 @@ public class Application{
     public Date getDateOfSubmission() {
         return this.dateOfSubmission;
     }
+
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     public void setStatus(Status value) {

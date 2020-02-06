@@ -79,6 +79,8 @@ public class Advertisement{
    public String getDescription() {
       return this.pet_description;
    }
+
+   @Enumerated(EnumType.STRING)
    private Sex pet_sex;
 
    public void setSex(Sex value) {
@@ -87,6 +89,8 @@ public class Advertisement{
    public Sex getSex() {
       return this.pet_sex;
    }
+
+   @Enumerated(EnumType.STRING)
    private Species pet_species;
 
    public void setSpecies(Species value) {
