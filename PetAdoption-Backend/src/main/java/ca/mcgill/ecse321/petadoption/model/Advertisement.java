@@ -7,7 +7,7 @@ import java.util.Set;
 @Entity
 public class Advertisement{
    private Date datePosted;
-   private Long id;
+   private Long advertisementId;
    private boolean isExpired;
    private Set<Application> applications;
    private AppUser postedBy;
@@ -29,13 +29,13 @@ public class Advertisement{
        return this.datePosted;
    }
 
-   public void setId(Long value) {
-       this.id = value;
+   public void setAdvertisementId(Long value) {
+       this.advertisementId = value;
    }
    @Id
    @GeneratedValue
-   public Long getId() {
-       return this.id;
+   public Long getAdvertisementId() {
+       return this.advertisementId;
    }
 
    public void setIsExpired(boolean value) {

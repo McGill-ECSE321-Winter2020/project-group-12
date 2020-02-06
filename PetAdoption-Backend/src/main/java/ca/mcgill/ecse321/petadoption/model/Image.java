@@ -9,7 +9,7 @@ import javax.persistence.ManyToOne;
 public class Image{
     private String name;
     private String link;
-    private Long id;
+    private Long imageId;
     private Advertisement advertisement;
 
     public void setName(String value) {
@@ -26,13 +26,13 @@ public class Image{
         return this.link;
     }
 
-    public void setId(Long value) {
-        this.id = value;
+    public void setImageId(Long value) {
+        this.imageId = value;
     }
     @Id
     @GeneratedValue
-    public Long getId() {
-        return this.id;
+    public Long getImageId() {
+        return this.imageId;
     }
 
 

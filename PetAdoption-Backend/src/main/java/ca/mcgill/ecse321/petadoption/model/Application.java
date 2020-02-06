@@ -9,7 +9,7 @@ public class Application{
     private String note;
     private Advertisement advertisement;
     private AppUser applicant;
-    private Long id;
+    private Long applicationId;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -48,13 +48,13 @@ public class Application{
     }
 
 
-    public void setId(Long value) {
-        this.id = value;
+    public void setApplicationId(Long value) {
+        this.applicationId = value;
     }
     @Id
     @GeneratedValue
-    public Long getId() {
-        return this.id;
+    public Long getApplicationId() {
+        return this.applicationId;
     }
 
     @ManyToOne(optional=false)

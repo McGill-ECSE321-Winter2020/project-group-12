@@ -68,7 +68,7 @@ public class PetAdoptionService {
 
     @Transactional
     public Advertisement getAdvertisement(Long id){
-        return advertisementRepository.findAdvertisementById(id);
+        return advertisementRepository.findAdvertisementByAdvertisementId(id);
     }
 
     @Transactional
@@ -84,7 +84,7 @@ public class PetAdoptionService {
 
     @Transactional
     public Application getApplication(Long id){
-        return applicationRepository.findApplicationById(id);
+        return applicationRepository.findApplicationByApplicationId(id);
     }
 
     @Transactional
@@ -114,6 +114,6 @@ public class PetAdoptionService {
 
     @Transactional
     public Image getImage(Long id){
-        return imageRepository.findImageById(id);
+        return imageRepository.findImageByImageId(id);
     }
 }
