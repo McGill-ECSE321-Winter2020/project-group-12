@@ -8,61 +8,102 @@ import java.util.Set;
 public class Advertisement{
    private Date datePosted;
 
-public void setDatePosted(Date value) {
-    this.datePosted = value;
-}
-public Date getDatePosted() {
-    return this.datePosted;
-}
-private Integer id;
+   public void setDatePosted(Date value) {
+       this.datePosted = value;
+   }
+   public Date getDatePosted() {
+       return this.datePosted;
+   }
+   private Integer id;
 
-public void setId(Integer value) {
-    this.id = value;
-}
-@Id
-@GeneratedValue
-public Integer getId() {
-    return this.id;
-}
-private boolean isExpired;
+   public void setId(Integer value) {
+       this.id = value;
+   }
+   @Id
+   @GeneratedValue
+   public Integer getId() {
+       return this.id;
+   }
+   private boolean isExpired;
 
-public void setIsExpired(boolean value) {
-    this.isExpired = value;
-}
-public boolean isIsExpired() {
-    return this.isExpired;
-}
+   public void setIsExpired(boolean value) {
+       this.isExpired = value;
+   }
+   public boolean isIsExpired() {
+       return this.isExpired;
+   }
    private Set<Application> applications;
-   
+
    @OneToMany(mappedBy="advertisement" )
    public Set<Application> getApplications() {
       return this.applications;
    }
-   
+
    public void setApplications(Set<Application> applicationss) {
       this.applications = applicationss;
    }
-   
+
    private AppUser postedBy;
-   
+
    @ManyToOne(optional=false)
    public AppUser getPostedBy() {
       return this.postedBy;
    }
-   
+
    public void setPostedBy(AppUser postedBy) {
       this.postedBy = postedBy;
    }
-   
-   private Pet pet;
-   
-   @OneToOne(mappedBy="advertisement" , cascade={CascadeType.ALL}, optional=false)
-   public Pet getPet() {
-      return this.pet;
+
+
+   private String pet_name;
+
+   public void setName(String value) {
+      this.pet_name = value;
    }
-   
-   public void setPet(Pet pet) {
-      this.pet = pet;
+   public String getName() {
+      return this.pet_name;
    }
-   
+   private Integer pet_age;
+
+   public void setAge(Integer value) {
+      this.pet_age = value;
    }
+   public Integer getAge() {
+      return this.pet_age;
+   }
+   private String pet_description;
+
+   public void setDescription(String value) {
+      this.pet_description = value;
+   }
+   public String getDescription() {
+      return this.pet_description;
+   }
+   private Sex pet_sex;
+
+   public void setSex(Sex value) {
+      this.pet_sex = value;
+   }
+   public Sex getSex() {
+      return this.pet_sex;
+   }
+   private Species pet_species;
+
+   public void setSpecies(Species value) {
+      this.pet_species = value;
+   }
+   public Species getSpecies() {
+      return this.pet_species;
+   }
+   private Set<Image> pet_images;
+
+   @OneToMany(mappedBy="advertisement" )
+   public Set<Image> getImages() {
+      return this.pet_images;
+   }
+
+   public void setImages(Set<Image> images) {
+      this.pet_images = images;
+   }
+
+}
