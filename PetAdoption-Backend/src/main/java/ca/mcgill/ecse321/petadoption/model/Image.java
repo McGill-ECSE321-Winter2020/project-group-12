@@ -30,7 +30,7 @@ public class Image{
         this.imageId = value;
     }
     @Id
-    @GeneratedValue
+    //@GeneratedValue
     public Long getImageId() {
         return this.imageId;
     }

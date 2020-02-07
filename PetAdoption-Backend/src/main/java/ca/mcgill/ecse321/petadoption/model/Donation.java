@@ -41,7 +41,7 @@ public class Donation{
         this.transactionNumber = value;
     }
     @Id
-    @GeneratedValue
+   // @GeneratedValue
     public Long getTransactionNumber() {
         return this.transactionNumber;
     }

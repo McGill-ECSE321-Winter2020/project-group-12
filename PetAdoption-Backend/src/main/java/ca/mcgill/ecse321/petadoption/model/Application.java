@@ -1,6 +1,11 @@
 package ca.mcgill.ecse321.petadoption.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.sql.Date;
 
 @Entity
@@ -52,7 +57,7 @@ public class Application{
         this.applicationId = value;
     }
     @Id
-    @GeneratedValue
+    //@GeneratedValue
     public Long getApplicationId() {
         return this.applicationId;
     }

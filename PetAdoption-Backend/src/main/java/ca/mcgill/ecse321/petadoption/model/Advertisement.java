@@ -33,7 +33,7 @@ public class Advertisement{
        this.advertisementId = value;
    }
    @Id
-   @GeneratedValue
+  // @GeneratedValue
    public Long getAdvertisementId() {
        return this.advertisementId;
    }
@@ -103,7 +103,7 @@ public class Advertisement{
       return this.pet_species;
    }
 
-   @OneToMany(mappedBy="advertisement")
+   @OneToMany(mappedBy="advertisement", cascade ={CascadeType.ALL})
    public Set<Image> getImages() {
       return this.pet_images;
    }
