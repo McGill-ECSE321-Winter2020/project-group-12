@@ -11,16 +11,16 @@ public class Advertisement{
    private boolean isExpired;
    private Set<Application> applications;
    private AppUser postedBy;
-   private String pet_name;
-   private Integer pet_age;
-   private String pet_description;
-   private Set<Image> pet_images;
+   private String petName;
+   private Integer petAge;
+   private String petDescription;
+   private Set<Image> petImages;
 
    @Enumerated(EnumType.STRING)
-   private Species pet_species;
+   private Species petSpecies;
 
    @Enumerated(EnumType.STRING)
-   private Sex pet_sex;
+   private Sex petSex;
 
    public void setDatePosted(Date value) {
        this.datePosted = value;
@@ -66,50 +66,50 @@ public class Advertisement{
 
 
 
-   public void setName(String value) {
-      this.pet_name = value;
+   public void setPetName(String value) {
+      this.petName = value;
    }
-   public String getName() {
-      return this.pet_name;
-   }
-
-   public void setAge(Integer value) {
-      this.pet_age = value;
-   }
-   public Integer getAge() {
-      return this.pet_age;
+   public String getPetName() {
+      return this.petName;
    }
 
-   public void setDescription(String value) {
-      this.pet_description = value;
+   public void setPetAge(Integer value) {
+      this.petAge = value;
    }
-   public String getDescription() {
-      return this.pet_description;
+   public Integer getPetAge() {
+      return this.petAge;
    }
 
-
-   public void setSex(Sex value) {
-      this.pet_sex = value;
+   public void setPetDescription(String value) {
+      this.petDescription = value;
    }
-   public Sex getSex() {
-      return this.pet_sex;
+   public String getPetDescription() {
+      return this.petDescription;
    }
 
 
-   public void setSpecies(Species value) {
-      this.pet_species = value;
+   public void setPetSex(Sex value) {
+      this.petSex = value;
    }
-   public Species getSpecies() {
-      return this.pet_species;
+   public Sex getPetSex() {
+      return this.petSex;
+   }
+
+
+   public void setPetSpecies(Species value) {
+      this.petSpecies = value;
+   }
+   public Species getPetSpecies() {
+      return this.petSpecies;
    }
 
    @OneToMany(mappedBy="advertisement")
-   public Set<Image> getImages() {
-      return this.pet_images;
+   public Set<Image> getPetImages() {
+      return this.petImages;
    }
 
-   public void setImages(Set<Image> images) {
-      this.pet_images = images;
+   public void setPetImages(Set<Image> images) {
+      this.petImages = images;
    }
 
 }

@@ -57,11 +57,11 @@ public class PetAdoptionService {
         Advertisement new_advertisement = new Advertisement();
         new_advertisement.setDatePosted(date_posted); //requires java.sql.date
         new_advertisement.setIsExpired(is_expired);
-        new_advertisement.setName(name);
-        new_advertisement.setAge(age);
-        new_advertisement.setDescription(description);
-        new_advertisement.setSex(sex);
-        new_advertisement.setSpecies(species);
+        new_advertisement.setPetName(name);
+        new_advertisement.setPetAge(age);
+        new_advertisement.setPetDescription(description);
+        new_advertisement.setPetSex(sex);
+        new_advertisement.setPetSpecies(species);
         advertisementRepository.save(new_advertisement);
         return new_advertisement;
     }
