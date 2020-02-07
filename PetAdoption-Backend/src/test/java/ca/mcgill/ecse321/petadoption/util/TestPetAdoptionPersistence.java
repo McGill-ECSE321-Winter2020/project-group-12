@@ -40,6 +40,38 @@ public class TestPetAdoptionPersistence {
     @Autowired
     private ImageRepository imageRepository;
 
+    @AfterEach
+    public void clearDatabase() {
+        // First, we clear advertisement to avoid exceptions due to inconsistencies
+        advertisementRepository.deleteAll();
+        // Then we can clear the other tables
+        applicationRepository.deleteAll();
+        appUserRepository.deleteAll();
+        donationRepository.deleteAll();
+        imageRepository.deleteAll();
+    }
+
+    @Test
+    public void testPersistAndLoadAdvertisement() {
+        Advertisement newad = new Advertisement();
+        advertisementRepository.save(newad);
+        Long id = newad.getAdvertisementId();
+        newad = null;
+        newad = advertisementRepository.findAdvertisementByAdvertisementId(id);
+        assertNotNull(newad);
+        assertEquals(id , newad.getAdvertisementId());
+//        // First example for object save/load
+//        Person person = new Person();
+//        // First example for attribute save/load
+//        person.setName(name);
+//        personRepository.save(person);
+//
+//        person = null;
+//
+//        person = personRepository.findPersonByName(name);
+//        assertNotNull(person);
+//        assertEquals(name, person.getName());
+    }
 
 
 }
