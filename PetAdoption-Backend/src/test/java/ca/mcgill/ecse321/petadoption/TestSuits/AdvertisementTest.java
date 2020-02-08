@@ -101,7 +101,7 @@ public class AdvertisementTest {
         applicant.setSex(applicantSex);
 
         Date datePosted = Date.valueOf(LocalDate.of(2020, Month.FEBRUARY, 7));
-        long adID = 1;
+        //long adID = 1;
         boolean isExpired = false;
         String petName = "Abbie";
         int petAge = 2;
@@ -117,12 +117,14 @@ public class AdvertisementTest {
         ad.setPetDescription(petDescription);
         ad.setPetSex(petSex);
         ad.setPetSpecies(petSpecies);
+        ad.setAdvertisementId();
+        String adID = ad.getAdvertisementId();
 
         // an application
         Date dateOfSubmission = Date.valueOf(LocalDate.of(2020, Month.FEBRUARY, 10));
         String note = "I really love golden retrievers and have interacted with them a lot!";
         Status status = Status.pending;
-        long appID = 1;
+        //long appID = 1;
         Application app = new Application();
         app.setApplicant(applicant);
         app.setAdvertisement(ad);
@@ -130,6 +132,8 @@ public class AdvertisementTest {
         app.setNote(note);
         app.setStatus(status);
         //app.setApplicationId(appID);
+        app.setApplicationId();
+        String applicationID = app.getApplicationId();
 
         petOwner.addAdvertisement(ad);
         ad.setPostedBy(petOwner); 
