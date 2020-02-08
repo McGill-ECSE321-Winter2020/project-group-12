@@ -10,7 +10,14 @@ public class Image{
     private String name;
     private String link;
     private Long imageId;
+    private Long specificId;
     private Advertisement advertisement;
+    private static long newId = 1;
+
+    public void setNewId(Long val){
+        newId++;
+        this.specificId = newId;
+    }
 
     public void setName(String value) {
         this.name = value;
