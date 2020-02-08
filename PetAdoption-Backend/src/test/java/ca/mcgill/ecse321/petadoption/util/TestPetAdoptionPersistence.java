@@ -9,6 +9,10 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.service.PetAdoptionService;
@@ -57,27 +61,59 @@ public class TestPetAdoptionPersistence {
         imageRepository.deleteAll();
     }
 
-    @Test
-    public void testPersistAndLoadAdvertisement() {
-        Advertisement newad = new Advertisement();
-        newad.setDatePosted(new Date(12345));
-        newad.setPetDescription("lovely,cute,adorable");
-        newad.setPetAge(88);
-        newad.setPetName("Mojo");
-        newad.setIsExpired(false);
-
-        advertisementRepository.save(newad);
-        Long id = newad.getAdvertisementId();
-        newad = null;
-        newad = advertisementRepository.findAdvertisementByAdvertisementId(id);
-        assertNotNull(newad);
-        assertEquals(new Date(12345),newad.getDatePosted());
-        assertEquals("lovely,cute,adorable",newad.getPetDescription());
-        assertEquals(88,newad.getPetAge());
-        assertEquals("Mojo",newad.getPetName());
-        assertEquals(false,newad.isIsExpired());
-
-    }
+//    @Test
+//    public void testPersistAndLoadAdvertisement() {
+//
+//        AppUser newUser = new AppUser();
+//        newUser.setEmail("dr.nafario@evil.com");
+//        newUser.setName("dr.Nafario");
+//        newUser.setAge(99);
+//        newUser.setBiography("Male");
+//        newUser.setHomeDescription("null");
+//        newUser.setIsAdmin(true);
+//        newUser.setPassword("abcdefg");
+//        newUser.setSex(Sex.M);
+//        appUserRepository.save(newUser);
+//
+//
+//        Image newImage = new Image();
+//        newImage.setImageId((long) 23);
+//        newImage.setLink("http");
+//        newImage.setName("cuteanimal");
+//
+//
+//        Application newApp = new Application();
+//        Set<Application> newApps = new HashSet<Application>();
+//        Set<Image> newImages = new HashSet<Image>();
+//        newApps.add(newApp);
+//        newImages.add(newImage);
+//
+//
+//        Advertisement newAd = new Advertisement();
+//        newAd.setDatePosted(new Date(12345));
+//        newAd.setPetDescription("lovely,cute,adorable");
+//        newAd.setPetAge(88);
+//        newAd.setPetName("Mojo");
+//        newAd.setIsExpired(false);
+//        newAd.setApplications(newApps);
+//        newAd.setPetImages(newImages);
+//        newAd.setPostedBy(newUser);
+//
+//        Set<Advertisement> ads = new HashSet<Advertisement>();
+//        ads.add(newAd);
+//
+//
+//        advertisementRepository.save(newAd);
+//        Long id = newAd.getAdvertisementId();
+//        newAd = null;
+//        newAd = advertisementRepository.findAdvertisementByAdvertisementId(id);
+//        assertNotNull(newAd);
+//        assertEquals(new Date(12345),newAd.getDatePosted());
+//        assertEquals("lovely,cute,adorable",newAd.getPetDescription());
+//        assertEquals(88,newAd.getPetAge());
+//        assertEquals("Mojo",newAd.getPetName());
+//        assertEquals(false,newAd.isIsExpired());
+//    }
 
 //    @Test
 //    public void testPersistAndLoadEvent() {
