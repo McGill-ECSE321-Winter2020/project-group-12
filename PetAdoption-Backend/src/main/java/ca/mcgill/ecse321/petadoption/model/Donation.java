@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.petadoption.model;
 
 import javax.persistence.Entity;
 import java.sql.Date;
+import java.util.UUID;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -11,7 +12,7 @@ public class Donation{
     private AppUser donor;
     private Integer amount;
     private Date dateOfPayment;
-    private Long transactionNumber;
+    private String transactionID;
 
     @ManyToOne(optional=false)
     public AppUser getDonor() {
@@ -37,13 +38,15 @@ public class Donation{
         return this.dateOfPayment;
     }
 
-    public void setTransactionNumber(Long value) {
-        this.transactionNumber = value;
+    public void setTransactionID(String value) {
+        this.transactionID = value;
+    }
+    public void setTransactionID() {
+        this.transactionID = UUID.randomUUID().toString();
     }
     @Id
-    @GeneratedValue
-    public Long getTransactionNumber() {
-        return this.transactionNumber;
+    public String getTransactionID() {
+        return this.transactionID;
     }
 
 }

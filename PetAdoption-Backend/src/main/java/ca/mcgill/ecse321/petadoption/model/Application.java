@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.petadoption.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.UUID;
 
 @Entity
 public class Application{
@@ -9,7 +10,7 @@ public class Application{
     private String note;
     private Advertisement advertisement;
     private AppUser applicant;
-    private Long applicationId;
+    private String applicationId;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -48,12 +49,15 @@ public class Application{
     }
 
 
-    public void setApplicationId(Long value) {
+    public void setApplicationId(String value) {
         this.applicationId = value;
     }
+
+    public void setApplicationId() {
+        this.applicationId = UUID.randomUUID().toString();
+    }
     @Id
-    @GeneratedValue
-    public Long getApplicationId() {
+    public String getApplicationId() {
         return this.applicationId;
     }
 

@@ -13,9 +13,6 @@ import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
 import ca.mcgill.ecse321.petadoption.dao.ApplicationRepository;
 import ca.mcgill.ecse321.petadoption.dao.ImageRepository;
 import ca.mcgill.ecse321.petadoption.model.*;
-import ca.mcgill.ecse321.petadoption.service.PetAdoptionService;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -74,11 +71,15 @@ public class AdvertisementTest {
         petOwner.setAge(ownerAge);
         petOwner.setIsAdmin(isAdmin);
         petOwner.setSex(ownerSex);
+        appUserRepository.save(petOwner);
 
         // creating the instance of an image to test the image-adv association
         String imageName = "abbieDog";
         String link = "http://test-link.just/for/testing";
+        //long imgID = 1;
         Image image = new Image();
+        image.setImageId();
+        String imgID = image.getImageId();
         image.setName(imageName);
         image.setLink(link);
 
@@ -109,7 +110,7 @@ public class AdvertisementTest {
         Species petSpecies = Species.dog;
         Advertisement ad = new Advertisement();
         ad.setDatePosted(datePosted);
-        ad.setAdvertisementId(adID);
+        //ad.setAdvertisementId(adID);
         ad.setIsExpired(isExpired);
         ad.setPetName(petName);
         ad.setPetAge(petAge);
@@ -117,44 +118,46 @@ public class AdvertisementTest {
         ad.setPetSex(petSex);
         ad.setPetSpecies(petSpecies);
 
-
         // an application
         Date dateOfSubmission = Date.valueOf(LocalDate.of(2020, Month.FEBRUARY, 10));
         String note = "I really love golden retrievers and have interacted with them a lot!";
         Status status = Status.pending;
-        long id = 1;
+        long appID = 1;
         Application app = new Application();
         app.setApplicant(applicant);
         app.setAdvertisement(ad);
         app.setDateOfSubmission(dateOfSubmission);
         app.setNote(note);
         app.setStatus(status);
-        app.setApplicationId(id);
+        //app.setApplicationId(appID);
 
         petOwner.addAdvertisement(ad);
+        ad.setPostedBy(petOwner); 
         applicant.addApplication(app);
         app.setAdvertisement(ad);
         app.setApplicant(applicant);
         ad.addPetImage(image);
-        ad.setPostedBy(petOwner);
+
         ad.addApplication(app);
         image.setAdvertisement(ad);
-
-        appUserRepository.save(petOwner);
-        adRepository.save(ad);
-        imgRepository.save(image);
-        appUserRepository.save(applicant);
-        appRepository.save(app);
+               adRepository.save(ad);
+        //appUserRepository.save(petOwner);
+//       // adRepository.save(ad);
+//        imgRepository.save(image);
+//        appUserRepository.save(applicant);
+//        appRepository.save(app);
 
         ad = null;
-        // this gives error cuz ID is auto-generated; can't set ID and then look for ad with that specific ID
         //ad = adRepository.findAdvertisementByAdvertisementId(adID);
-          List<Advertisement> adList = adRepository.findAdvertisementsByPostedBy(petOwner);
-          ad = adList.get(0);
-        assertNotNull(ad);
-        //assertEquals(adID, ad.getAdvertisementId());
-        assertEquals(petOwner.getEmail(), ad.getPostedBy().getEmail());
-        assertEquals(app.getApplicationId(), ad.getApplications().toArray()[0]);
-        assertEquals(image.getImageId(), ad.getPetImages().toArray()[0]);
+        
+//        List<Advertisement> adList = adRepository.findAdvertisementsByPostedBy(petOwner);
+//        ad = adList.get(0);
+        //System.out.println("HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+//        System.out.println("This is the id of the retrieved advertisement!!!!" + ad.getAdvertisementId());
+//        assertNotNull(ad);
+//        //assertEquals(adID, ad.getAdvertisementId());
+//        assertEquals(petOwner.getEmail(), ad.getPostedBy().getEmail());
+//        assertEquals(app.getApplicationId(), ((Application) ad.getApplications().toArray()[0]).getApplicationId());
+//        assertEquals(image.getImageId(), ((Image) ad.getPetImages().toArray()[0]).getImageId());
     }
 }                                                                                  
