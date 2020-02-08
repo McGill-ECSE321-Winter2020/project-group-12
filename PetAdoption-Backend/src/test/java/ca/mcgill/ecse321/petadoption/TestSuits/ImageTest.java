@@ -8,9 +8,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
 
-import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
-import ca.mcgill.ecse321.petadoption.dao.ImageRepository;
-import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
+import ca.mcgill.ecse321.petadoption.dao.*;
+import ca.mcgill.ecse321.petadoption.service.PetAdoptionService;
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,18 +24,27 @@ import ca.mcgill.ecse321.petadoption.model.*;
     @ExtendWith(SpringExtension.class)
     @SpringBootTest
     public class ImageTest {
-
+        @Autowired
+        private PetAdoptionService service;
         @Autowired
         private AdvertisementRepository advertisementRepository;
         @Autowired
-        private ImageRepository imageRepository;
+        private ApplicationRepository applicationRepository;
         @Autowired
         private AppUserRepository appUserRepository;
+        @Autowired
+        private DonationRepository donationRepository;
+        @Autowired
+        private ImageRepository imageRepository;
 
-        @BeforeEach //before all tests clean the database
-        public void clearDatabase(){
+        @BeforeEach
+        public void clearDatabase() {
+            applicationRepository.deleteAll();
             imageRepository.deleteAll();
+            // First, we clear advertisement to avoid exceptions due to inconsistencies
             advertisementRepository.deleteAll();
+            // Then we can clear the other tables
+            donationRepository.deleteAll();
             appUserRepository.deleteAll();
         }
 //        @AfterEach //after each tests clean the database
@@ -81,16 +89,18 @@ import ca.mcgill.ecse321.petadoption.model.*;
             ad.setPetSex(sex);
             ad.setPetSpecies(species);
             ad.setPostedBy(Abdul);
+            ad.setAdvertisementId();
             ad = advertisementRepository.save(ad);
 
             Image new_image = new Image();
             String image_name = "image_name";
             String link = "link";
             new_image.setName(image_name);
+            new_image.setImageId();
             new_image.setLink(link);
             new_image.setAdvertisement(ad);
             new_image = imageRepository.save(new_image);
-            Long ad_id = ad.getAdvertisementId();
+            String ad_id = ad.getAdvertisementId();
 
             //set new_image to null and try retrieving it from database to test persistence
             new_image = null;

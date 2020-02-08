@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.petadoption.TestSuits;
-import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
+import ca.mcgill.ecse321.petadoption.dao.*;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.sql.Date;
@@ -9,9 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
-import ca.mcgill.ecse321.petadoption.dao.ApplicationRepository;
-import ca.mcgill.ecse321.petadoption.dao.ImageRepository;
 import ca.mcgill.ecse321.petadoption.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,16 +36,17 @@ public class AdvertisementTest {
 
     @Autowired
     private ImageRepository imgRepository;
+    @Autowired
+    private DonationRepository donationRepository;
 
     @BeforeEach
     public void clearDatabase() {
-        // here, order of deleting dsnt matter bc we are deleting all; not deleting
-        // entries in a table based on the value of other columns related to it
-        // otherwise, we would need to delete the classes with mandatory dependencies on others before those others
-        adRepository.deleteAll();
-        // no need to test these cuz they are optional associations (0..*)
-        imgRepository.deleteAll();
         appRepository.deleteAll();
+        imgRepository.deleteAll();
+        // First, we clear advertisement to avoid exceptions due to inconsistencies
+        adRepository.deleteAll();
+        // Then we can clear the other tables
+        donationRepository.deleteAll();
         appUserRepository.deleteAll();
     }
 
@@ -97,10 +96,10 @@ public class AdvertisementTest {
         adRepository.save(ad);
 
 
-        image.setAdvertisement(ad);
-        ad.addPetImage(image);
-        imgRepository.save(image);
-
+//        image.setAdvertisement(ad);
+//        ad.addPetImage(image);
+//        imgRepository.save(image);
+//
 
         String applicantEmail = "testapplicant@test.com";
         String applicantName = "TestApplicant";

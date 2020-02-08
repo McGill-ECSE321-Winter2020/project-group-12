@@ -2,9 +2,10 @@ package ca.mcgill.ecse321.petadoption.TestSuits;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
-import ca.mcgill.ecse321.petadoption.dao.DonationRepository;
+
+import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.model.*;
+import ca.mcgill.ecse321.petadoption.service.PetAdoptionService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,13 +32,25 @@ public class DonationTest {
     public static Sex SEX = Sex.M;
 
     @Autowired
+    private PetAdoptionService service;
+    @Autowired
+    private AdvertisementRepository advertisementRepository;
+    @Autowired
+    private ApplicationRepository applicationRepository;
+    @Autowired
     private AppUserRepository appUserRepository;
     @Autowired
     private DonationRepository donationRepository;
+    @Autowired
+    private ImageRepository imageRepository;
 
     @BeforeEach
     public void clearDatabase() {
-        //Order of deleting does not matter
+        applicationRepository.deleteAll();
+        imageRepository.deleteAll();
+        // First, we clear advertisement to avoid exceptions due to inconsistencies
+        advertisementRepository.deleteAll();
+        // Then we can clear the other tables
         donationRepository.deleteAll();
         appUserRepository.deleteAll();
     }

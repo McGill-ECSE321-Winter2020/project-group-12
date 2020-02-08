@@ -50,13 +50,14 @@ public class ApplicationTest {
 
     @BeforeEach
     public void clearDatabase() {
+        applicationRepository.deleteAll();
+        imageRepository.deleteAll();
+
         // First, we clear advertisement to avoid exceptions due to inconsistencies
         advertisementRepository.deleteAll();
         // Then we can clear the other tables
-        applicationRepository.deleteAll();
-        appUserRepository.deleteAll();
         donationRepository.deleteAll();
-        imageRepository.deleteAll();
+        appUserRepository.deleteAll();
     }
 
     @Test

@@ -12,12 +12,12 @@ public class Image{
     private String link;
     private String imageId;
     private Advertisement advertisement;
-    private static long newId = 1;
-
-    public void setNewId(Long val){
-        newId++;
-        this.specificId = newId;
-    }
+//    private static long newId = 1;
+//
+//    public void setNewId(Long val){
+//        newId++;
+//        this. specificId= newId;
+//    }
 
     public void setName(String value) {
         this.name = value;
