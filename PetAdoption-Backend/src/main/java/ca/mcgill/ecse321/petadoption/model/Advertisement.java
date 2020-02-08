@@ -4,11 +4,12 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 public class Advertisement{
    private Date datePosted;
-   private Long advertisementId;
+   private String advertisementId;
    private boolean isExpired;
    private Set<Application> applications;
    private AppUser postedBy;
@@ -30,12 +31,16 @@ public class Advertisement{
        return this.datePosted;
    }
 
-   public void setAdvertisementId(Long value) {
+   public void setAdvertisementId(String value) {
        this.advertisementId = value;
    }
+
+   public void setAdvertisementId() {
+         this.advertisementId = UUID.randomUUID().toString();
+   }
+
    @Id
-   @GeneratedValue
-   public Long getAdvertisementId() {
+   public String getAdvertisementId() {
        return this.advertisementId;
    }
 
@@ -70,8 +75,6 @@ public class Advertisement{
    public void setPostedBy(AppUser postedBy) {
       this.postedBy = postedBy;
    }
-
-
 
    public void setPetName(String value) {
       this.petName = value;
