@@ -1,7 +1,7 @@
-package ca.mcgill.ecse321.petadoption.TestSuits;                                                                          
-import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;                                                         
-import static org.junit.jupiter.api.Assertions.assertEquals;                                                              
-import static org.junit.jupiter.api.Assertions.assertNotNull;                                                             
+package ca.mcgill.ecse321.petadoption.TestSuits;
+import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Month;
@@ -73,33 +73,6 @@ public class AdvertisementTest {
         petOwner.setSex(ownerSex);
         appUserRepository.save(petOwner);
 
-        // creating the instance of an image to test the image-adv association
-        String imageName = "abbieDog";
-        String link = "http://test-link.just/for/testing";
-        //long imgID = 1;
-        Image image = new Image();
-        image.setImageId();
-        String imgID = image.getImageId();
-        image.setName(imageName);
-        image.setLink(link);
-
-        String applicantEmail = "testapplicant@test.com";
-        String applicantName = "TestApplicant";
-        String applicantPassword = "applicantpassword";
-        String applicantBiography = "I have had 2 cats and 1 dog before.";
-        String applicantHomeDescription = "2-bedroom apartment near the park and lake";
-        int applicantAge = 25;
-        Sex applicantSex = Sex.F;
-        AppUser applicant = new AppUser();
-        applicant.setEmail(applicantEmail);
-        applicant.setName(applicantName);
-        applicant.setPassword(applicantPassword);
-        applicant.setBiography(applicantBiography);
-        applicant.setHomeDescription(applicantHomeDescription);
-        applicant.setAge(applicantAge);
-        applicant.setIsAdmin(isAdmin);
-        applicant.setSex(applicantSex);
-
         Date datePosted = Date.valueOf(LocalDate.of(2020, Month.FEBRUARY, 7));
         //long adID = 1;
         boolean isExpired = false;
@@ -119,6 +92,35 @@ public class AdvertisementTest {
         ad.setPetSpecies(petSpecies);
         ad.setAdvertisementId();
         String adID = ad.getAdvertisementId();
+        ad.setPostedBy(petOwner);
+        petOwner.addAdvertisement(ad);
+        adRepository.save(ad);
+
+
+        image.setAdvertisement(ad);
+        ad.addPetImage(image);
+        imgRepository.save(image);
+
+
+        String applicantEmail = "testapplicant@test.com";
+        String applicantName = "TestApplicant";
+        String applicantPassword = "applicantpassword";
+        String applicantBiography = "I have had 2 cats and 1 dog before.";
+        String applicantHomeDescription = "2-bedroom apartment near the park and lake";
+        int applicantAge = 25;
+        Sex applicantSex = Sex.F;
+        AppUser applicant = new AppUser();
+        applicant.setEmail(applicantEmail);
+        applicant.setName(applicantName);
+        applicant.setPassword(applicantPassword);
+        applicant.setBiography(applicantBiography);
+        applicant.setHomeDescription(applicantHomeDescription);
+        applicant.setAge(applicantAge);
+        applicant.setIsAdmin(isAdmin);
+        applicant.setSex(applicantSex);
+        
+      appUserRepository.save(applicant);
+
 
         // an application
         Date dateOfSubmission = Date.valueOf(LocalDate.of(2020, Month.FEBRUARY, 10));
@@ -134,25 +136,29 @@ public class AdvertisementTest {
         //app.setApplicationId(appID);
         app.setApplicationId();
         String applicationID = app.getApplicationId();
-
-        petOwner.addAdvertisement(ad);
-        ad.setPostedBy(petOwner);
         applicant.addApplication(app);
-        app.setAdvertisement(ad);
         app.setApplicant(applicant);
-        ad.addPetImage(image);
-
+        app.setAdvertisement(ad);
         ad.addApplication(app);
-        image.setAdvertisement(ad);
-               adRepository.save(ad);
-        //appUserRepository.save(petOwner);
-//       // adRepository.save(ad);
-//        imgRepository.save(image);
-//        appUserRepository.save(applicant);
-//        appRepository.save(app);
+        appRepository.save(app);
 
-        ad = null;
-        //ad = adRepository.findAdvertisementByAdvertisementId(adID);
+
+//        applicant.addApplication(app);
+//        app.setAdvertisement(ad);
+//        app.setApplicant(applicant);
+//        ad.addPetImage(image);
+//
+//        ad.addApplication(app);
+//        image.setAdvertisement(ad);
+
+//        //appUserRepository.save(petOwner);
+////       // adRepository.save(ad);
+////        imgRepository.save(image);
+////        appUserRepository.save(applicant);
+////        appRepository.save(app);
+//
+//        ad = null;
+//        //ad = adRepository.findAdvertisementByAdvertisementId(adID);
 
 //        List<Advertisement> adList = adRepository.findAdvertisementsByPostedBy(petOwner);
 //        ad = adList.get(0);
@@ -163,5 +169,14 @@ public class AdvertisementTest {
 //        assertEquals(petOwner.getEmail(), ad.getPostedBy().getEmail());
 //        assertEquals(app.getApplicationId(), ((Application) ad.getApplications().toArray()[0]).getApplicationId());
 //        assertEquals(image.getImageId(), ((Image) ad.getPetImages().toArray()[0]).getImageId());
+
+        ad = null;
+        ad = adRepository.findAdvertisementByAdvertisementId(adID);
+        assertNotNull(ad);
+        assertEquals(adID, ad.getAdvertisementId());
+        assertEquals(petOwner.getEmail(), ad.getPostedBy().getEmail());
+        //assertEquals(app.getApplicationId(), ((Application) ad.getApplications().toArray()[0]).getApplicationId());
     }
+
+
 }                                                                                  
