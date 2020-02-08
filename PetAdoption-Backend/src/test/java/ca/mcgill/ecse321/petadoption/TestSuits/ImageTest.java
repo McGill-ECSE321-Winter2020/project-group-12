@@ -90,21 +90,26 @@ import ca.mcgill.ecse321.petadoption.model.*;
             new_image.setLink(link);
             new_image.setAdvertisement(ad);
             new_image = imageRepository.save(new_image);
-            Long id = new_image.getImageId();
             Long ad_id = ad.getAdvertisementId();
 
             //set new_image to null and try retrieving it from database to test persistence
             new_image = null;
-            ad = null;
 
-            Image retrieved = imageRepository.findImageByName(image_name);
-            System.out.println("This is the image id:");
-            System.out.println(id+ "     ");
-            System.out.println("retrieved id = " +  retrieved.getImageId());
-            System.out.println("This is the add id:");
-            System.out.println(ad_id);
+            Image retrieved = imageRepository.findImageByLink(link);
+
+            //For debugging purposes:
+//            System.out.print("This is the image link:");
+//            System.out.println(link+ "     ");
+//            System.out.println("retrieved link = " +  retrieved.getLink());
+            /////
+
             assertNotNull(retrieved);
-            assertEquals(id, retrieved.getImageId());
+            assertEquals(link, retrieved.getLink());
+            assertEquals(image_name, retrieved.getName());
+            assertEquals(ad.getPetName(), retrieved.getAdvertisement().getPetName());
+            assertEquals(ad.getPetSex(), retrieved.getAdvertisement().getPetSex());
+            assertEquals(ad.getPetAge(), retrieved.getAdvertisement().getPetAge());
+            assertEquals(ad.getPostedBy().getEmail(), retrieved.getAdvertisement().getPostedBy().getEmail());
         }
 
 
