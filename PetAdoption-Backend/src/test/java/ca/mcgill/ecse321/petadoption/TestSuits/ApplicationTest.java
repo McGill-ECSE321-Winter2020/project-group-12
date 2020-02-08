@@ -112,8 +112,8 @@ public class ApplicationTest {
         assertEquals(datePosted, newapp1.getDateOfSubmission());
         assertEquals("careful,friendly,nice", newapp1.getNote());
         assertEquals(Status.accepted, newapp1.getStatus());
-        //assertEquals(newUser2, newapp1.getApplicant());
-        //assertEquals(newAd, newapp1.getAdvertisement());
+        assertEquals(newUser2.getEmail(), newapp1.getApplicant().getEmail());
+        assertEquals(newAd.getAdvertisementId(), newapp1.getAdvertisement().getAdvertisementId());
 
     }
 
