@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.petadoption.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -28,6 +29,12 @@ public class AppUser {
         this.donations = donations;
     }
 
+    public void addDonation(Donation donation){
+        if(this.donations == null){
+            this.donations = new HashSet<Donation>();
+        }
+        this.donations.add(donation);
+    }
 
     public void setName(String value) {
         this.name = value;
@@ -103,6 +110,12 @@ public class AppUser {
         this.advertisements = advertisements;
     }
 
+    public void addAdvertisement(Advertisement advertisement){
+        if(this.advertisements == null){
+            this.advertisements = new HashSet<Advertisement>();
+        }
+        this.advertisements.add(advertisement);
+    }
 
     @OneToMany(mappedBy = "applicant")
     public Set<Application> getApplications() {
@@ -113,4 +126,9 @@ public class AppUser {
         this.applications = applications;
     }
 
+    public void addApplication(Application application){
+        if(this.applications == null){
+            this.applications = new HashSet<Application>();
+        }
+        this.applications.add(application);}
 }
