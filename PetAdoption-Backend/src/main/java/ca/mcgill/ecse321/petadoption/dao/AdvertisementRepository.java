@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface AdvertisementRepository extends CrudRepository<Advertisement, Long> {
 
-    Advertisement findAdvertisementByAdvertisementId(Long id);
+    Advertisement findAdvertisementByAdvertisementId(String id);
 
     List<Advertisement> findAdvertisementsByPostedBy(AppUser postedBy);
 }
