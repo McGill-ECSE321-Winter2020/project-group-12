@@ -77,12 +77,9 @@ public class AdvertisementTest {
         // creating the instance of an image to test the image-adv association
         String imageName = "abbieDog";
         String link = "http://test-link.just/for/testing";
-        long imageID = 1;
         Image image = new Image();
         image.setName(imageName);
         image.setLink(link);
-        image.setImageId(imageID);
-
 
         String applicantEmail = "testapplicant@test.com";
         String applicantName = "TestApplicant";
@@ -149,6 +146,7 @@ public class AdvertisementTest {
         appRepository.save(app);
 
         ad = null;
+        // this gives error cuz ID is auto-generated; can't set ID and then look for ad with that specific ID
         ad = adRepository.findAdvertisementByAdvertisementId(adID);
 
         assertNotNull(ad);
