@@ -96,18 +96,11 @@ public class AdvertisementTest {
         petOwner.addAdvertisement(ad);
         adRepository.save(ad);
 
-        // creating the instance of an image to test the image-adv association
-        String imageName = "abbieDog";
-        String link = "http://test-link.just/for/testing";
-        //long imgID = 1;
-        Image image = new Image();
-        image.setImageId();
-        String imgID = image.getImageId();
-        image.setName(imageName);
-        image.setLink(link);
+
         image.setAdvertisement(ad);
         ad.addPetImage(image);
         imgRepository.save(image);
+
 
         String applicantEmail = "testapplicant@test.com";
         String applicantName = "TestApplicant";
@@ -125,7 +118,9 @@ public class AdvertisementTest {
         applicant.setAge(applicantAge);
         applicant.setIsAdmin(isAdmin);
         applicant.setSex(applicantSex);
-        appUserRepository.save(applicant);
+        
+      appUserRepository.save(applicant);
+
 
         // an application
         Date dateOfSubmission = Date.valueOf(LocalDate.of(2020, Month.FEBRUARY, 10));
@@ -182,5 +177,6 @@ public class AdvertisementTest {
         assertEquals(petOwner.getEmail(), ad.getPostedBy().getEmail());
         //assertEquals(app.getApplicationId(), ((Application) ad.getApplications().toArray()[0]).getApplicationId());
     }
+
 
 }                                                                                  
