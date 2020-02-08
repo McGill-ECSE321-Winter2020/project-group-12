@@ -95,6 +95,15 @@ public class AdvertisementTest {
         petOwner.addAdvertisement(ad);
         adRepository.save(ad);
 
+        String imageName = "abbieDog";
+        String link = "http://test-link.just/for/testing";
+        //long imgID = 1;
+        Image image = new Image();
+        image.setImageId();
+        String imgID = image.getImageId();
+        image.setName(imageName);
+        image.setLink(link);
+
 
 //        image.setAdvertisement(ad);
 //        ad.addPetImage(image);
