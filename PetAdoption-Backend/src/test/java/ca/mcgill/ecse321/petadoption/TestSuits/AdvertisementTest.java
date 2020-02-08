@@ -147,6 +147,7 @@ public class AdvertisementTest {
         ad.addApplication(app);
         appRepository.save(app);
 
+
 //        applicant.addApplication(app);
 //        app.setAdvertisement(ad);
 //        app.setApplicant(applicant);
@@ -154,7 +155,7 @@ public class AdvertisementTest {
 //
 //        ad.addApplication(app);
 //        image.setAdvertisement(ad);
-//        
+
 //        //appUserRepository.save(petOwner);
 ////       // adRepository.save(ad);
 ////        imgRepository.save(image);
@@ -181,4 +182,5 @@ public class AdvertisementTest {
         assertEquals(petOwner.getEmail(), ad.getPostedBy().getEmail());
         //assertEquals(app.getApplicationId(), ((Application) ad.getApplications().toArray()[0]).getApplicationId());
     }
+
 }                                                                                  
