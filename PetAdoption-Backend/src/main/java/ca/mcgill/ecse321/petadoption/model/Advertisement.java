@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.petadoption.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -54,6 +55,12 @@ public class Advertisement{
       this.applications = applications;
    }
 
+   public void addApplication(Application application) {
+      if(this.applications == null){
+         this.applications = new HashSet<Application>();
+      }
+      this.applications.add(application);
+   }
 
    @ManyToOne(optional=false)
    public AppUser getPostedBy() {
@@ -110,6 +117,13 @@ public class Advertisement{
 
    public void setPetImages(Set<Image> images) {
       this.petImages = images;
+   }
+
+   public void addPetImage(Image image) {
+      if(this.petImages == null){
+         this.petImages = new HashSet<Image>();
+      }
+      this.petImages.add(image);
    }
 
 }

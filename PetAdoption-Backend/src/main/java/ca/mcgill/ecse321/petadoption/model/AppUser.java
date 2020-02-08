@@ -130,5 +130,6 @@ public class AppUser {
         if(this.applications == null){
             this.applications = new HashSet<Application>();
         }
-        this.applications.add(application);}
+        this.applications.add(application);
+    }
 }
