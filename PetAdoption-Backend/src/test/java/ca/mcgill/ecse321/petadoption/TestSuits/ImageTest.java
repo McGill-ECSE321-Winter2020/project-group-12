@@ -72,6 +72,7 @@ import ca.mcgill.ecse321.petadoption.model.*;
             Abdul.setAge(user_age);
             Abdul.setIsAdmin(false);
             Abdul.setSex(Sex.M);
+
             appUserRepository.save(Abdul);
 
             Date date_posted = Date.valueOf(LocalDate.of(2020, 1, 23)); // date in depreciated form
@@ -99,13 +100,16 @@ import ca.mcgill.ecse321.petadoption.model.*;
             new_image.setImageId();
             new_image.setLink(link);
             new_image.setAdvertisement(ad);
+            new_image.setImageId();
+            String id = new_image.getImageId() ;
             new_image = imageRepository.save(new_image);
             String ad_id = ad.getAdvertisementId();
+
 
             //set new_image to null and try retrieving it from database to test persistence
             new_image = null;
 
-            Image retrieved = imageRepository.findImageByLink(link);
+            Image retrieved = imageRepository.findImageByImageId(id);
 
             //For debugging purposes:
 //            System.out.print("This is the image link:");
@@ -120,6 +124,8 @@ import ca.mcgill.ecse321.petadoption.model.*;
             assertEquals(ad.getPetSex(), retrieved.getAdvertisement().getPetSex());
             assertEquals(ad.getPetAge(), retrieved.getAdvertisement().getPetAge());
             assertEquals(ad.getPostedBy().getEmail(), retrieved.getAdvertisement().getPostedBy().getEmail());
+            assertEquals(ad.getPostedBy().getBiography(), retrieved.getAdvertisement().getPostedBy().getBiography());
+            assertEquals(ad.getAdvertisementId(), retrieved.getAdvertisement().getAdvertisementId());
         }
 
 
