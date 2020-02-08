@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
@@ -147,10 +148,11 @@ public class AdvertisementTest {
 
         ad = null;
         // this gives error cuz ID is auto-generated; can't set ID and then look for ad with that specific ID
-        ad = adRepository.findAdvertisementByAdvertisementId(adID);
-
+        //ad = adRepository.findAdvertisementByAdvertisementId(adID);
+          List<Advertisement> adList = adRepository.findAdvertisementsByPostedBy(petOwner);
+          ad = adList.get(0);
         assertNotNull(ad);
-        assertEquals(adID, ad.getAdvertisementId());
+        //assertEquals(adID, ad.getAdvertisementId());
         assertEquals(petOwner.getEmail(), ad.getPostedBy().getEmail());
         assertEquals(app.getApplicationId(), ad.getApplications().toArray()[0]);
         assertEquals(image.getImageId(), ad.getPetImages().toArray()[0]);
