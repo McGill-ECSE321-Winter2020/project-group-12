@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface DonationRepository extends CrudRepository<Donation, Long>{
 
-    Donation findDonationByTransactionNumber(Long transactionNumber);
+    Donation findDonationByTransactionID(String transactionID);
 
 }

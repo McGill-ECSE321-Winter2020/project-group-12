@@ -2,12 +2,14 @@ package ca.mcgill.ecse321.petadoption.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 public class Advertisement{
    private Date datePosted;
-   private Long advertisementId;
+   private String advertisementId;
    private boolean isExpired;
    private Set<Application> applications;
    private AppUser postedBy;
@@ -29,12 +31,16 @@ public class Advertisement{
        return this.datePosted;
    }
 
-   public void setAdvertisementId(Long value) {
+   public void setAdvertisementId(String value) {
        this.advertisementId = value;
    }
+
+   public void setAdvertisementId() {
+         this.advertisementId = UUID.randomUUID().toString();
+   }
+
    @Id
-   @GeneratedValue
-   public Long getAdvertisementId() {
+   public String getAdvertisementId() {
        return this.advertisementId;
    }
 
@@ -54,6 +60,12 @@ public class Advertisement{
       this.applications = applications;
    }
 
+   public void addApplication(Application application) {
+      if(this.applications == null){
+         this.applications = new HashSet<Application>();
+      }
+      this.applications.add(application);
+   }
 
    @ManyToOne(optional=false)
    public AppUser getPostedBy() {
@@ -63,8 +75,6 @@ public class Advertisement{
    public void setPostedBy(AppUser postedBy) {
       this.postedBy = postedBy;
    }
-
-
 
    public void setPetName(String value) {
       this.petName = value;
@@ -110,6 +120,13 @@ public class Advertisement{
 
    public void setPetImages(Set<Image> images) {
       this.petImages = images;
+   }
+
+   public void addPetImage(Image image) {
+      if(this.petImages == null){
+         this.petImages = new HashSet<Image>();
+      }
+      this.petImages.add(image);
    }
 
 }

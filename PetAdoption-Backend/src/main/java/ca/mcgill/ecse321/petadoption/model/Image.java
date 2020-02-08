@@ -4,13 +4,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.util.UUID;
 
 @Entity
 public class Image{
     private String name;
     private String link;
-    private Long imageId;
-    private Long specificId;
+    private String imageId;
     private Advertisement advertisement;
     private static long newId = 1;
 
@@ -33,12 +33,15 @@ public class Image{
         return this.link;
     }
 
-    public void setImageId(Long value) {
+    public void setImageId(String value) {
         this.imageId = value;
     }
+
+    public void setImageId() {
+        this.imageId = UUID.randomUUID().toString();
+    }
     @Id
-    @GeneratedValue
-    public Long getImageId() {
+    public String getImageId() {
         return this.imageId;
     }
 
