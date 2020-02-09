@@ -88,6 +88,7 @@ public class ApplicationTest {
 
         Application newapp1 = new Application();
         newapp1.setApplicationId("petadoption1");
+        String id = newapp1.getApplicationId();
         newapp1.setDateOfSubmission(datePosted);
         newapp1.setNote("careful,friendly,nice");
         newapp1.setStatus(Status.accepted);
@@ -103,6 +104,7 @@ public class ApplicationTest {
         assertEquals(Status.accepted, newapp1.getStatus());
         assertEquals(newUser2.getEmail(), newapp1.getApplicant().getEmail());
         assertEquals(newAd.getAdvertisementId(), newapp1.getAdvertisement().getAdvertisementId());
+        assertEquals(id, newapp1.getApplicationId());
 
     }
 

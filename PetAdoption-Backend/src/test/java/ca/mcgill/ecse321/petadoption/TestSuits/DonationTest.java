@@ -94,6 +94,7 @@ public class DonationTest {
         assertEquals(date, donation1.getDateOfPayment());
         assertEquals(testAmount, donation1.getAmount());
         assertEquals(appUser1.getEmail(), donation1.getDonor().getEmail());
+        assertEquals(donation1_ID, donation1.getTransactionID());
 
     }
 }
