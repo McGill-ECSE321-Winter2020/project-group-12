@@ -60,6 +60,15 @@ public class ApplicationTest {
         appUserRepository.deleteAll();
     }
 
+    @AfterEach
+    public void afterClearDatabase() {
+        applicationRepository.deleteAll();
+        imageRepository.deleteAll();
+        advertisementRepository.deleteAll();
+        donationRepository.deleteAll();
+        appUserRepository.deleteAll();
+    }
+
     @Test
     public void ApplicationTest() {
 

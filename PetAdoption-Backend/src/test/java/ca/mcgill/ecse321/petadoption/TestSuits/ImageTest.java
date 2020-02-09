@@ -47,11 +47,15 @@ import ca.mcgill.ecse321.petadoption.model.*;
             donationRepository.deleteAll();
             appUserRepository.deleteAll();
         }
-//        @AfterEach //after each tests clean the database
-//        public void cleanDatabase(){
-//            ImageRepository.deleteAll();
-//            AdvertisementRepository.deleteAll();
-//        }
+
+        @AfterEach //after each tests clean the database
+        public void afterCleanDatabase(){
+            imageRepository.deleteAll();
+            advertisementRepository.deleteAll();
+            donationRepository.deleteAll();
+            appUserRepository.deleteAll();
+            applicationRepository.deleteAll();
+        }
 
         //Image tests//
         @Test
