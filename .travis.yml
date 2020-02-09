@@ -1,9 +1,9 @@
 language: java
 script:
-- gradle build 
-
+- gradle build
 deploy:
-    provider: heroku 
-    api_key: e181ff68-ad8a-4bec-bc85-b2e314da3e3d
-    app: petadoption-backend
-    on: master
+  provider: heroku
+  api_key:
+    secure: dOQz9B6MKez/BK05ESZYj/7H2BuIgbLRTlLTgwFEyCzjhh3ES2WYOojKraiSz4yq86A9xs43p6m2u1y1nGxi5iZMr4zVrTh8JQcoMpCZ+PnJxduyTgfr8tNy/2MS6vX1qD5WGj8zjUtWpVRPrn5i8khO0VOlRduW1mX8g4e1wfg6jAWwWt7TlugQ9xQa8rnvBM+oSp8Q3BiQD75PxZAy/yxyJplRgwx4rteZTt8/9ju40cWdi3l7E8lfoM4+IOFRoQHUrmWbeh6CXOnGBrWr5ROoPtWaxkZQ0Sn/GYDvzzHGKXjui1/704vciZKzz7/nQOqFvaSTSUkp3sOE42WtE93iBsGVCVH6AYUFiwyx8dp/KIKYjVTXMQfn8LPTD2Wi8r/BMA7osupuo+SSELNau4caGyXU9p903nOdHtSYNqxTU1X+LAVGFnAbhKg/AFyhE1yFzfhdLQT6MwLcnBUpBIKVsnNXVSsoYCoaZ9R9eiS6VEUm1mQlPwPBSGZ9mOWjSYYfKVrsuJ1oWEv17qUHldJ9ILZqWLOGdMDUezwe0WIMkOtac+Qm7FeFJHzv4g2RDfMjBvEhUhfXyWOHOkMIL2HssNQdvrzZeE/qv+WZU8Q98C2lSVJlQGUC+lju5K4SXIlnnz5qZVlDEXndEe94DVnttPu2pzI1qE/8ZOlz4Rg=
+  app: petadoption-backend
+  on: master
