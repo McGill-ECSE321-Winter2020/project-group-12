@@ -288,6 +288,7 @@ public class AppUserTest {
         user.setAge(USER_AGE_1);
         user.setSex(USER_SEX_1);
         user.setIsAdmin(USER_ADMIN_1);
+        appUserRepository.save(user);
 
 
         AppUser user2 = new AppUser();
@@ -299,6 +300,7 @@ public class AppUserTest {
         user2.setAge(USER_AGE_2);
         user2.setSex(USER_SEX_2);
         user2.setIsAdmin(false);
+        appUserRepository.save(user2);
 
 
         //create advertisement
@@ -313,8 +315,8 @@ public class AppUserTest {
         ad.setPetSex(PET_SEX);
         ad.setPetSpecies(PET_SPECIES);
         ad.setPostedBy(user2);
-        advertisementRepository.save(ad);
         user2.addAdvertisement(ad);
+        advertisementRepository.save(ad);
 
 
         //create application
@@ -352,13 +354,13 @@ public class AppUserTest {
         assertNotNull(ap);
 
         assertEquals(id, ap.getApplicationId());
-       // assertEquals(ap.getAdvertisement().getAdvertisementId(), ret_ad.getAdvertisementId());
-      //  assertEquals(ap.getApplicant().getEmail(), retrieveUser.getEmail());
+        assertEquals(ap.getAdvertisement().getAdvertisementId(), ret_ad.getAdvertisementId());
+        assertEquals(ap.getApplicant().getEmail(), retrieveUser.getEmail());
         assertEquals(USER_EMAIL_1, ap.getApplicant().getEmail());
-        assertEquals(date, ap.getDateOfSubmission());
+        assertEquals(date2, ap.getDateOfSubmission());
         assertEquals(note, ap.getNote());
         assertEquals(status, ap.getStatus());
-        //assertEquals(ap.getAdvertisement().getPostedBy().getEmail(), retrieveUser2.getEmail());
+        assertEquals(ap.getAdvertisement().getPostedBy().getEmail(), retrieveUser2.getEmail());
 
     }
 
