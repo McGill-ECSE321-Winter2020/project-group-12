@@ -20,7 +20,7 @@ public class AppUser {
     @Enumerated(EnumType.STRING)
     private Sex sex;
 
-    @OneToMany(mappedBy = "donor")
+    @OneToMany(mappedBy = "donor", fetch = FetchType.EAGER)
     public Set<Donation> getDonations() {
         return this.donations;
     }
@@ -101,7 +101,7 @@ public class AppUser {
         return this.isAdmin;
     }
 
-    @OneToMany(mappedBy = "postedBy")
+    @OneToMany(mappedBy = "postedBy", fetch = FetchType.EAGER)
     public Set<Advertisement> getAdvertisements() {
         return this.advertisements;
     }
@@ -117,7 +117,7 @@ public class AppUser {
         this.advertisements.add(advertisement);
     }
 
-    @OneToMany(mappedBy = "applicant")
+    @OneToMany(mappedBy = "applicant", fetch = FetchType.EAGER)
     public Set<Application> getApplications() {
         return this.applications;
     }
