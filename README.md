@@ -24,4 +24,4 @@ Learn more about the project and the development process from the [Project Wiki]
 | Abhimukth Chaudhuri | 18| Domain model design, Build setup, Test suite, Report 
 | Abdullatif Hassan   | 18| Domain model design, Test suite, Persistence testing, Report 
 
-Click to find out more about [Deliverable 1](https://github.com/McGill-ECSE321-Winter2020/project-group-12/wiki/Deliverable-1) and the [Project Report](https://github.com/McGill-ECSE321-Winter2020/project-group-12/wiki/Deliverable-1-Report)!
+Click to find out more about [Deliverable 1](https://github.com/McGill-ECSE321-Winter2020/project-group-12/wiki/Deliverable-1-(Requirements-model,-Use-case-diagram,-Domain-Model)) and the [Project Report](https://github.com/McGill-ECSE321-Winter2020/project-group-12/wiki/Deliverable-1-Report)!
