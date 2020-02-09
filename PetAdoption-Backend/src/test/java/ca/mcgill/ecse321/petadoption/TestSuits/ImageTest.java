@@ -3,16 +3,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.Month;
 
 import ca.mcgill.ecse321.petadoption.dao.*;
-import ca.mcgill.ecse321.petadoption.service.PetAdoptionService;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,8 +18,7 @@ import ca.mcgill.ecse321.petadoption.model.*;
     @ExtendWith(SpringExtension.class)
     @SpringBootTest
     public class ImageTest {
-        @Autowired
-        private PetAdoptionService service;
+
         @Autowired
         private AdvertisementRepository advertisementRepository;
         @Autowired
@@ -46,15 +39,6 @@ import ca.mcgill.ecse321.petadoption.model.*;
             // Then we can clear the other tables
             donationRepository.deleteAll();
             appUserRepository.deleteAll();
-        }
-
-        @AfterEach //after each tests clean the database
-        public void afterCleanDatabase(){
-            imageRepository.deleteAll();
-            advertisementRepository.deleteAll();
-            donationRepository.deleteAll();
-            appUserRepository.deleteAll();
-            applicationRepository.deleteAll();
         }
 
         //Image tests//
@@ -115,11 +99,6 @@ import ca.mcgill.ecse321.petadoption.model.*;
 
             Image retrieved = imageRepository.findImageByImageId(id);
 
-            //For debugging purposes:
-//            System.out.print("This is the image link:");
-//            System.out.println(link+ "     ");
-//            System.out.println("retrieved link = " +  retrieved.getLink());
-            /////
 
             assertNotNull(retrieved);
             assertEquals(link, retrieved.getLink());

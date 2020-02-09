@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.model.*;
-import ca.mcgill.ecse321.petadoption.service.PetAdoptionService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,8 +31,6 @@ public class DonationTest {
     public static Sex SEX = Sex.M;
 
     @Autowired
-    private PetAdoptionService service;
-    @Autowired
     private AdvertisementRepository advertisementRepository;
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -55,14 +52,6 @@ public class DonationTest {
         appUserRepository.deleteAll();
     }
 
-    @AfterEach
-    public void afterClearDatabase() {
-        applicationRepository.deleteAll();
-        imageRepository.deleteAll();
-        advertisementRepository.deleteAll();
-        donationRepository.deleteAll();
-        appUserRepository.deleteAll();
-    }
 
     //Test Cases:
     //READ Case - Retrieve info about a donation - Available info: Donor email, donation amount, date of payment, ID

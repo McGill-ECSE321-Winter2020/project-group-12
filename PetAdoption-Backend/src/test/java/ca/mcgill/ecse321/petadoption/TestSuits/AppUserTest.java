@@ -3,8 +3,6 @@ package ca.mcgill.ecse321.petadoption.TestSuits;
 
 import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.model.*;
-import ca.mcgill.ecse321.petadoption.service.PetAdoptionService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +12,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -43,8 +40,7 @@ public class AppUserTest {
     public static boolean USER_ADMIN_2 = false;
 
     public static Integer DONATION_AMOUNT = 50;
-    public static long DATE_CST = 687731489;
-    public static long DATE_CST2 = 961716516;
+
 
     public static String PET_NAME = "Bubbles";
     public static Integer PET_AGE = 5;
@@ -58,9 +54,6 @@ public class AppUserTest {
     public static Date date = java.sql.Date.valueOf(LocalDate.of(2020, 1, 31));
     public static Date date2 = java.sql.Date.valueOf(LocalDate.of(2020, 2, 1));
 
-
-    @Autowired
-    private PetAdoptionService service;
 
     @Autowired
     private AdvertisementRepository advertisementRepository;
@@ -80,15 +73,6 @@ public class AppUserTest {
         // First, we clear advertisement to avoid exceptions due to inconsistencies
         advertisementRepository.deleteAll();
         // Then we can clear the other tables
-        donationRepository.deleteAll();
-        appUserRepository.deleteAll();
-    }
-
-    @AfterEach
-    public void afterClearDatabase() {
-        applicationRepository.deleteAll();
-        imageRepository.deleteAll();
-        advertisementRepository.deleteAll();
         donationRepository.deleteAll();
         appUserRepository.deleteAll();
     }
@@ -125,11 +109,7 @@ public class AppUserTest {
 
     @Test
     public void multipleUserCreateTest() {
-//        service.createAppUser(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1, USER_HOME_1,
-//                USER_AGE_1, USER_SEX_1, USER_ADMIN_1);
-//
-//        service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2, USER_HOME_2,
-//                USER_AGE_2, USER_SEX_2, USER_ADMIN_2);
+
         AppUser user1 = new AppUser();
         user1.setName(USER_NAME_1);
         user1.setEmail(USER_EMAIL_1);
@@ -221,7 +201,7 @@ public class AppUserTest {
             donation = (Donation) (user.getDonations().toArray()[0]);
 
         } catch (Exception e){
-            System.out.println("EROOOOOOOOOOOOOOOOOR : " + e.getMessage());
+            System.out.println(e.getMessage());
         }
 
 
@@ -267,12 +247,7 @@ public class AppUserTest {
         advertisement = null;
         user = appUserRepository.findAppUserByEmail(USER_EMAIL_1);
 
-//        try {
-//            advertisement = (Advertisement) (user.getAdvertisements().toArray()[0]);
-//
-//        } catch (Exception e){
-//            System.out.println(e.getMessage());
-//        }
+
         advertisement = (Advertisement) (user.getAdvertisements().toArray()[0]);
         assertEquals(ad_id, advertisement.getAdvertisementId());
         assertEquals(date, advertisement.getDatePosted());

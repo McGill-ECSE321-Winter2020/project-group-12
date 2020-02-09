@@ -1,21 +1,12 @@
 package ca.mcgill.ecse321.petadoption.TestSuits;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.Month;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 import ca.mcgill.ecse321.petadoption.dao.*;
-import ca.mcgill.ecse321.petadoption.service.PetAdoptionService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,17 +17,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ca.mcgill.ecse321.petadoption.model.Advertisement;
 import ca.mcgill.ecse321.petadoption.model.Application;
 import ca.mcgill.ecse321.petadoption.model.AppUser;
-import ca.mcgill.ecse321.petadoption.model.Donation;
-import ca.mcgill.ecse321.petadoption.model.Image;
 import ca.mcgill.ecse321.petadoption.model.Sex;
-import ca.mcgill.ecse321.petadoption.model.Species;
 import ca.mcgill.ecse321.petadoption.model.Status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class ApplicationTest {
-    @Autowired
-    private PetAdoptionService service;
+
     @Autowired
     private AdvertisementRepository advertisementRepository;
     @Autowired
@@ -60,14 +47,7 @@ public class ApplicationTest {
         appUserRepository.deleteAll();
     }
 
-    @AfterEach
-    public void afterClearDatabase() {
-        applicationRepository.deleteAll();
-        imageRepository.deleteAll();
-        advertisementRepository.deleteAll();
-        donationRepository.deleteAll();
-        appUserRepository.deleteAll();
-    }
+
 
     @Test
     public void ApplicationTest() {

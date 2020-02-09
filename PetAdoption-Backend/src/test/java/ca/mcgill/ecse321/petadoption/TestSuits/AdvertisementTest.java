@@ -43,14 +43,6 @@ public class AdvertisementTest {
         appUserRepository.deleteAll();
     }
 
-    @AfterEach
-    public void afterClearDatabase() {
-        appRepository.deleteAll();
-        imgRepository.deleteAll();
-        adRepository.deleteAll();
-        donationRepository.deleteAll();
-        appUserRepository.deleteAll();
-    }
 
     @Test
     public void testPersistAndLoadAdvertisement() {
