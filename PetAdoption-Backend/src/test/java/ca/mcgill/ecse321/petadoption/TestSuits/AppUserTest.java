@@ -232,6 +232,7 @@ public class AppUserTest {
         user.setAge(USER_AGE_1);
         user.setSex(USER_SEX_1);
         user.setIsAdmin(USER_ADMIN_1);
+        appUserRepository.save(user);
 
         Advertisement advertisement = new Advertisement();
         advertisement.setDatePosted(date); //requires java.sql.date
@@ -248,7 +249,7 @@ public class AppUserTest {
         user.addAdvertisement(advertisement);
 
 
-        appUserRepository.save(user);
+
         advertisementRepository.save(advertisement);
 
         user = null;
@@ -312,8 +313,9 @@ public class AppUserTest {
         ad.setPetSex(PET_SEX);
         ad.setPetSpecies(PET_SPECIES);
         ad.setPostedBy(user2);
-        user.addAdvertisement(ad);
         advertisementRepository.save(ad);
+        user2.addAdvertisement(ad);
+
 
         //create application
         Application application = new Application();
