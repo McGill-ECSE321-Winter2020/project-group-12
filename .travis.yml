@@ -1,3 +1,9 @@
 language: java
 script:
 - gradle build 
+
+deploy:
+    provider: heroku 
+    api_key: e181ff68-ad8a-4bec-bc85-b2e314da3e3d
+    app: petadoption-backend
+    on: master
