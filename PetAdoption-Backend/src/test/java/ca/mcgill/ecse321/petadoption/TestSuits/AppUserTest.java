@@ -4,6 +4,7 @@ package ca.mcgill.ecse321.petadoption.TestSuits;
 import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.model.*;
 import ca.mcgill.ecse321.petadoption.service.PetAdoptionService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -82,6 +83,16 @@ public class AppUserTest {
         donationRepository.deleteAll();
         appUserRepository.deleteAll();
     }
+
+    @AfterEach
+    public void afterClearDatabase() {
+        applicationRepository.deleteAll();
+        imageRepository.deleteAll();
+        advertisementRepository.deleteAll();
+        donationRepository.deleteAll();
+        appUserRepository.deleteAll();
+    }
+
     @Test
     public void userCreateTest() {
 

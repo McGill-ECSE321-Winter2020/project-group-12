@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.model.*;
 import ca.mcgill.ecse321.petadoption.service.PetAdoptionService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,6 +51,15 @@ public class DonationTest {
         // First, we clear advertisement to avoid exceptions due to inconsistencies
         advertisementRepository.deleteAll();
         // Then we can clear the other tables
+        donationRepository.deleteAll();
+        appUserRepository.deleteAll();
+    }
+
+    @AfterEach
+    public void afterClearDatabase() {
+        applicationRepository.deleteAll();
+        imageRepository.deleteAll();
+        advertisementRepository.deleteAll();
         donationRepository.deleteAll();
         appUserRepository.deleteAll();
     }
