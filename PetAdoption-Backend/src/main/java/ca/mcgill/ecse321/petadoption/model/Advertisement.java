@@ -51,7 +51,7 @@ public class Advertisement{
        return this.isExpired;
    }
 
-   @OneToMany(mappedBy="advertisement" )
+   @OneToMany(mappedBy="advertisement", fetch = FetchType.EAGER)  //FetchType.LAZY gave "failed to initialize" error
    public Set<Application> getApplications() {
       return this.applications;
    }
@@ -113,7 +113,7 @@ public class Advertisement{
       return this.petSpecies;
    }
 
-   @OneToMany(mappedBy="advertisement")
+   @OneToMany(mappedBy="advertisement", fetch = FetchType.EAGER)
    public Set<Image> getPetImages() {
       return this.petImages;
    }

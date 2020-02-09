@@ -6,17 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import ca.mcgill.ecse321.petadoption.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -52,7 +46,7 @@ public class AdvertisementTest {
 
     @Test
     public void testPersistAndLoadAdvertisement() {
-        // creating the instance of the poster of the advertisement to test the advertisement-user association
+        // Creating owner instance of AppUser
         String ownerEmail = "testowner@test.com";
         String ownerName = "TestOwner";
         String ownerPassword = "ownerpassword";
@@ -72,35 +66,7 @@ public class AdvertisementTest {
         petOwner.setSex(ownerSex);
         appUserRepository.save(petOwner);
 
-        Date datePosted = Date.valueOf(LocalDate.of(2020, Month.FEBRUARY, 7));
-        //long adID = 1;
-        boolean isExpired = false;
-        String petName = "Abbie";
-        int petAge = 2;
-        String petDescription = "Fun and playful golden retriever";
-        Sex petSex = Sex.F;
-        Species petSpecies = Species.dog;
-        Advertisement ad = new Advertisement();
-        ad.setDatePosted(datePosted);
-        //ad.setAdvertisementId(adID);
-        ad.setIsExpired(isExpired);
-        ad.setPetName(petName);
-        ad.setPetAge(petAge);
-        ad.setPetDescription(petDescription);
-        ad.setPetSex(petSex);
-        ad.setPetSpecies(petSpecies);
-        ad.setAdvertisementId();
-        String adID = ad.getAdvertisementId();
-        ad.setPostedBy(petOwner);
-        petOwner.addAdvertisement(ad);
-        adRepository.save(ad);
-
-
-//        image.setAdvertisement(ad);
-//        ad.addPetImage(image);
-//        imgRepository.save(image);
-//
-
+        //Creating applicant instance of AppUser
         String applicantEmail = "testapplicant@test.com";
         String applicantName = "TestApplicant";
         String applicantPassword = "applicantpassword";
@@ -115,67 +81,73 @@ public class AdvertisementTest {
         applicant.setBiography(applicantBiography);
         applicant.setHomeDescription(applicantHomeDescription);
         applicant.setAge(applicantAge);
-        applicant.setIsAdmin(isAdmin);
+        applicant.setIsAdmin(isAdmin);  //Both pet shelter owner and applicant Admin fields set to False.
         applicant.setSex(applicantSex);
-        
-      appUserRepository.save(applicant);
+        appUserRepository.save(applicant);
 
+        //Creating Advertisement instance
+        Date datePosted = Date.valueOf(LocalDate.of(2020, Month.FEBRUARY, 7));
+        boolean isExpired = false;
+        String petName = "Abbie";
+        int petAge = 2;
+        String petDescription = "Fun and playful golden retriever";
+        Sex petSex = Sex.F;
+        Species petSpecies = Species.dog;
+        Advertisement ad = new Advertisement();
+        ad.setDatePosted(datePosted);
+        ad.setIsExpired(isExpired);
+        ad.setPetName(petName);
+        ad.setPetAge(petAge);
+        ad.setPetDescription(petDescription);
+        ad.setPetSex(petSex);
+        ad.setPetSpecies(petSpecies);
+        ad.setAdvertisementId();
+        String adID = ad.getAdvertisementId();
+        ad.setPostedBy(petOwner);
+        petOwner.addAdvertisement(ad);
+        adRepository.save(ad);
 
-        // an application
+        //Creating image instance
+        String imageName = "abbieDog";
+        String link = "http://test-link.just/for/testing";
+        Image image = new Image();
+        image.setImageId();
+        String imageID = image.getImageId();
+        image.setName(imageName);
+        image.setLink(link);
+        image.setAdvertisement(ad);
+        ad.addPetImage(image);
+        imgRepository.save(image);
+
+        // Creating application instance
         Date dateOfSubmission = Date.valueOf(LocalDate.of(2020, Month.FEBRUARY, 10));
         String note = "I really love golden retrievers and have interacted with them a lot!";
         Status status = Status.pending;
-        //long appID = 1;
         Application app = new Application();
         app.setApplicant(applicant);
         app.setAdvertisement(ad);
         app.setDateOfSubmission(dateOfSubmission);
         app.setNote(note);
         app.setStatus(status);
-        //app.setApplicationId(appID);
         app.setApplicationId();
         String applicationID = app.getApplicationId();
+
+        //Setting Links
+        //2 way association between applicant and the application
         applicant.addApplication(app);
         app.setApplicant(applicant);
+        //2 way association between application and the advertisement
         app.setAdvertisement(ad);
         ad.addApplication(app);
         appRepository.save(app);
 
-
-//        applicant.addApplication(app);
-//        app.setAdvertisement(ad);
-//        app.setApplicant(applicant);
-//        ad.addPetImage(image);
-//
-//        ad.addApplication(app);
-//        image.setAdvertisement(ad);
-
-//        //appUserRepository.save(petOwner);
-////       // adRepository.save(ad);
-////        imgRepository.save(image);
-////        appUserRepository.save(applicant);
-////        appRepository.save(app);
-//
-//        ad = null;
-//        //ad = adRepository.findAdvertisementByAdvertisementId(adID);
-
-//        List<Advertisement> adList = adRepository.findAdvertisementsByPostedBy(petOwner);
-//        ad = adList.get(0);
-        //System.out.println("HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-//        System.out.println("This is the id of the retrieved advertisement!!!!" + ad.getAdvertisementId());
-//        assertNotNull(ad);
-//        //assertEquals(adID, ad.getAdvertisementId());
-//        assertEquals(petOwner.getEmail(), ad.getPostedBy().getEmail());
-//        assertEquals(app.getApplicationId(), ((Application) ad.getApplications().toArray()[0]).getApplicationId());
-//        assertEquals(image.getImageId(), ((Image) ad.getPetImages().toArray()[0]).getImageId());
-
-        ad = null;
+        //Unit Testing Advertisement with associations
         ad = adRepository.findAdvertisementByAdvertisementId(adID);
         assertNotNull(ad);
         assertEquals(adID, ad.getAdvertisementId());
-        assertEquals(petOwner.getEmail(), ad.getPostedBy().getEmail());
-        //assertEquals(app.getApplicationId(), ((Application) ad.getApplications().toArray()[0]).getApplicationId());
+        assertEquals(ownerEmail, ad.getPostedBy().getEmail());
+        assertEquals(applicationID, ((Application) ad.getApplications().toArray()[0]).getApplicationId());
+        assertEquals(imageID, ((Image) ad.getPetImages().toArray()[0]).getImageId());
     }
-
 
 }                                                                                  
