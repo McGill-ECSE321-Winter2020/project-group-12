@@ -38,9 +38,7 @@ public class AdvertisementTest {
     public void clearDatabase() {
         appRepository.deleteAll();
         imgRepository.deleteAll();
-        // First, we clear advertisement to avoid exceptions due to inconsistencies
         adRepository.deleteAll();
-        // Then we can clear the other tables
         donationRepository.deleteAll();
         appUserRepository.deleteAll();
     }
@@ -155,6 +153,7 @@ public class AdvertisementTest {
         ad = adRepository.findAdvertisementByAdvertisementId(adID);
         assertNotNull(ad);
         assertEquals(adID, ad.getAdvertisementId());
+        assertEquals(petDescription, ad.getPetDescription());
         assertEquals(ownerEmail, ad.getPostedBy().getEmail());
         assertEquals(applicationID, ((Application) ad.getApplications().toArray()[0]).getApplicationId());
         assertEquals(imageID, ((Image) ad.getPetImages().toArray()[0]).getImageId());
