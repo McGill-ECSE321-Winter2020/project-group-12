@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.Month;
 
 import ca.mcgill.ecse321.petadoption.model.*;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

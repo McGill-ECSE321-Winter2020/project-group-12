@@ -3,7 +3,6 @@ package ca.mcgill.ecse321.petadoption.model;
 import javax.persistence.Entity;
 import java.sql.Date;
 import java.util.UUID;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
