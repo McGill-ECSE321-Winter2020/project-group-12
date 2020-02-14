@@ -79,6 +79,7 @@ import ca.mcgill.ecse321.petadoption.model.*;
             ad.setPetSpecies(species);
             ad.setPostedBy(Abdul);
             ad.setAdvertisementId();
+            String ad_id = ad.getAdvertisementId();
             ad = advertisementRepository.save(ad);
 
             Image new_image = new Image();
@@ -89,15 +90,15 @@ import ca.mcgill.ecse321.petadoption.model.*;
             new_image.setLink(link);
             new_image.setAdvertisement(ad);
             new_image.setImageId();
-            String id = new_image.getImageId() ;
-            new_image = imageRepository.save(new_image);
-            String ad_id = ad.getAdvertisementId();
+            String img_id = new_image.getImageId() ;
+            imageRepository.save(new_image);
 
 
-            //set new_image to null and try retrieving it from database to test persistence
+
+            //set new_image to null and try retrieving it from database to test persistence through attribute comparison
             new_image = null;
 
-            Image retrieved = imageRepository.findImageByImageId(id);
+            Image retrieved = imageRepository.findImageByImageId(img_id);
 
 
             assertNotNull(retrieved);
@@ -109,6 +110,7 @@ import ca.mcgill.ecse321.petadoption.model.*;
             assertEquals(ad.getPostedBy().getEmail(), retrieved.getAdvertisement().getPostedBy().getEmail());
             assertEquals(ad.getPostedBy().getBiography(), retrieved.getAdvertisement().getPostedBy().getBiography());
             assertEquals(ad.getAdvertisementId(), retrieved.getAdvertisement().getAdvertisementId());
+            assertEquals(img_id, retrieved.getImageId());
         }
 
 
