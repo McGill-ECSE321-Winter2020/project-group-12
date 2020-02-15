@@ -9,4 +9,5 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
 
     Application findApplicationByApplicationId(String id);
 
+    void deleteApplicationById(String id);
 }

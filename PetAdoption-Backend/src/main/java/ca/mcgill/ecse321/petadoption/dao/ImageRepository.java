@@ -9,4 +9,5 @@ public interface ImageRepository extends CrudRepository<Image, Long>{
     Image findImageByName(String name);
     Image findImageByLink(String link);
     Image findImageByImageId(String id);
+    void deleteImageByImageId(String id);
 }
