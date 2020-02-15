@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.petadoption.TestSuits;
+package ca.mcgill.ecse321.petadoption.TestSuits.PersistenceTests;
 
 
 import ca.mcgill.ecse321.petadoption.dao.*;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class AppUserTest {
+public class AppUserTestPersistence {
 
     public static String USER_NAME_1 = "user 1";
     public static String USER_EMAIL_1 = "user1@mcgill.ca";

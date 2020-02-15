@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.petadoption.TestSuits;
+package ca.mcgill.ecse321.petadoption.TestSuits.PersistenceTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,7 +22,7 @@ import ca.mcgill.ecse321.petadoption.model.Status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class ApplicationTest {
+public class ApplicationTestPersistence {
 
     @Autowired
     private AdvertisementRepository advertisementRepository;

@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.petadoption.TestSuits;
+package ca.mcgill.ecse321.petadoption.TestSuits.PersistenceTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -18,7 +18,7 @@ import java.time.LocalDate;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class DonationTest {
+public class DonationTestPersistence {
 
     //AppUser #1
     public static String NAME = "Test User";

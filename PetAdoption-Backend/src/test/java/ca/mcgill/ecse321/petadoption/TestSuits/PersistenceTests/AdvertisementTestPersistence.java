@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.petadoption.TestSuits;
+package ca.mcgill.ecse321.petadoption.TestSuits.PersistenceTests;
 import ca.mcgill.ecse321.petadoption.dao.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,7 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class AdvertisementTest {
+public class AdvertisementTestPersistence {
 
     @Autowired
     private AdvertisementRepository adRepository;
