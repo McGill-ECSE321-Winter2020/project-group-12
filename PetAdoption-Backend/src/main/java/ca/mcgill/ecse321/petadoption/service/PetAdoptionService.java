@@ -15,5 +15,16 @@ import ca.mcgill.ecse321.petadoption.dao.DonationRepository;
 import ca.mcgill.ecse321.petadoption.dao.ImageRepository;
 
 public class PetAdoptionService {
+    @Autowired(required = true)
+    AppUserRepository appUserRepository;
+    @Autowired(required = true)
+    ApplicationRepository applicationRepository;
+    @Autowired(required = true)
+    AdvertisementRepository advertisementRepository;
+    @Autowired(required = true)
+    DonationRepository donationRepository;
+    @Autowired(required = true)
+    ImageRepository imageRepository;
 
+    
 }
