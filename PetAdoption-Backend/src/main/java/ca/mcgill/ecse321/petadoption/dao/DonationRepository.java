@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 public interface DonationRepository extends CrudRepository<Donation, Long>{
 
     Donation findDonationByTransactionID(String transactionID);
-    void deleteDonationByDonationId(String transactionID);
+    void deleteDonationByTransactionID(String transactionID);
 
 }

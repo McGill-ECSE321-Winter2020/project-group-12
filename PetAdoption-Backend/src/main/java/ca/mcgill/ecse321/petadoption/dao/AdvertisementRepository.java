@@ -12,5 +12,5 @@ public interface AdvertisementRepository extends CrudRepository<Advertisement, L
 
     List<Advertisement> findAdvertisementsByPostedBy(AppUser postedBy);
 
-    void deleteAdvertisementById(String id);
+    void deleteAdvertisementByAdvertisementId(String id);
 }
