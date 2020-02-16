@@ -27,6 +27,18 @@ public class PetAdoptionService {
     @Autowired(required = true)
     ImageRepository imageRepository;
 
+    /**
+     * Creates and adds a new Advertisement object to the database.
+     *
+     * @param datePosted
+     * @param isExpired
+     * @param petName
+     * @param petAge
+     * @param petDescription
+     * @param petSex
+     * @param petSpecies
+     * @return Advertisement object
+     */
     @Transactional
     public Advertisement createAdvertisement(Date datePosted, boolean isExpired, String petName, Integer petAge, String petDescription, Sex petSex, Species petSpecies) {
         Advertisement ad = new Advertisement();
@@ -67,6 +79,41 @@ public class PetAdoptionService {
 
         advertisementRepository.save(ad);
         return ad;
+    }
+
+    /**
+     * Creates and adds a new Application object to the database.
+     *
+     * @param dateOfSubmission
+     * @param note
+     * @param status
+     * @return Application object
+     */
+    @Transactional
+    public Application createApplication(Date dateOfSubmission, String note, Status status) {
+        Application app = new Application();
+        String error = "";
+        if (dateOfSubmission == null) {
+            error = "dateOfSubmission can not be empty! ";
+        }
+        if (note == null || note.trim().length() == 0) {
+            error = error + "note cannot be empty ";
+        }
+        if (status != Status.accepted && status != Status.pending && status != Status.rejected) {
+            error = error + "status is not valid! ";
+        }
+
+        if (error.length() != 0) {
+            throw new IllegalArgumentException(error);
+        }
+
+        app.setApplicationId();
+        app.setDateOfSubmission(dateOfSubmission);
+        app.setNote(note);
+        app.setStatus(status);
+
+        applicationRepository.save(app);
+        return app;
     }
 
 }
