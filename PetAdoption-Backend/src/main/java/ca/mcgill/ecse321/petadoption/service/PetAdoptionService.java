@@ -30,6 +30,7 @@ public class PetAdoptionService {
     /**
      * Creates and adds a new Advertisement object to the database.
      *
+     * @param user
      * @param id
      * @param datePosted
      * @param isExpired
@@ -41,9 +42,13 @@ public class PetAdoptionService {
      * @return Advertisement object
      */
     @Transactional
-    public Advertisement createAdvertisement(String id, Date datePosted, boolean isExpired, String petName, Integer petAge, String petDescription, Sex petSex, Species petSpecies) {
+    public Advertisement createAdvertisement(AppUser user, String id, Date datePosted, boolean isExpired, String petName, Integer petAge, String petDescription, Sex petSex, Species petSpecies) {
         Advertisement ad = new Advertisement();
         String error = "";
+
+        if(user == null){
+            error = error + "An Advertisement must have a AppUser ";
+        }
         if (id == null || id.trim().length() == 0) {
             error = error + "id is not valid! ";
         }
@@ -80,6 +85,7 @@ public class PetAdoptionService {
         ad.setPetAge(petAge);
         ad.setPetSex(petSex);
         ad.setPetSpecies(petSpecies);
+        ad.setPostedBy(user);
 
         advertisementRepository.save(ad);
         return ad;
@@ -88,6 +94,8 @@ public class PetAdoptionService {
     /**
      * Creates and adds a new Application object to the database.
      *
+     * @param advertisement
+     * @param aUser
      * @param id
      * @param dateOfSubmission
      * @param note
@@ -95,9 +103,13 @@ public class PetAdoptionService {
      * @return Application object
      */
     @Transactional
-    public Application createApplication(String id, Date dateOfSubmission, String note, Status status) {
+    public Application createApplication(Advertisement advertisement, AppUser aUser, String id, Date dateOfSubmission, String note, Status status) {
         Application app = new Application();
         String error = "";
+
+        if (advertisement == null || aUser == null) {
+            error = error + "An Application must have an Advertisement and a AppUser ";
+        }
         if (id == null || id.trim().length() == 0) {
             error = error + "id is not valid! ";
         }
@@ -115,6 +127,8 @@ public class PetAdoptionService {
             throw new IllegalArgumentException(error);
         }
 
+        app.setApplicant(aUser);
+        app.setAdvertisement(advertisement);
         app.setApplicationId(id);
         app.setDateOfSubmission(dateOfSubmission);
         app.setNote(note);
@@ -138,7 +152,7 @@ public class PetAdoptionService {
      * @return AppUser object
      */
     @Transactional
-    public AppUser createAppUser(String name, String email, String password, String biography, String homeDescription, Integer age, boolean isAdmin, Sex sex ) {
+    public  AppUser createAppUser(String name, String email, String password, String biography, String homeDescription, Integer age, boolean isAdmin, Sex sex ) {
         AppUser user1 = new AppUser();
         String error = "";
         if (name == null || name.trim().length() == 0) {
@@ -178,6 +192,85 @@ public class PetAdoptionService {
 
         appUserRepository.save(user1);
         return user1;
+    }
+
+    /**
+     * Creates and adds a new Donation object to the database.
+     *
+     * @param amount(Integer)
+     * @param dateOfPayment(Date)
+     * @param transactionNumber(String)
+     * @return Donation object
+     */
+    @Transactional
+    public Donation createDonation(AppUser user2, Integer amount, Date dateOfPayment, String transactionNumber) {
+        Donation donation = new Donation();
+        String error = "";
+
+        if (user2 == null) {
+            error = "A Donation must have a AppUser ";
+        }
+        if (amount <= 0) {
+            error = "Go take care of yourself! ";
+        }
+        if (dateOfPayment == null) {
+            error = error + "dateOfPayment cannot be empty ";
+        }
+        if (transactionNumber == null || transactionNumber.trim().length() == 0) {
+            error = error + "transactionNumber is invalid ";
+        }
+
+        if (error.length() != 0) {
+            throw new IllegalArgumentException(error);
+        }
+
+        donation.setAmount(amount);
+        donation.setDateOfPayment(dateOfPayment);
+        donation.setTransactionID(transactionNumber);
+        donation.setDonor(user2);
+
+        donationRepository.save(donation);
+        return donation;
+    }
+
+    /**
+     * Creates and adds a new Image object to the database.
+     *
+     * @param advertisement1
+     * @param name(String)
+     * @param link(String)
+     * @param id(String)
+     * @return Image object
+     */
+    @Transactional
+    public Image createImage(Advertisement advertisement1, String name, String link, String id) {
+        Image image = new Image();
+        String error = "";
+
+        if (advertisement1 == null) {
+            error = error + "A Image must have an Advertisement";
+        }
+        if (link == null || link.trim().length() == 0) {
+            error = error + "link can not be empty ";
+        }
+        if (name == null || name.trim().length() == 0) {
+            error = error + "name can not be empty ";
+        }
+        if (id == null || id.trim().length() == 0) {
+            error = error + "id is invalid ";
+        }
+
+        if (error.length() != 0) {
+            throw new IllegalArgumentException(error);
+        }
+
+        image.setImageId(id);
+        image.setName(name);
+        image.setLink(link);
+        image.setAdvertisement(advertisement1);
+
+        imageRepository.save(image);
+        return image;
     }
 
 }
