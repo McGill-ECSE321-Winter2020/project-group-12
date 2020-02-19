@@ -325,21 +325,18 @@ public class PetAdoptionService {
             Set<Advertisement> advertisements = user1.getAdvertisements();
             Advertisement ad = advertisements.iterator().next();
             deleteAdvertisement(ad.getAdvertisementId());
-            advertisementRepository.saveAll(advertisements);
         }
 
         while(user1.getDonations().size() != 0) {
             Set<Donation> donuts = user1.getDonations();
             Donation donut = donuts.iterator().next();
             deleteDonation(donut.getTransactionID());
-            donationRepository.saveAll(donuts);
         }
 
         while(user1.getApplications().size() != 0) {
             Set<Application> apps = user1.getApplications();
             Application app = apps.iterator().next();
             deleteApplication(app.getApplicationId());
-            applicationRepository.saveAll(apps);
         }
 
         appUserRepository.delete(user1);
@@ -389,14 +386,12 @@ public class PetAdoptionService {
             Set<Application> applications = adToDelete.getApplications();
             Application app = applications.iterator().next();
             deleteApplication(app.getApplicationId());
-            applicationRepository.saveAll(applications);
         }
 
         while(adToDelete.getPetImages().size() != 0) {
             Set<Image> petImages = adToDelete.getPetImages();
             Image image = petImages.iterator().next();
             deleteImage(image.getImageId());
-            imageRepository.saveAll(petImages);
         }
 
         advertisementRepository.delete(adToDelete);
