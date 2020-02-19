@@ -4,6 +4,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import ca.mcgill.ecse321.petadoption.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,8 @@ import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
 import ca.mcgill.ecse321.petadoption.dao.ApplicationRepository;
 import ca.mcgill.ecse321.petadoption.dao.DonationRepository;
 import ca.mcgill.ecse321.petadoption.dao.ImageRepository;
+
+import static org.hibernate.internal.util.collections.ArrayHelper.toList;
 
 /**
  * This class contains the database service methods.
@@ -279,6 +282,7 @@ public class PetAdoptionService {
         return image;
     }
 
+    /////////////////////////////////AppUser getter////////////////////////////////////////
     /**
      * Returns the AppUser with specified email from the database.
      *
@@ -295,6 +299,17 @@ public class PetAdoptionService {
     }
 
     /**
+     * Returns all AppUsers in the database.
+     *
+     * @return List of AppUser objects
+     */
+    @Transactional
+    public List<AppUser> getAllAppUsers() {
+        return toList(appUserRepository.findAll());
+    }
+
+    /////////////////////////////Advertisement getter////////////////////////////////////////
+    /**
      * Returns the Advertisement with specified id from the database.
      *
      * @param id
@@ -309,6 +324,17 @@ public class PetAdoptionService {
         return a;
     }
 
+    /**
+     * Returns all Advertisements in the database.
+     *
+     * @return List of Advertisement objects
+     */
+    @Transactional
+    public List<Advertisement> getAllAdvertisements() {
+        return toList(advertisementRepository.findAll());
+    }
+
+    /////////////////////////////////Application getter////////////////////////////////////////
     /**
      * Returns the Application with specified id from the database.
      *
@@ -325,6 +351,17 @@ public class PetAdoptionService {
     }
 
     /**
+     * Returns all Applications in the database.
+     *
+     * @return List of Application objects
+     */
+    @Transactional
+    public List<Application> getAllApplications() {
+        return toList(applicationRepository.findAll());
+    }
+
+    /////////////////////////////////Donation getter////////////////////////////////////////
+    /**
      * Returns the Donation with specified transactionNumber from the database.
      *
      * @param transactionNumber
@@ -340,6 +377,17 @@ public class PetAdoptionService {
     }
 
     /**
+     * Returns all Donations in the database.
+     *
+     * @return List of Donation objects
+     */
+    @Transactional
+    public List<Donation> getAllDonations() {
+        return toList(donationRepository.findAll());
+    }
+
+    /////////////////////////////////Image getter////////////////////////////////////////
+    /**
      * Returns the Image with specified id from the database.
      *
      * @param id
@@ -353,5 +401,17 @@ public class PetAdoptionService {
         Image a = imageRepository.findImageByImageId(id);
         return a;
     }
+
+    /**
+     * Returns all Images in the database.
+     *
+     * @return List of Image objects
+     */
+    @Transactional
+    public List<Image> getAllImages() {
+        return toList(imageRepository.findAll());
+    }
+
+
 
 }
