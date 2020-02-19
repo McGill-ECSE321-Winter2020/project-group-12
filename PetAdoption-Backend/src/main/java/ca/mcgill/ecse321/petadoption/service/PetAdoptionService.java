@@ -1,9 +1,10 @@
 package ca.mcgill.ecse321.petadoption.service;
+
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Set;
 
 import ca.mcgill.ecse321.petadoption.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -281,8 +282,10 @@ public class PetAdoptionService {
         imageRepository.save(image);
         return image;
     }
-
-    /////////////////////////////////AppUser getter////////////////////////////////////////
+    //-------------------------------------------------------------------------------------//
+    /////////////////////////////////AppUser methods/////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////AppUser getter//////////////////////////////////////////
     /**
      * Returns the AppUser with specified email from the database.
      *
@@ -292,7 +295,7 @@ public class PetAdoptionService {
     @Transactional
     public AppUser getAppUserByEmail(String email) {
         if (email == null || email.trim().length() == 0) {
-            throw new IllegalArgumentException("AppUser email cannot be empty!");
+            throw new IllegalArgumentException("AppUser must have an email");
         }
         AppUser a = appUserRepository.findAppUserByEmail(email);
         return a;
@@ -308,6 +311,44 @@ public class PetAdoptionService {
         return toList(appUserRepository.findAll());
     }
 
+    //////////////////////////////////AppUser delete method//////////////////////////////////
+    /**
+     * Deletes the AppUser with specified email from the database.
+     *
+     * @param email
+     */
+    @Transactional
+    public void deleteAppUser(String email) {
+        AppUser user1 = appUserRepository.findAppUserByEmail(email);
+
+        while(user1.getAdvertisements().size() != 0) {
+            Set<Advertisement> advertisements = user1.getAdvertisements();
+            Advertisement ad = advertisements.iterator().next();
+            deleteAdvertisement(ad.getAdvertisementId());
+            advertisementRepository.saveAll(advertisements);
+        }
+
+        while(user1.getDonations().size() != 0) {
+            Set<Donation> donuts = user1.getDonations();
+            Donation donut = donuts.iterator().next();
+            deleteDonation(donut.getTransactionID());
+            donationRepository.saveAll(donuts);
+        }
+
+        while(user1.getApplications().size() != 0) {
+            Set<Application> apps = user1.getApplications();
+            Application app = apps.iterator().next();
+            deleteApplication(app.getApplicationId());
+            applicationRepository.saveAll(apps);
+        }
+
+        appUserRepository.delete(user1);
+    }
+
+
+    //-------------------------------------------------------------------------------------//
+    /////////////////////////////Advertisement methods///////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////Advertisement getter////////////////////////////////////////
     /**
      * Returns the Advertisement with specified id from the database.
@@ -318,7 +359,7 @@ public class PetAdoptionService {
     @Transactional
     public Advertisement getAdvertisementByID(String id) {
         if (id == null || id.trim().length() == 0) {
-            throw new IllegalArgumentException("Advertisement id cannot be empty!");
+            throw new IllegalArgumentException("Advertisement must have an ID");
         }
         Advertisement a = advertisementRepository.findAdvertisementByAdvertisementId(id);
         return a;
@@ -334,7 +375,39 @@ public class PetAdoptionService {
         return toList(advertisementRepository.findAll());
     }
 
-    /////////////////////////////////Application getter////////////////////////////////////////
+    /////////////////////////////Advertisement Delete Method////////////////////////////////////////
+    /**
+     * Deletes the Advertisement with specified id from the database.
+     *
+     * @param id
+     */
+    @Transactional
+    public void deleteAdvertisement(String id) {
+        Advertisement adToDelete = advertisementRepository.findAdvertisementByAdvertisementId(id);
+
+        while(adToDelete.getApplications().size() != 0) {
+            Set<Application> applications = adToDelete.getApplications();
+            Application app = applications.iterator().next();
+            deleteApplication(app.getApplicationId());
+            applicationRepository.saveAll(applications);
+        }
+
+        while(adToDelete.getPetImages().size() != 0) {
+            Set<Image> petImages = adToDelete.getPetImages();
+            Image image = petImages.iterator().next();
+            deleteImage(image.getImageId());
+            imageRepository.saveAll(petImages);
+        }
+
+        advertisementRepository.delete(adToDelete);
+    }
+
+
+    //-------------------------------------------------------------------------------------//
+    /////////////////////////////////Application methods/////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////Application getter//////////////////////////////////////
     /**
      * Returns the Application with specified id from the database.
      *
@@ -344,7 +417,7 @@ public class PetAdoptionService {
     @Transactional
     public Application getApplicationByID(String id) {
         if (id == null || id.trim().length() == 0) {
-            throw new IllegalArgumentException("Application id cannot be empty!");
+            throw new IllegalArgumentException("Application must have an ID");
         }
         Application a = applicationRepository.findApplicationByApplicationId(id);
         return a;
@@ -360,6 +433,20 @@ public class PetAdoptionService {
         return toList(applicationRepository.findAll());
     }
 
+    /////////////////////////////Application Delete Method////////////////////////////////////////
+    /**
+     * Deletes the Application with specified id from the database.
+     *
+     * @param id
+     */
+    @Transactional
+    public void deleteApplication(String id) {
+        applicationRepository.deleteApplicationByApplicationId(id);
+    }
+
+    //-------------------------------------------------------------------------------------//
+    /////////////////////////////////Donation methods///////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////Donation getter////////////////////////////////////////
     /**
      * Returns the Donation with specified transactionNumber from the database.
@@ -370,7 +457,7 @@ public class PetAdoptionService {
     @Transactional
     public Donation getDonationByTransactionID(String transactionNumber) {
         if (transactionNumber == null || transactionNumber.trim().length() == 0) {
-            throw new IllegalArgumentException("Donation transactionNumber cannot be empty!");
+            throw new IllegalArgumentException("Donation must have a transactionNumber!");
         }
         Donation a = donationRepository.findDonationByTransactionID(transactionNumber);
         return a;
@@ -386,7 +473,23 @@ public class PetAdoptionService {
         return toList(donationRepository.findAll());
     }
 
-    /////////////////////////////////Image getter////////////////////////////////////////
+    /////////////////////////////Donation Delete Method////////////////////////////////////////
+    /**
+     * Deletes the Donation with specified transactionNumber from the database.
+     *
+     * @param transactionNumber
+     */
+    @Transactional
+    public void deleteDonation(String transactionNumber) {
+        donationRepository.deleteDonationByTransactionID(transactionNumber);
+    }
+
+
+    //-------------------------------------------------------------------------------------//
+    /////////////////////////////////Image methods///////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////Image getter////////////////////////////////////////////
     /**
      * Returns the Image with specified id from the database.
      *
@@ -396,7 +499,7 @@ public class PetAdoptionService {
     @Transactional
     public Image getImageByID(String id) {
         if (id == null || id.trim().length() == 0) {
-            throw new IllegalArgumentException("Image id cannot be empty!");
+            throw new IllegalArgumentException("Image must have an ID");
         }
         Image a = imageRepository.findImageByImageId(id);
         return a;
@@ -412,6 +515,15 @@ public class PetAdoptionService {
         return toList(imageRepository.findAll());
     }
 
-
+    /////////////////////////////Image Delete Method////////////////////////////////////////
+    /**
+     * Deletes the image with specified id from the database.
+     *
+     * @param id
+     */
+    @Transactional
+    public void deleteImage(String id) {
+        imageRepository.deleteImageByImageId(id);
+    }
 
 }
