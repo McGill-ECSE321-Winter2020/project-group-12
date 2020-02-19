@@ -15,6 +15,12 @@ import ca.mcgill.ecse321.petadoption.dao.ApplicationRepository;
 import ca.mcgill.ecse321.petadoption.dao.DonationRepository;
 import ca.mcgill.ecse321.petadoption.dao.ImageRepository;
 
+/**
+ * This class contains the database service methods.
+ *
+ * @author Bozhong Lu
+ */
+
 public class PetAdoptionService {
     @Autowired(required = true)
     AppUserRepository appUserRepository;
@@ -271,6 +277,81 @@ public class PetAdoptionService {
 
         imageRepository.save(image);
         return image;
+    }
+
+    /**
+     * Returns the AppUser with specified email from the database.
+     *
+     * @param email
+     * @return AppUser object
+     */
+    @Transactional
+    public AppUser getAppUserByEmail(String email) {
+        if (email == null || email.trim().length() == 0) {
+            throw new IllegalArgumentException("AppUser email cannot be empty!");
+        }
+        AppUser a = appUserRepository.findAppUserByEmail(email);
+        return a;
+    }
+
+    /**
+     * Returns the Advertisement with specified id from the database.
+     *
+     * @param id
+     * @return Advertisement object
+     */
+    @Transactional
+    public Advertisement getAdvertisementByID(String id) {
+        if (id == null || id.trim().length() == 0) {
+            throw new IllegalArgumentException("Advertisement id cannot be empty!");
+        }
+        Advertisement a = advertisementRepository.findAdvertisementByAdvertisementId(id);
+        return a;
+    }
+
+    /**
+     * Returns the Application with specified id from the database.
+     *
+     * @param id
+     * @return Application object
+     */
+    @Transactional
+    public Application getApplicationByID(String id) {
+        if (id == null || id.trim().length() == 0) {
+            throw new IllegalArgumentException("Application id cannot be empty!");
+        }
+        Application a = applicationRepository.findApplicationByApplicationId(id);
+        return a;
+    }
+
+    /**
+     * Returns the Donation with specified transactionNumber from the database.
+     *
+     * @param transactionNumber
+     * @return Donation object
+     */
+    @Transactional
+    public Donation getDonationByTransactionID(String transactionNumber) {
+        if (transactionNumber == null || transactionNumber.trim().length() == 0) {
+            throw new IllegalArgumentException("Donation transactionNumber cannot be empty!");
+        }
+        Donation a = donationRepository.findDonationByTransactionID(transactionNumber);
+        return a;
+    }
+
+    /**
+     * Returns the Image with specified id from the database.
+     *
+     * @param id
+     * @return Image object
+     */
+    @Transactional
+    public Image getImageByID(String id) {
+        if (id == null || id.trim().length() == 0) {
+            throw new IllegalArgumentException("Image id cannot be empty!");
+        }
+        Image a = imageRepository.findImageByImageId(id);
+        return a;
     }
 
 }
