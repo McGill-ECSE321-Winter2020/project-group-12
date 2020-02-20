@@ -1,21 +1,13 @@
 package ca.mcgill.ecse321.petadoption.service;
 
-import java.sql.Date;
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
-import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
-import ca.mcgill.ecse321.petadoption.dao.ApplicationRepository;
-import ca.mcgill.ecse321.petadoption.dao.DonationRepository;
-import ca.mcgill.ecse321.petadoption.dao.ImageRepository;
+import java.sql.Date;
+import java.util.List;
+import java.util.Set;
 
 import static org.hibernate.internal.util.collections.ArrayHelper.toList;
 
@@ -328,9 +320,9 @@ public class PetAdoptionService {
         }
 
         while(user1.getDonations().size() != 0) {
-            Set<Donation> donuts = user1.getDonations();
-            Donation donut = donuts.iterator().next();
-            deleteDonation(donut.getTransactionID());
+            Set<Donation> donations = user1.getDonations();
+            Donation donation = donations.iterator().next();
+            deleteDonation(donation.getTransactionID());
         }
 
         while(user1.getApplications().size() != 0) {
