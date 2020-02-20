@@ -24,7 +24,7 @@ import static org.hibernate.internal.util.collections.ArrayHelper.toList;
  *
  * @author Bozhong Lu
  */
-
+@Service
 public class PetAdoptionService {
     @Autowired(required = true)
     AppUserRepository appUserRepository;
