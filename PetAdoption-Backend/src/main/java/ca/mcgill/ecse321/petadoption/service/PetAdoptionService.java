@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.petadoption.service;
 import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
@@ -16,6 +17,7 @@ import static org.hibernate.internal.util.collections.ArrayHelper.toList;
  *
  * @author Bozhong Lu
  */
+
 @Service
 public class PetAdoptionService {
     @Autowired(required = true)
