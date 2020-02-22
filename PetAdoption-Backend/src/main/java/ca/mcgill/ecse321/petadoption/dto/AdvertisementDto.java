@@ -1,8 +1,6 @@
 package ca.mcgill.ecse321.petadoption.dto;
 
-import ca.mcgill.ecse321.petadoption.model.AppUser;
-import ca.mcgill.ecse321.petadoption.model.Application;
-import ca.mcgill.ecse321.petadoption.model.Image;
+import ca.mcgill.ecse321.petadoption.model.*;
 
 import java.sql.Date;
 import java.util.Set;
@@ -11,19 +9,38 @@ public class AdvertisementDto {
     private Date datePosted;
     private String advertisementId;
     private boolean isExpired;
-    private Set<Application> applications;
-    private AppUser postedBy;
     private String petName;
     private Integer petAge;
     private String petDescription;
+    private Sex petSex;
+    private Species petSpecies;
+    private Set<Application> applications;
+    private AppUser postedBy;
+
+    public Sex getPetSex() {
+        return petSex;
+    }
+
+    public void setPetSex(Sex petSex) {
+        this.petSex = petSex;
+    }
+
+    public Species getPetSpecies() {
+        return petSpecies;
+    }
+
+    public void setPetSpecies(Species petSpecies) {
+        this.petSpecies = petSpecies;
+    }
+
     private Set<Image> petImages;
 
     public AdvertisementDto() {
     }
 
-    public AdvertisementDto(Date datePosted, String advertisementId, boolean isExpired,
-                            Set<Application> applications, AppUser postedBy, String petName, Integer petAge,
-                            String petDescription, Set<Image> petImages) {
+    public AdvertisementDto(AppUser postedBy, String advertisementId, Date datePosted,  boolean isExpired,
+                            String petName, Integer petAge, String petDescription, Set<Application> applications,
+                             Set<Image> petImages) {
         this.datePosted = datePosted;
         this.advertisementId = advertisementId;
         this.isExpired = isExpired;
