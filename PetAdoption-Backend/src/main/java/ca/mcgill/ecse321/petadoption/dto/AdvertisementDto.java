@@ -14,42 +14,35 @@ public class AdvertisementDto {
     private String petDescription;
     private Sex petSex;
     private Species petSpecies;
-    private Set<Application> applications;
-    private AppUser postedBy;
+    private Set<ApplicationDto> applications;
+    private AppUserDto postedBy;
 
-    public Sex getPetSex() {
-        return petSex;
-    }
 
-    public void setPetSex(Sex petSex) {
-        this.petSex = petSex;
-    }
-
-    public Species getPetSpecies() {
-        return petSpecies;
-    }
-
-    public void setPetSpecies(Species petSpecies) {
-        this.petSpecies = petSpecies;
-    }
-
-    private Set<Image> petImages;
+    private Set<ImageDto> petImages;
 
     public AdvertisementDto() {
     }
 
-    public AdvertisementDto(AppUser postedBy, String advertisementId, Date datePosted,  boolean isExpired,
-                            String petName, Integer petAge, String petDescription, Set<Application> applications,
-                             Set<Image> petImages) {
+    public AdvertisementDto(AppUserDto postedBy, String advertisementId, Date datePosted,  boolean isExpired,
+                            String petName, Integer petAge, String petDescription, Set<ApplicationDto> applications,
+                             Set<ImageDto> petImages) {
         this.datePosted = datePosted;
         this.advertisementId = advertisementId;
-        this.isExpired = isExpired;
+        this.isExpired = isExpired; //#SYNERGY
         this.applications = applications;
         this.postedBy = postedBy;
         this.petName = petName;
         this.petAge = petAge;
         this.petDescription = petDescription;
         this.petImages = petImages;
+    }
+
+    public Sex getPetSex() {
+        return petSex;
+    }
+
+    public Species getPetSpecies() {
+        return petSpecies;
     }
 
     public Date getDatePosted() {
@@ -76,51 +69,27 @@ public class AdvertisementDto {
         isExpired = expired;
     }
 
-    public Set<Application> getApplications() {
+    public Set<ApplicationDto> getApplications() {
         return applications;
     }
 
-    public void setApplications(Set<Application> applications) {
-        this.applications = applications;
-    }
-
-    public AppUser getPostedBy() {
+    public AppUserDto getPostedBy() {
         return postedBy;
-    }
-
-    public void setPostedBy(AppUser postedBy) {
-        this.postedBy = postedBy;
     }
 
     public String getPetName() {
         return petName;
     }
 
-    public void setPetName(String petName) {
-        this.petName = petName;
-    }
-
     public Integer getPetAge() {
         return petAge;
-    }
-
-    public void setPetAge(Integer petAge) {
-        this.petAge = petAge;
     }
 
     public String getPetDescription() {
         return petDescription;
     }
 
-    public void setPetDescription(String petDescription) {
-        this.petDescription = petDescription;
-    }
-
-    public Set<Image> getPetImages() {
+    public Set<ImageDto> getPetImages() {
         return petImages;
-    }
-
-    public void setPetImages(Set<Image> petImages) {
-        this.petImages = petImages;
     }
 }

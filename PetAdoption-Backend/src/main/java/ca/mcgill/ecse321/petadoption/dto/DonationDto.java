@@ -6,14 +6,14 @@ import java.sql.Date;
 import java.util.UUID;
 
 public class DonationDto {
-    private AppUser donor;
+    private AppUserDto donor;
     private Integer amount;
     private Date dateOfPayment;
     private String transactionID;
 
     // constructor: come back to this to see how many constructors u need and what u shld pass into them (???)
 
-    public DonationDto(AppUser donor, Date dateOfPayment, Integer amount, String transactionID) {
+    public DonationDto(AppUserDto donor, Date dateOfPayment, Integer amount, String transactionID) {
         this.donor = donor;
         this.dateOfPayment = dateOfPayment;
         this.amount = amount;
@@ -21,8 +21,7 @@ public class DonationDto {
     }
 
     // getters
-
-    public AppUser getDonor() {
+    public AppUserDto getDonor() {
         return this.donor;
     }
 
@@ -37,23 +36,4 @@ public class DonationDto {
     public String getTransactionID() {
         return this.transactionID;
     }
-
-    // setters
-
-    public void setDonor(AppUser donor) {
-        this.donor = donor;
-    }
-
-    public void setAmount(Integer value) {
-        this.amount = value;
-    }
-
-    public void setDateOfPayment(Date value) {
-        this.dateOfPayment = value;
-    }
-
-    public void setTransactionID() {
-        this.transactionID = UUID.randomUUID().toString();
-    }
-
 }

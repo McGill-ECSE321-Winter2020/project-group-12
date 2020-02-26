@@ -9,20 +9,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class AppUserDto {
-    private Set<Donation> donations;
+    private Set<DonationDto> donations;
     private String name;
     private String email;
     private String biography;
     private String homeDescription;
     private Integer age;
     private boolean isAdmin;
-    private Set<Advertisement> advertisements;
-    private Set<Application> applications;
+    private Set<AdvertisementDto> advertisements;
+    private Set<ApplicationDto> applications;
 
     private Sex sex;
 
     public AppUserDto(String name, String email, String biography, String homeDescription, int age, boolean isAdmin,
-                      Sex sex)
+                      Sex sex, Set<DonationDto> donations, Set<AdvertisementDto> advertisements, Set<ApplicationDto> applications)
     {
         this.name = name;
         this.email = email;
@@ -31,9 +31,12 @@ public class AppUserDto {
         this.age =age;
         this.isAdmin = isAdmin;
         this.sex = sex;
-
+        this.donations = donations;
+        this.advertisements = advertisements;
+        this.applications = applications;
     }
-    public Set<Donation> getDonations() {
+
+    public Set<DonationDto> getDonations() {
         return this.donations;
     }
 
@@ -77,11 +80,11 @@ public class AppUserDto {
         return this.isAdmin;
     }
 
-    public Set<Advertisement> getAdvertisements() {
+    public Set<AdvertisementDto> getAdvertisements() {
         return this.advertisements;
     }
 
-    public Set<Application> getApplications() {
+    public Set<ApplicationDto> getApplications() {
         return this.applications;
     }
 
