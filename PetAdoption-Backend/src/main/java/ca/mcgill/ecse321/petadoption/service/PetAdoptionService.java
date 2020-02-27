@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,8 +36,7 @@ public class PetAdoptionService {
     /**
      * Creates and adds a new Advertisement object to the database.
      *
-     * @param user
-     * @param id
+     * @param userEmail
      * @param datePosted
      * @param isExpired
      * @param petName
@@ -47,15 +47,15 @@ public class PetAdoptionService {
      * @return Advertisement object
      */
     @Transactional
-    public Advertisement createAdvertisement(AppUser user, String id, Date datePosted, boolean isExpired, String petName, Integer petAge, String petDescription, Sex petSex, Species petSpecies) {
+    public Advertisement createAdvertisement(String userEmail, Date datePosted, boolean isExpired, String petName,
+                                             Integer petAge, String petDescription, Sex petSex, Species petSpecies) {
         Advertisement ad = new Advertisement();
         String error = "";
+        // Find user profile by unique ID.
+        AppUser user = appUserRepository.findAppUserByEmail(userEmail);
 
-        if(user == null){
+        if (user == null) {
             error = error + "An Advertisement must have a AppUser ";
-        }
-        if (id == null || id.trim().length() == 0) {
-            error = error + "id is not valid! ";
         }
         if (datePosted == null) {
             error = "datePosted can not be empty! ";
@@ -75,7 +75,8 @@ public class PetAdoptionService {
         if (petSex != Sex.F && petSex != Sex.M) {
             error = error + "petSex must be either male or female!";
         }
-        if (petSpecies != Species.bird && petSpecies != Species.cat && petSpecies != Species.dog && petSpecies != Species.rabbit && petSpecies != Species.other) {
+        if (petSpecies != Species.bird && petSpecies != Species.cat && petSpecies != Species.dog &&
+                petSpecies != Species.rabbit && petSpecies != Species.other) {
             error = error + "petSpecies is invalid! ";
         }
 
@@ -84,13 +85,17 @@ public class PetAdoptionService {
         }
 
         ad.setDatePosted(datePosted);
-        ad.setAdvertisementId(id);
+        ad.setIsExpired(isExpired);
+        ad.setAdvertisementId();
         ad.setPetDescription(petDescription);
         ad.setPetName(petName);
         ad.setPetAge(petAge);
         ad.setPetSex(petSex);
         ad.setPetSpecies(petSpecies);
+        //Setting associations with appUser, applications and images for the advertisement
         ad.setPostedBy(user);
+        ad.setApplications(new HashSet<>());
+        ad.setPetImages(new HashSet<>());
 
         advertisementRepository.save(ad);
         return ad;
@@ -157,7 +162,7 @@ public class PetAdoptionService {
      * @return AppUser object
      */
     @Transactional
-    public  AppUser createAppUser(String name, String email, String password, String biography, String homeDescription, Integer age, boolean isAdmin, Sex sex ) {
+    public AppUser createAppUser(String name, String email, String password, String biography, String homeDescription, Integer age, boolean isAdmin, Sex sex) {
         AppUser user1 = new AppUser();
         String error = "";
         if (name == null || name.trim().length() == 0) {
@@ -281,6 +286,7 @@ public class PetAdoptionService {
     /////////////////////////////////AppUser methods/////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////AppUser getter//////////////////////////////////////////
+
     /**
      * Returns the AppUser with specified email from the database.
      *
@@ -307,6 +313,7 @@ public class PetAdoptionService {
     }
 
     //////////////////////////////////AppUser delete method//////////////////////////////////
+
     /**
      * Deletes the AppUser with specified email from the database.
      *
@@ -316,19 +323,19 @@ public class PetAdoptionService {
     public void deleteAppUser(String email) {
         AppUser user1 = appUserRepository.findAppUserByEmail(email);
 
-        while(user1.getAdvertisements().size() != 0) {
+        while (user1.getAdvertisements().size() != 0) {
             Set<Advertisement> advertisements = user1.getAdvertisements();
             Advertisement ad = advertisements.iterator().next();
             deleteAdvertisement(ad.getAdvertisementId());
         }
 
-        while(user1.getDonations().size() != 0) {
+        while (user1.getDonations().size() != 0) {
             Set<Donation> donations = user1.getDonations();
             Donation donation = donations.iterator().next();
             deleteDonation(donation.getTransactionID());
         }
 
-        while(user1.getApplications().size() != 0) {
+        while (user1.getApplications().size() != 0) {
             Set<Application> apps = user1.getApplications();
             Application app = apps.iterator().next();
             deleteApplication(app.getApplicationId());
@@ -342,6 +349,7 @@ public class PetAdoptionService {
     /////////////////////////////Advertisement methods///////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////Advertisement getter////////////////////////////////////////
+
     /**
      * Returns the Advertisement with specified id from the database.
      *
@@ -368,6 +376,7 @@ public class PetAdoptionService {
     }
 
     /////////////////////////////Advertisement Delete Method////////////////////////////////////////
+
     /**
      * Deletes the Advertisement with specified id from the database.
      *
@@ -377,13 +386,13 @@ public class PetAdoptionService {
     public void deleteAdvertisement(String id) {
         Advertisement adToDelete = advertisementRepository.findAdvertisementByAdvertisementId(id);
 
-        while(adToDelete.getApplications().size() != 0) {
+        while (adToDelete.getApplications().size() != 0) {
             Set<Application> applications = adToDelete.getApplications();
             Application app = applications.iterator().next();
             deleteApplication(app.getApplicationId());
         }
 
-        while(adToDelete.getPetImages().size() != 0) {
+        while (adToDelete.getPetImages().size() != 0) {
             Set<Image> petImages = adToDelete.getPetImages();
             Image image = petImages.iterator().next();
             deleteImage(image.getImageId());
@@ -398,6 +407,7 @@ public class PetAdoptionService {
     /////////////////////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////Application getter//////////////////////////////////////
+
     /**
      * Returns the Application with specified id from the database.
      *
@@ -424,6 +434,7 @@ public class PetAdoptionService {
     }
 
     /////////////////////////////Application Delete Method////////////////////////////////////////
+
     /**
      * Deletes the Application with specified id from the database.
      *
@@ -438,6 +449,7 @@ public class PetAdoptionService {
     /////////////////////////////////Donation methods///////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////Donation getter////////////////////////////////////////
+
     /**
      * Returns the Donation with specified transactionNumber from the database.
      *
@@ -464,6 +476,7 @@ public class PetAdoptionService {
     }
 
     /////////////////////////////Donation Delete Method////////////////////////////////////////
+
     /**
      * Deletes the Donation with specified transactionNumber from the database.
      *
@@ -480,6 +493,7 @@ public class PetAdoptionService {
     /////////////////////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////Image getter////////////////////////////////////////////
+
     /**
      * Returns the Image with specified id from the database.
      *
@@ -506,6 +520,7 @@ public class PetAdoptionService {
     }
 
     /////////////////////////////Image Delete Method////////////////////////////////////////
+
     /**
      * Deletes the image with specified id from the database.
      *

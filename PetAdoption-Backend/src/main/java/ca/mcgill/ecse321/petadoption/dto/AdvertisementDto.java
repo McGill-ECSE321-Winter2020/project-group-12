@@ -14,26 +14,26 @@ public class AdvertisementDto {
     private String petDescription;
     private Sex petSex;
     private Species petSpecies;
-    private Set<ApplicationDto> applications;
     private AppUserDto postedBy;
-
-
+    private Set<ApplicationDto> applications;
     private Set<ImageDto> petImages;
 
     public AdvertisementDto() {
     }
 
-    public AdvertisementDto(AppUserDto postedBy, String advertisementId, Date datePosted,  boolean isExpired,
-                            String petName, Integer petAge, String petDescription, Set<ApplicationDto> applications,
-                             Set<ImageDto> petImages) {
+    public AdvertisementDto(AppUserDto postedBy, Date datePosted, String advertisementId, boolean isExpired,
+                            String petName, Integer petAge, String petDescription, Sex petSex, Species petSpecies,
+                            Set<ApplicationDto> applications, Set<ImageDto> petImages) {
         this.datePosted = datePosted;
         this.advertisementId = advertisementId;
         this.isExpired = isExpired; //#SYNERGY
-        this.applications = applications;
-        this.postedBy = postedBy;
         this.petName = petName;
         this.petAge = petAge;
         this.petDescription = petDescription;
+        this.petSex = petSex;
+        this.petSpecies = petSpecies;
+        this.postedBy = postedBy;
+        this.applications = applications;
         this.petImages = petImages;
     }
 
@@ -49,24 +49,12 @@ public class AdvertisementDto {
         return datePosted;
     }
 
-    public void setDatePosted(Date datePosted) {
-        this.datePosted = datePosted;
-    }
-
     public String getAdvertisementId() {
         return advertisementId;
     }
 
-    public void setAdvertisementId(String advertisementId) {
-        this.advertisementId = advertisementId;
-    }
-
     public boolean isExpired() {
         return isExpired;
-    }
-
-    public void setExpired(boolean expired) {
-        isExpired = expired;
     }
 
     public Set<ApplicationDto> getApplications() {
@@ -91,5 +79,37 @@ public class AdvertisementDto {
 
     public Set<ImageDto> getPetImages() {
         return petImages;
+    }
+
+    public void setExpired(boolean expired) {
+        isExpired = expired;
+    }
+
+    public void setPetName(String petName) {
+        this.petName = petName;
+    }
+
+    public void setPetAge(Integer petAge) {
+        this.petAge = petAge;
+    }
+
+    public void setPetDescription(String petDescription) {
+        this.petDescription = petDescription;
+    }
+
+    public void setPetSex(Sex petSex) {
+        this.petSex = petSex;
+    }
+
+    public void setPetSpecies(Species petSpecies) {
+        this.petSpecies = petSpecies;
+    }
+
+    public void setApplications(Set<ApplicationDto> applications) {
+        this.applications = applications;
+    }
+
+    public void setPetImages(Set<ImageDto> petImages) {
+        this.petImages = petImages;
     }
 }
