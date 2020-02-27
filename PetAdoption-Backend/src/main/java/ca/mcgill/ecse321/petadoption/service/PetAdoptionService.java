@@ -397,22 +397,26 @@ public class PetAdoptionService {
      * @param id
      */
     @Transactional
-    public void deleteAdvertisement(String id) {
+    public boolean deleteAdvertisement(String id) {
         Advertisement adToDelete = advertisementRepository.findAdvertisementByAdvertisementId(id);
+        if (adToDelete != null){
+            //Delete all multiple associations with an application
+            while (adToDelete.getApplications().size() != 0) {
+                Set<Application> applications = adToDelete.getApplications();
+                Application app = applications.iterator().next();
+                deleteApplication(app.getApplicationId());
+            }
 
-        while (adToDelete.getApplications().size() != 0) {
-            Set<Application> applications = adToDelete.getApplications();
-            Application app = applications.iterator().next();
-            deleteApplication(app.getApplicationId());
+            while (adToDelete.getPetImages().size() != 0) {
+                Set<Image> petImages = adToDelete.getPetImages();
+                Image image = petImages.iterator().next();
+                deleteImage(image.getImageId());
+            }
+
+            advertisementRepository.delete(adToDelete);
+            return true;
         }
-
-        while (adToDelete.getPetImages().size() != 0) {
-            Set<Image> petImages = adToDelete.getPetImages();
-            Image image = petImages.iterator().next();
-            deleteImage(image.getImageId());
-        }
-
-        advertisementRepository.delete(adToDelete);
+        return false;
     }
 
 //////////////////////////////Advertisement update method////////////////////////////////////

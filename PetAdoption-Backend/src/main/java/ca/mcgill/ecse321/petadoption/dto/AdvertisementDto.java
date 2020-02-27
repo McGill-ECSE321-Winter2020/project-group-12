@@ -14,16 +14,16 @@ public class AdvertisementDto {
     private String petDescription;
     private Sex petSex;
     private Species petSpecies;
-    private AppUserDto postedBy;
-    private Set<ApplicationDto> applications;
-    private Set<ImageDto> petImages;
+    private AppUser postedBy;
+    private Set<Application> applications;
+    private Set<Image> petImages;
 
     public AdvertisementDto() {
     }
 
-    public AdvertisementDto(AppUserDto postedBy, Date datePosted, String advertisementId, boolean isExpired,
+    public AdvertisementDto(AppUser postedBy, Date datePosted, String advertisementId, boolean isExpired,
                             String petName, Integer petAge, String petDescription, Sex petSex, Species petSpecies,
-                            Set<ApplicationDto> applications, Set<ImageDto> petImages) {
+                            Set<Application> applications, Set<Image> petImages) {
         this.datePosted = datePosted;
         this.advertisementId = advertisementId;
         this.isExpired = isExpired; //#SYNERGY
@@ -57,11 +57,11 @@ public class AdvertisementDto {
         return isExpired;
     }
 
-    public Set<ApplicationDto> getApplications() {
+    public Set<Application> getApplications() {
         return applications;
     }
 
-    public AppUserDto getPostedBy() {
+    public AppUser getPostedBy() {
         return postedBy;
     }
 
@@ -77,7 +77,7 @@ public class AdvertisementDto {
         return petDescription;
     }
 
-    public Set<ImageDto> getPetImages() {
+    public Set<Image> getPetImages() {
         return petImages;
     }
 
@@ -105,11 +105,11 @@ public class AdvertisementDto {
         this.petSpecies = petSpecies;
     }
 
-    public void setApplications(Set<ApplicationDto> applications) {
+    public void setApplications(Set<Application> applications) {
         this.applications = applications;
     }
 
-    public void setPetImages(Set<ImageDto> petImages) {
+    public void setPetImages(Set<Image> petImages) {
         this.petImages = petImages;
     }
 }
