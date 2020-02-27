@@ -33,10 +33,15 @@ public class AppUserController {
         return lst;
     }
 
-    @PutMapping(value = {"/updateUser","/updateUser"}}
-    public AppUserDto updateAppUser(@RequestBody AppUserDto appUser) {
-
+    @PutMapping(value = {"/updateUser","/updateUser"})
+    public AppUserDto updateAppUser(@RequestBody AppUserDto appUser){
         return null;
+    }
+
+    @GetMapping(value = {"/getUser/{email}","/getUser/{email}/"})
+    public AppUserDto getAppUser(@PathVariable("email") String email) {
+        AppUser user = service.getAppUserByEmail(email);
+        return convertToDto(user);
     }
 
     private AppUserDto convertToDto(AppUser appUser){
