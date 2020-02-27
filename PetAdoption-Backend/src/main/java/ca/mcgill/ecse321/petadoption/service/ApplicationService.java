@@ -47,6 +47,11 @@ public class ApplicationService {
         if (advertisement == null || aUser == null) {
             error = error + "An Application must have an Advertisement and a AppUser ";
         }
+
+        else if(advertisement.isIsExpired()){
+            error = error + "The Advertisement has expired";
+        }
+
         if (id == null || id.trim().length() == 0) {
             error = error + "id is not valid! ";
         }
