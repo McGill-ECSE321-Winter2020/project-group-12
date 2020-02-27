@@ -4,12 +4,14 @@ import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.model.Advertisement;
 import ca.mcgill.ecse321.petadoption.model.Image;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.hibernate.internal.util.collections.ArrayHelper.toList;
 
+@Service
 public class ImageService {
 
     @Autowired(required = true)

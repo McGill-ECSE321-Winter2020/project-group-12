@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.petadoption.service;
 import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
@@ -12,6 +13,7 @@ import java.util.Set;
 
 import static org.hibernate.internal.util.collections.ArrayHelper.toList;
 
+@Service
 public class AdvertisementService {
 
     @Autowired(required = true)
@@ -111,6 +113,21 @@ public class AdvertisementService {
             throw new IllegalArgumentException("Advertisement must have an ID");
         }
         Advertisement a = advertisementRepository.findAdvertisementByAdvertisementId(id);
+        return a;
+    }
+
+    /**
+     * Returns the AppUser with specified email from the database.
+     *
+     * @param email
+     * @return AppUser object
+     */
+    @Transactional
+    public AppUser getAppUserByEmail(String email) {
+        if (email == null || email.trim().length() == 0) {
+            throw new IllegalArgumentException("AppUser must have an email");
+        }
+        AppUser a = appUserRepository.findAppUserByEmail(email);
         return a;
     }
 

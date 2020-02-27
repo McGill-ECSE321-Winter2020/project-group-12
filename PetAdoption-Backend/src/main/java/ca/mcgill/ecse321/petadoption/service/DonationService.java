@@ -4,6 +4,7 @@ import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.model.AppUser;
 import ca.mcgill.ecse321.petadoption.model.Donation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import static org.hibernate.internal.util.collections.ArrayHelper.toList;
 
+@Service
 public class DonationService {
     @Autowired(required = true)
     AppUserRepository appUserRepository;

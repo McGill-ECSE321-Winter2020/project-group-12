@@ -3,7 +3,7 @@ package ca.mcgill.ecse321.petadoption.controller;
 import ca.mcgill.ecse321.petadoption.dto.AdvertisementDto;
 import ca.mcgill.ecse321.petadoption.model.Advertisement;
 import ca.mcgill.ecse321.petadoption.model.AppUser;
-import ca.mcgill.ecse321.petadoption.service.PetAdoptionService;
+import ca.mcgill.ecse321.petadoption.service.AdvertisementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,7 @@ import java.util.List;
 public class AdvertisementController {
 
     @Autowired
-    private PetAdoptionService service;
+    private AdvertisementService service;
 
     //TODO: Test POST mapping for advertisement after implementing POST method for AppUser
     @PostMapping(value = {"{userId}/advertisement/create", "{userId}/advertisement/create/"})
