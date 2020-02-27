@@ -1,28 +1,26 @@
 package ca.mcgill.ecse321.petadoption.dto;
 
-import ca.mcgill.ecse321.petadoption.model.Advertisement;
-import ca.mcgill.ecse321.petadoption.model.Application;
-import ca.mcgill.ecse321.petadoption.model.Donation;
 import ca.mcgill.ecse321.petadoption.model.Sex;
-
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 public class AppUserDto {
-    private Set<DonationDto> donations;
+    private List<DonationDto> donations;
     private String name;
     private String email;
     private String biography;
     private String homeDescription;
     private Integer age;
     private boolean isAdmin;
-    private Set<AdvertisementDto> advertisements;
-    private Set<ApplicationDto> applications;
+    private List<AdvertisementDto> advertisements;
+    private List<ApplicationDto> applications;
 
     private Sex sex;
 
+    public AppUserDto(){
+
+    }
     public AppUserDto(String name, String email, String biography, String homeDescription, int age, boolean isAdmin,
-                      Sex sex, Set<DonationDto> donations, Set<AdvertisementDto> advertisements, Set<ApplicationDto> applications)
+                      Sex sex, List<DonationDto> donations, List<AdvertisementDto> advertisements, List<ApplicationDto> applications)
     {
         this.name = name;
         this.email = email;
@@ -36,7 +34,7 @@ public class AppUserDto {
         this.applications = applications;
     }
 
-    public Set<DonationDto> getDonations() {
+    public List<DonationDto> getDonations() {
         return this.donations;
     }
 
@@ -80,11 +78,11 @@ public class AppUserDto {
         return this.isAdmin;
     }
 
-    public Set<AdvertisementDto> getAdvertisements() {
+    public List<AdvertisementDto> getAdvertisements() {
         return this.advertisements;
     }
 
-    public Set<ApplicationDto> getApplications() {
+    public List<ApplicationDto> getApplications() {
         return this.applications;
     }
 

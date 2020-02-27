@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -303,7 +305,7 @@ public class PetAdoptionService {
      */
     @Transactional
     public List<AppUser> getAllAppUsers() {
-        return toList(appUserRepository.findAll());
+        return new ArrayList<AppUser>((Collection<? extends AppUser>) appUserRepository.findAll());
     }
 
     //////////////////////////////////AppUser delete method//////////////////////////////////
