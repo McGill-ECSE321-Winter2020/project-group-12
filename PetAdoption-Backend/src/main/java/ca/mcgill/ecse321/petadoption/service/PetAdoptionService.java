@@ -336,6 +336,20 @@ public class PetAdoptionService {
         appUserRepository.delete(user1);
     }
 
+    //////////////////////////////AppUser update method////////////////////////////////////
+    /**
+     * Updates the isAdmin attribute of AppUser class in the database.
+     *
+     * @param isAdmin
+     * @return AppUser
+     */
+    @Transactional
+    public AppUser updateAppUserIsAdmin(AppUser user, boolean isAdmin) {
+        user.setIsAdmin(isAdmin);
+        appUserRepository.save(user);
+        return user;
+    }
+
 
     //-------------------------------------------------------------------------------------//
     /////////////////////////////Advertisement methods///////////////////////////////////////
@@ -391,6 +405,20 @@ public class PetAdoptionService {
         advertisementRepository.delete(adToDelete);
     }
 
+//////////////////////////////Advertisement update method////////////////////////////////////
+    /**
+     * Updates the isExpired attribute of Advertisement class in the database.
+     *
+     * @param isExpired
+     * @return Advertisement
+     */
+    @Transactional
+    public Advertisement updateAdvertisementIsExpired(Advertisement ad, boolean isExpired) {
+        ad.setIsExpired(isExpired);
+        advertisementRepository.save(ad);
+        return ad;
+    }
+
 
     //-------------------------------------------------------------------------------------//
     /////////////////////////////////Application methods/////////////////////////////////////
@@ -432,6 +460,23 @@ public class PetAdoptionService {
     public void deleteApplication(String id) {
         applicationRepository.deleteApplicationByApplicationId(id);
     }
+
+
+    //////////////////////////////Application update method////////////////////////////////////
+    /**
+     * Updates the status attribute of Application class in the database.
+     *
+     * @param status
+     * @return Application
+     */
+    @Transactional
+    public Application updateApplicationStatus(Application app, Status status) {
+        app.setStatus(status);
+        applicationRepository.save(app);
+        return app;
+    }
+
+
 
     //-------------------------------------------------------------------------------------//
     /////////////////////////////////Donation methods///////////////////////////////////////
