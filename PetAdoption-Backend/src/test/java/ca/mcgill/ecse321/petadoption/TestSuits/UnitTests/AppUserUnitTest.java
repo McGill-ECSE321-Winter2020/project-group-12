@@ -14,7 +14,7 @@ public class AppUserUnitTest {
 
     @Mock
     private PetAdoptionService service;
-    
+
     @Test
     public void createAppUser(){
 
