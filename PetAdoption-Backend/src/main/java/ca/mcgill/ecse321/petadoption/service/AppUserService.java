@@ -65,7 +65,6 @@ public class AppUserService {
         new_user.setAge(age);
         new_user.setEmail(email);
         new_user.setName(name);
-        appUserRepository.save(new_user);
         return appUserRepository.save(new_user);
     }
 
@@ -78,10 +77,13 @@ public class AppUserService {
     @Transactional
     public AppUser getAppUserByEmail(String email) {
         if (email == null || email.trim().length() == 0) {
-            throw new IllegalArgumentException("AppUser must have an email");
+            throw new IllegalArgumentException("The email entered is not valid.");
         }
-        AppUser a = appUserRepository.findAppUserByEmail(email);
-        return a;
+        AppUser user = appUserRepository.findAppUserByEmail(email);
+        if(user == null) {
+            throw new IllegalArgumentException("The user with email "+ email +" does not exist.");
+        }
+        return user;
     }
 
     /**
@@ -103,38 +105,19 @@ public class AppUserService {
     public void deleteAppUser(String email) {
         AppUser user1 = appUserRepository.findAppUserByEmail(email);
 
-        while (user1.getAdvertisements().size() != 0) {
-            Set<Advertisement> advertisements = user1.getAdvertisements();
-            Advertisement ad = advertisements.iterator().next();
-            advertisementService.deleteAdvertisement(ad.getAdvertisementId());
+        for (Advertisement ad : user1.getAdvertisements()){
+            advertisementRepository.deleteAdvertisementByAdvertisementId(ad.getAdvertisementId());
         }
 
-        while (user1.getDonations().size() != 0) {
-            Set<Donation> donations = user1.getDonations();
-            Donation donation = donations.iterator().next();
-            donationService.deleteDonation(donation.getTransactionID());
+        for(Donation donation: user1.getDonations()){
+            donationRepository.deleteDonationByTransactionID(donation.getTransactionID());
         }
 
-        while (user1.getApplications().size() != 0) {
-            Set<Application> apps = user1.getApplications();
-            Application app = apps.iterator().next();
-            applicationService.deleteApplication(app.getApplicationId());
+        for(Application app : user1.getApplications()){
+            applicationRepository.deleteApplicationByApplicationId(app.getApplicationId());
         }
 
-        appUserRepository.delete(user1);
-    }
-
-    /**
-     * Updates the isAdmin attribute of AppUser class in the database.
-     *
-     * @param isAdmin
-     * @return AppUser
-     */
-    @Transactional
-    public AppUser updateAppUserIsAdmin(AppUser user, boolean isAdmin) {
-        user.setIsAdmin(isAdmin);
-        appUserRepository.save(user);
-        return user;
+        appUserRepository.deleteAppUserByEmail(email);
     }
 
     /**
@@ -151,7 +134,7 @@ public class AppUserService {
      * @return the updated AppUser
      */
      @Transactional
-    public AppUser updaterAppUser(String name, String email, String password, String biography,
+    public AppUser updateAppUser(String name, String email, String password, String biography,
                                   String homeDescription, Integer age, boolean isAdmin, Sex sex){
 
          userParamCheck(name, email, password, biography, homeDescription, age, sex);
@@ -168,7 +151,6 @@ public class AppUserService {
          user.setAge(age);
          user.setEmail(email);
          user.setName(name);
-         appUserRepository.save(user);
          return appUserRepository.save(user);
      }
 
@@ -193,9 +175,7 @@ public class AppUserService {
         if (age <= 0) {
             error = error + "age is not valid ";
         }
-        if (sex != Sex.F && sex != Sex.M) {
-            error = error + "sex is invalid ";
-        }
+
         if (error.length() != 0) {
             throw new IllegalArgumentException(error);
         }
