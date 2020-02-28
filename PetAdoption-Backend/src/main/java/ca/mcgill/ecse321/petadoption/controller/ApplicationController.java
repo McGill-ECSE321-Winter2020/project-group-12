@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.petadoption.controller;
 
 
 import ca.mcgill.ecse321.petadoption.dto.AppUserDto;
+import ca.mcgill.ecse321.petadoption.model.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,7 +41,7 @@ public class ApplicationController {
 
     @PostMapping(value = {"/applications/", "/applications/"})
     public ApplicationDto createApplication(@RequestBody ApplicationDto ap) throws IllegalArgumentException {
-        Application appl = service.createApplication(ap.getAdvertisement(), ap.getApplicant(), ap.getApplicationId(), ap.getDateOfSubmission(), ap.getNote());
+        Application appl = service.createApplication(ap.getAdvertisement(), ap.getApplicant(), ap.getApplicationId(), ap.getDateOfSubmission(), ap.getNote(), Status.accepted);
         return convertToDto(appl);
     }
 
@@ -61,7 +62,7 @@ public class ApplicationController {
     }
 
     private ApplicationDto convertToDto(Application app) {
-        return new ApplicationDto(app.getDateOfSubmission(), app.getNote(), convertAdToDto(app.getAdvertisement()), app.getApplicant(), app.getApplicationId());
+        return new ApplicationDto(app.getDateOfSubmission(), app.getNote(), app.getAdvertisement(), app.getApplicant(), app.getApplicationId());
     }
 
     private AdvertisementDto convertAdToDto(Advertisement ad) {

@@ -8,14 +8,14 @@ import java.sql.Date;
 public class ApplicationDto {
     private Date dateOfSubmission;
     private String note;
-    private AdvertisementDto advertisement;
+    private Advertisement advertisement;
     private AppUser applicant;
     private String applicationId;
 
     public ApplicationDto(){
     }
 
-    public ApplicationDto(Date date, String note, AdvertisementDto ad, AppUser applicant, String id){
+    public ApplicationDto(Date date, String note, Advertisement ad, AppUser applicant, String id){
         this.dateOfSubmission = date;
         this.note = note;
         this.advertisement = ad;
@@ -39,11 +39,11 @@ public class ApplicationDto {
         return note;
     }
 
-    public void setAdvertisement(AdvertisementDto advertisement) {
+    public void setAdvertisement(Advertisement advertisement) {
         this.advertisement = advertisement;
     }
 
-    public AdvertisementDto getAdvertisement(){
+    public Advertisement getAdvertisement(){
         return this.advertisement;
     }
 
