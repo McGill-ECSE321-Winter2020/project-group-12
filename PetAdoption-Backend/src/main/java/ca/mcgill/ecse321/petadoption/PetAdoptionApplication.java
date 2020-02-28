@@ -14,7 +14,7 @@ public class PetAdoptionApplication {
 	}
 @RequestMapping("/")
   public String greeting(){
-    return "Hello world!";
+    return "Hello world! from PetAdoption Backend!";
   }
 
 }
