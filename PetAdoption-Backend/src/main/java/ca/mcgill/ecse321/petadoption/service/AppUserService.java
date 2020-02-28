@@ -47,46 +47,26 @@ public class AppUserService {
      * @return AppUser object
      */
     @Transactional
-    public AppUser createAppUser(String name, String email, String password, String biography, String homeDescription, Integer age, boolean isAdmin, Sex sex) {
-        AppUser user1 = new AppUser();
-        String error = "";
-        if (name == null || name.trim().length() == 0) {
-            error = "name can not be empty! ";
-        }
-        if (email == null || email.trim().length() == 0) {
-            error = error + "email cannot be empty ";
-        }
-        if (password == null || password.trim().length() == 0) {
-            error = error + "password cannot be empty ";
-        }
-        if (biography == null || biography.trim().length() == 0) {
-            error = error + "biography cannot be empty ";
-        }
-        if (homeDescription == null || homeDescription.trim().length() == 0) {
-            error = error + "homeDescription cannot be empty ";
-        }
-        if (age <= 0) {
-            error = error + "age is not valid ";
-        }
-        if (sex != Sex.F && sex != Sex.M) {
-            error = error + "sex is invalid ";
-        }
+    public AppUser createAppUser(String name, String email, String password,
+                                 String biography, String homeDescription, Integer age, boolean isAdmin, Sex sex) {
 
-        if (error.length() != 0) {
-            throw new IllegalArgumentException(error);
+        userParamCheck(name, email, password, biography, homeDescription, age, sex);
+
+        AppUser old_user = appUserRepository.findAppUserByEmail(email);
+        if(old_user != null){
+            throw new IllegalArgumentException("The email " + email+ " is already used.");
         }
-
-        user1.setSex(sex);
-        user1.setPassword(password);
-        user1.setIsAdmin(isAdmin);
-        user1.setHomeDescription(homeDescription);
-        user1.setBiography(biography);
-        user1.setAge(age);
-        user1.setEmail(email);
-        user1.setName(name);
-
-        appUserRepository.save(user1);
-        return user1;
+        AppUser new_user = new AppUser();
+        new_user.setSex(sex);
+        new_user.setPassword(password);
+        new_user.setIsAdmin(isAdmin);
+        new_user.setHomeDescription(homeDescription);
+        new_user.setBiography(biography);
+        new_user.setAge(age);
+        new_user.setEmail(email);
+        new_user.setName(name);
+        appUserRepository.save(new_user);
+        return appUserRepository.save(new_user);
     }
 
     /**
@@ -157,5 +137,67 @@ public class AppUserService {
         return user;
     }
 
+    /**
+     * Updates the AppUser instance and save it to the database.
+     * @param name(String)
+     * @param email(String)
+     * @param password(String)
+     * @param biography(String)
+     * @param homeDescription(String)
+     * @param age(Integer)
+     * @param isAdmin(boolean)
+     * @param sex(Sex)
+     *
+     * @return the updated AppUser
+     */
+     @Transactional
+    public AppUser updaterAppUser(String name, String email, String password, String biography,
+                                  String homeDescription, Integer age, boolean isAdmin, Sex sex){
 
+         userParamCheck(name, email, password, biography, homeDescription, age, sex);
+         AppUser user = appUserRepository.findAppUserByEmail(email);
+         if(user == null){
+             String error = "The User with email: " + email + " does not exist";
+             throw new IllegalArgumentException(error);
+         }
+         user.setSex(sex);
+         user.setPassword(password);
+         user.setIsAdmin(isAdmin);
+         user.setHomeDescription(homeDescription);
+         user.setBiography(biography);
+         user.setAge(age);
+         user.setEmail(email);
+         user.setName(name);
+         appUserRepository.save(user);
+         return appUserRepository.save(user);
+     }
+
+    private void userParamCheck(String name, String email, String password, String biography,
+                                String homeDescription, Integer age, Sex sex){
+        String error = "";
+        if (name == null || name.trim().length() == 0) {
+            error = "name cannot be empty! ";
+        }
+        if (email == null || email.trim().length() == 0) {
+            error = error + "email cannot be empty ";
+        }
+        if (password == null || password.trim().length() == 0) {
+            error = error + "password cannot be empty ";
+        }
+        if (biography == null || biography.trim().length() == 0) {
+            error = error + "biography cannot be empty ";
+        }
+        if (homeDescription == null || homeDescription.trim().length() == 0) {
+            error = error + "homeDescription cannot be empty ";
+        }
+        if (age <= 0) {
+            error = error + "age is not valid ";
+        }
+        if (sex != Sex.F && sex != Sex.M) {
+            error = error + "sex is invalid ";
+        }
+        if (error.length() != 0) {
+            throw new IllegalArgumentException(error);
+        }
+    }
 }
