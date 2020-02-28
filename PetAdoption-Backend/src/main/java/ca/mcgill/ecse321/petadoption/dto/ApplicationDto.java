@@ -55,4 +55,12 @@ public class ApplicationDto {
         return this.applicant;
     }
 
+    public void setApplicationId(String id){
+        this.applicationId = id;
+    }
+
+    public String getApplicationId(){
+        return this.applicationId;
+    }
+
 }
