@@ -60,7 +60,6 @@ public class AdvertisementController {
         return advertisementDtoList;
     }
 
-    //TODO: Test GET Mapping after AppUser class has been implemented
     @GetMapping(value = {"/{userID}/advertisements", "/{userID}/advertisements/"})
     public List<AdvertisementDto> getAdvertisementsByAppUser(@PathVariable("userID") String userEmail) {
         try {
@@ -102,15 +101,4 @@ public class AdvertisementController {
         }
         return advertisementDtos;
     }
-//    Evaluate the necessities of the following convert to DTO methods for the Advertisement class
-//    Method needs convertToDto from application class
-//    public static List<ApplicationDto> createApplicationDtosForAdvertisement(Set<Application> applications){ Set or List?
-//        return null;
-//    }
-//
-//    Method needs convertToDto from image class
-//    public static List<ImageDto> createImageDtosForAdvertisement(Set<Image> images){
-//        return null;
-//    }
-
 }
