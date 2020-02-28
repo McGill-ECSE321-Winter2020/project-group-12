@@ -40,8 +40,8 @@ public class ApplicationController {
     }
 
     @PostMapping(value = {"/applications/", "/applications/"})
-    public ApplicationDto createApplication(@RequestBody ApplicationDto ap) throws IllegalArgumentException {
-        Application appl = service.createApplication(ap.getAdvertisement(), ap.getApplicant(), ap.getApplicationId(), ap.getDateOfSubmission(), ap.getNote(), Status.accepted);
+    public ApplicationDto createApplication(@RequestBody ApplicationDto ap, @RequestParam String userEmail, @RequestParam String advertisementId) throws IllegalArgumentException {
+        Application appl = service.createApplication(advertisementId, userEmail, ap.getDateOfSubmission(), ap.getNote(), Status.accepted);
         return convertToDto(appl);
     }
 

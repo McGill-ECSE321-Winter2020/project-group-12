@@ -31,20 +31,19 @@ public class ApplicationService {
     /**
      * Creates and adds a new Application object to the database.
      *
-     * @param advertisement
-     * @param aUser
-     * @param id
      * @param dateOfSubmission
      * @param note
      * @param status
      * @return Application object
      */
     @Transactional
-    public Application createApplication(Advertisement advertisement, AppUser aUser, String id, Date dateOfSubmission, String note, Status status) {
+    public Application createApplication(String advertisementId, String appUserEmail, Date dateOfSubmission, String note, Status status) {
         Application app = new Application();
+        Advertisement advertisement = advertisementRepository.findAdvertisementByAdvertisementId(advertisementId);
+        AppUser aUser = appUserRepository.findAppUserByEmail(appUserEmail);
         String error = "";
 
-        if (advertisement == null || aUser == null) {
+        if (advertisementId == null || appUserEmail == null) {
             error = error + "An Application must have an Advertisement and a AppUser ";
         }
 
@@ -52,9 +51,6 @@ public class ApplicationService {
             error = error + "The Advertisement has expired";
         }
 
-        if (id == null || id.trim().length() == 0) {
-            error = error + "id is not valid! ";
-        }
         if (dateOfSubmission == null) {
             error = "dateOfSubmission can not be empty! ";
         }
@@ -71,7 +67,7 @@ public class ApplicationService {
 
         app.setApplicant(aUser);
         app.setAdvertisement(advertisement);
-        app.setApplicationId(id);
+        app.setApplicationId();
         app.setDateOfSubmission(dateOfSubmission);
         app.setNote(note);
         app.setStatus(status);
