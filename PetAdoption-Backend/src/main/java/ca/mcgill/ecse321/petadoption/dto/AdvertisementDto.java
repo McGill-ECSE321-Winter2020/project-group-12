@@ -18,9 +18,6 @@ public class AdvertisementDto {
     private Set<Application> applications;
     private Set<Image> petImages;
 
-    public AdvertisementDto() {
-    }
-
     public AdvertisementDto(String userEmail, Date datePosted, String advertisementId, boolean isExpired,
                             String petName, Integer petAge, String petDescription, Sex petSex, Species petSpecies,
                             Set<Application> applications, Set<Image> petImages) {
