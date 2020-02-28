@@ -290,6 +290,19 @@ public class AppUserUnitTest {
     }
 
     @Test
+    public void testGetAppUserNonExistent(){
+        AppUser user = null;
+        String error = "";
+        try{
+            user = service.getAppUserByEmail( USER_EMAIL_1);
+        }catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertNull(user);
+        assertEquals(error, "The user with email "+ USER_EMAIL_1 +" does not exist.");
+    }
+
+    @Test
     public void testGetAppUserNullEmail(){
         AppUser user = null;
         String error = "";

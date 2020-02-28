@@ -79,8 +79,11 @@ public class AppUserService {
         if (email == null || email.trim().length() == 0) {
             throw new IllegalArgumentException("The email entered is not valid.");
         }
-        AppUser a = appUserRepository.findAppUserByEmail(email);
-        return a;
+        AppUser user = appUserRepository.findAppUserByEmail(email);
+        if(user == null) {
+            throw new IllegalArgumentException("The user with email "+ email +" does not exist.");
+        }
+        return user;
     }
 
     /**
