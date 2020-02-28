@@ -1,17 +1,13 @@
 package ca.mcgill.ecse321.petadoption.controller;
 
-import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
-import ca.mcgill.ecse321.petadoption.dto.AdvertisementDto;
 import ca.mcgill.ecse321.petadoption.dto.ImageDto;
 import ca.mcgill.ecse321.petadoption.model.Advertisement;
 import ca.mcgill.ecse321.petadoption.model.Image;
 import ca.mcgill.ecse321.petadoption.service.ImageService;
 import ca.mcgill.ecse321.petadoption.service.AdvertisementService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
