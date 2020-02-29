@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Set;
 
 import static org.hibernate.internal.util.collections.ArrayHelper.toList;
 
@@ -43,11 +44,29 @@ public class ApplicationService {
         AppUser aUser = appUserRepository.findAppUserByEmail(appUserEmail);
         String error = "";
 
+        Set<Application> apps = advertisement.getApplications();
+      //  error = error + "You already applied for this";
+       // apps.add(app);
+       //if (apps == null) error = error + "You already applied for this";
+       // for (Application a : apps) {
+            //if (a.getApplicant().getEmail().equals(appUserEmail)) {
+              //  error = error + "You already applied for this";
+            //}
+        //    int abdul = 3;
+     //   }
+
+
+        app.setApplicationId();
+////        String id = app.getApplicationId();
+////        Application old_application = applicationRepository.findApplicationByApplicationId(id);
+////
+////        if(old_application != null){
+////            throw new IllegalArgumentException("The application id: " + id + " already exists");
+////        }
+
         if (advertisementId == null || appUserEmail == null) {
             error = error + "An Application must have an Advertisement and a AppUser ";
-        }
-
-        else if(advertisement.isIsExpired()){
+        } else if (advertisement.isIsExpired()) {
             error = error + "The Advertisement has expired";
         }
 
@@ -67,7 +86,6 @@ public class ApplicationService {
 
         app.setApplicant(aUser);
         app.setAdvertisement(advertisement);
-        app.setApplicationId();
         app.setDateOfSubmission(dateOfSubmission);
         app.setNote(note);
         app.setStatus(status);
@@ -75,6 +93,7 @@ public class ApplicationService {
         applicationRepository.save(app);
         return app;
     }
+
     /**
      * Returns the Application with specified id from the database.
      *
@@ -114,6 +133,7 @@ public class ApplicationService {
 
 
     //////////////////////////////Application update method////////////////////////////////////
+
     /**
      * Updates the status attribute of Application class in the database.
      *

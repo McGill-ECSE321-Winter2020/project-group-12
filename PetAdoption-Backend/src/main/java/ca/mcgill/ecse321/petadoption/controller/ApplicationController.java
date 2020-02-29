@@ -41,7 +41,7 @@ public class ApplicationController {
 
     @PostMapping(value = {"/applications/", "/applications/"})
     public ApplicationDto createApplication(@RequestBody ApplicationDto ap, @RequestParam String userEmail, @RequestParam String advertisementId) throws IllegalArgumentException {
-        Application appl = service.createApplication(advertisementId, userEmail, ap.getDateOfSubmission(), ap.getNote(), Status.accepted);
+        Application appl = service.createApplication(advertisementId, userEmail, ap.getDateOfSubmission(), ap.getNote(), Status.pending);
         return convertToDto(appl);
     }
 
@@ -65,12 +65,12 @@ public class ApplicationController {
         return new ApplicationDto(app.getDateOfSubmission(), app.getNote(), app.getAdvertisement(), app.getApplicant(), app.getApplicationId());
     }
 
-    private AdvertisementDto convertAdToDto(Advertisement ad) {
-        AdvertisementDto advertisementDto = new AdvertisementDto(ad.getPostedBy(), ad.getDatePosted(),
-                ad.getAdvertisementId(), ad.isIsExpired(), ad.getPetName(), ad.getPetAge(), ad.getPetDescription(),
-                ad.getPetSex(), ad.getPetSpecies(), ad.getApplications(), ad.getPetImages());
-        return advertisementDto;
-    }
+//    private AdvertisementDto convertAdToDto(Advertisement ad) {
+//        AdvertisementDto advertisementDto = new AdvertisementDto(ad.getPostedBy(), ad.getDatePosted(),
+//                ad.getAdvertisementId(), ad.isIsExpired(), ad.getPetName(), ad.getPetAge(), ad.getPetDescription(),
+//                ad.getPetSex(), ad.getPetSpecies(), ad.getApplications(), ad.getPetImages());
+//        return advertisementDto;
+//    }
     //not sure about this one
     @PutMapping(value = {"/application/update", "/application/update/"})
     public ResponseEntity<Object> updateApplication(@RequestParam("applicationId") String applicationID) {
