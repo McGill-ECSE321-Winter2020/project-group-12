@@ -129,7 +129,7 @@ public class AdvertisementService {
                 imageService.deleteImage(image.getImageId());
             }
 
-            advertisementRepository.delete(adToDelete);
+            advertisementRepository.deleteAdvertisementByAdvertisementId(id);
             return true;
         }
         return false;

@@ -15,11 +15,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -78,15 +80,13 @@ public class AdvertisementUnitTest {
 
     //Create Mock Advertisement Objects
     private static final Advertisement ADVERTISEMENT_1 = createAdvertisement(APP_USER_1, DATE_1, ADVERTISEMENT_1_ID,
-            IS_EXPIRED_1,PET_NAME_1, PET_AGE_1, PET_DESCRIPTION_1, PET_SEX_1, PET_SPECIES_1);
+            IS_EXPIRED_1, PET_NAME_1, PET_AGE_1, PET_DESCRIPTION_1, PET_SEX_1, PET_SPECIES_1);
     private static final Advertisement ADVERTISEMENT_2 = createAdvertisement(APP_USER_2, DATE_1, ADVERTISEMENT_2_ID,
-            IS_EXPIRED_2,PET_NAME_2, PET_AGE_2, PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
+            IS_EXPIRED_2, PET_NAME_2, PET_AGE_2, PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
     private static final Advertisement ADVERTISEMENT_3 = createAdvertisement(APP_USER_2, DATE_2, ADVERTISEMENT_3_ID,
-            IS_EXPIRED_3,PET_NAME_3, PET_AGE_3, PET_DESCRIPTION_3, PET_SEX_3, PET_SPECIES_3);
+            IS_EXPIRED_3, PET_NAME_3, PET_AGE_3, PET_DESCRIPTION_3, PET_SEX_3, PET_SPECIES_3);
 
-    //TODO: Set up lenient blocks for all methods that are called from the CRUD repository for advertisement
-    //Methods include: (AU)findAppUserByEmail,(Ad)findAdvertisementByPostedBy,(Ad)findAdvertisementByAdvertisementID,
-    //(Ad) deleteAdvertisementByAdvertisementID, (Ad)findAll,(Ad)save,(Ad)delete
+    //TODO: Find out how to mock a void from the CRUD repository
     //IF YOU ARE NOT MOCKING IT THEN YOU ARE CALLING THE ACTUAL DATABASE AND YOU DO NOT WANT THAT.
     @BeforeEach
     public void setMockOutput() {
@@ -108,7 +108,7 @@ public class AdvertisementUnitTest {
         lenient().when(advertisementDao.findAdvertisementsByPostedBy(any(AppUser.class))).thenAnswer(
                 (InvocationOnMock invocation) -> {
                     if (((AppUser) invocation.getArgument(0)).getEmail().equals(USER_EMAIL_1)) {
-                        //Return as ArrayList because method in DAO class returns List<Advertisement>
+                        //Return HashSet data as ArrayList because method in DAO class returns List<Advertisement>
                         return new ArrayList<>(APP_USER_1.getAdvertisements());
                     } else if (((AppUser) invocation.getArgument(0)).getEmail().equals(USER_EMAIL_2)) {
                         return new ArrayList<>(APP_USER_2.getAdvertisements());
@@ -118,11 +118,32 @@ public class AdvertisementUnitTest {
 
         lenient().when(advertisementDao.findAdvertisementByAdvertisementId(anyString())).thenAnswer(
                 (InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(ADVERTISEMENT_1)){
-
+                    if (invocation.getArgument(0).equals(ADVERTISEMENT_1_ID)) {
+                        return ADVERTISEMENT_1;
+                    } else if (invocation.getArgument(0).equals(ADVERTISEMENT_2_ID)) {
+                        return ADVERTISEMENT_2;
+                    } else if (invocation.getArgument(0).equals(ADVERTISEMENT_3_ID)) {
+                        return ADVERTISEMENT_3;
                     }
                     return null;
                 });
+
+        lenient().when(advertisementDao.findAll()).thenAnswer(
+                (InvocationOnMock invocation) -> {
+                    List<Advertisement> advertisementList = new ArrayList<>();
+                    advertisementList.add(ADVERTISEMENT_1);
+                    advertisementList.add(ADVERTISEMENT_2);
+                    advertisementList.add(ADVERTISEMENT_3);
+
+                    return advertisementList;
+                });
+
+        //Returning Parameter object upon save
+        Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
+            return invocation.getArgument(0);
+        };
+
+        lenient().when(advertisementDao.save(any(Advertisement.class))).thenAnswer(returnParameterAsAnswer);
     }
 
     @Test
@@ -131,7 +152,7 @@ public class AdvertisementUnitTest {
     }
 
 
-    private static Advertisement createAdvertisement(AppUser appUser,Date datePosted, String id, boolean isExpired, String petName,
+    private static Advertisement createAdvertisement(AppUser appUser, Date datePosted, String id, boolean isExpired, String petName,
                                                      Integer petAge, String petDescription, Sex petSex, Species petSpecies) {
         Advertisement advertisement = new Advertisement();
         advertisement.setDatePosted(datePosted);
@@ -150,9 +171,9 @@ public class AdvertisementUnitTest {
         return advertisement;
     }
 
-    private static void configureAppUser(AppUser appUser, String userEmail, Advertisement... advertisement){
+    private static void configureAppUser(AppUser appUser, String userEmail, Advertisement... advertisement) {
         appUser.setEmail(userEmail);
-        for (Advertisement ad : advertisement){
+        for (Advertisement ad : advertisement) {
             appUser.addAdvertisement(ad);
         }
     }
