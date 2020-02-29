@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.petadoption.controller;
 
 import ca.mcgill.ecse321.petadoption.dto.AppUserDto;
 import ca.mcgill.ecse321.petadoption.model.AppUser;
+import ca.mcgill.ecse321.petadoption.service.AppUserService;
 import ca.mcgill.ecse321.petadoption.service.PetAdoptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,35 +14,40 @@ import java.util.List;
 @RestController
 public class AppUserController {
     @Autowired
-    private PetAdoptionService service;
+    private AppUserService service;
 
     @PostMapping(value ={"/register","/register/" })
     public AppUserDto createAppUser(@RequestBody AppUserDto appUser){
-        service.createAppUser(appUser.getName(), appUser.getEmail(), "password", appUser.getBiography(), appUser.getHomeDescription(),
+        AppUser user = service.createAppUser(appUser.getName(), appUser.getEmail(), "password", appUser.getBiography(), appUser.getHomeDescription(),
                 appUser.getAge(), appUser.isIsAdmin(), appUser.getSex());
-        return appUser;
+        return convertToDto(user);
     }
 
     @GetMapping(value ={"/getAllUsers", "/getAllUsers/"})
     public List<AppUserDto> getAllAppUsers(){
         List<AppUserDto> lst = new ArrayList<AppUserDto>();
         for( AppUser user: service.getAllAppUsers() ){
-            if(!user.isIsAdmin()){
                 lst.add(convertToDto(user));
-            }
         }
         return lst;
     }
 
     @PutMapping(value = {"/updateUser","/updateUser"})
     public AppUserDto updateAppUser(@RequestBody AppUserDto appUser){
-        return null;
+        AppUser updatedUser = service.updateAppUser(appUser.getName(), appUser.getEmail(),"password", appUser.getBiography(), appUser.getHomeDescription(),
+                appUser.getAge(), appUser.isIsAdmin(), appUser.getSex());
+        return convertToDto(updatedUser);
     }
 
     @GetMapping(value = {"/getUser/{email}","/getUser/{email}/"})
     public AppUserDto getAppUser(@PathVariable("email") String email) {
         AppUser user = service.getAppUserByEmail(email);
         return convertToDto(user);
+    }
+
+    @PostMapping(value = {"/delete/user/{email}", "/delete/user/{email}/"})
+    public void deleteAppUser(@PathVariable("email") String email) {
+        service.deleteAppUser(email);
     }
 
     private AppUserDto convertToDto(AppUser appUser){

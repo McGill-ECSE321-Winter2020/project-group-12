@@ -7,11 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.hibernate.internal.util.collections.ArrayHelper.toList;
+import java.util.*;
 
 @Service
 public class AdvertisementService {
@@ -29,7 +25,6 @@ public class AdvertisementService {
 
     @Autowired
     ApplicationService applicationService;
-
     @Autowired
     ImageService imageService;
 
@@ -38,7 +33,6 @@ public class AdvertisementService {
      *
      * @param userEmail
      * @param datePosted
-     * @param isExpired
      * @param petName
      * @param petAge
      * @param petDescription
@@ -47,45 +41,21 @@ public class AdvertisementService {
      * @return Advertisement object
      */
     @Transactional
-    public Advertisement createAdvertisement(String userEmail, Date datePosted, boolean isExpired, String petName,
+    public Advertisement createAdvertisement(String userEmail, Date datePosted, String petName,
                                              Integer petAge, String petDescription, Sex petSex, Species petSpecies) {
-        Advertisement ad = new Advertisement();
-        String error = "";
-        // Find user profile by unique ID.
         AppUser user = appUserRepository.findAppUserByEmail(userEmail);
-
         if (user == null) {
-            error = error + "An Advertisement must have a AppUser ";
+            throw new IllegalArgumentException("User not found. Cannot make advertisement without user profile!");
         }
+        //TODO: Check if date posted upon advertisement creation can be null or not
         if (datePosted == null) {
-            error = "datePosted can not be empty! ";
+            throw new IllegalArgumentException("Date posted cannot be an empty field!");
         }
-        if (isExpired == true) {
-            error = error + "isExpired cannot be true at this point! ";
-        }
-        if (petName == null || petName.trim().length() == 0) {
-            error = error + "petName cannot be empty! ";
-        }
-        if (petAge <= 0) {
-            error = error + "petAge cannot be less than or equal to 0! ";
-        }
-        if (petDescription == null || petDescription.trim().length() == 0) {
-            error = error + "petDescription cannot be empty! ";
-        }
-        if (petSex != Sex.F && petSex != Sex.M) {
-            error = error + "petSex must be either male or female!";
-        }
-        if (petSpecies != Species.bird && petSpecies != Species.cat && petSpecies != Species.dog &&
-                petSpecies != Species.rabbit && petSpecies != Species.other) {
-            error = error + "petSpecies is invalid! ";
-        }
-
-        if (error.length() != 0) {
-            throw new IllegalArgumentException(error);
-        }
+        advertisementParamCheck(petName, petAge, petDescription, petSex, petSpecies);
+        Advertisement ad = new Advertisement();
 
         ad.setDatePosted(datePosted);
-        ad.setIsExpired(isExpired);
+        ad.setIsExpired(false); // Advertisement on creation is not expired
         ad.setAdvertisementId();
         ad.setPetDescription(petDescription);
         ad.setPetName(petName);
@@ -117,31 +87,25 @@ public class AdvertisementService {
     }
 
     /**
-     * Returns the AppUser with specified email from the database.
-     *
-     * @param email
-     * @return AppUser object
-     */
-    @Transactional
-    public AppUser getAppUserByEmail(String email) {
-        if (email == null || email.trim().length() == 0) {
-            throw new IllegalArgumentException("AppUser must have an email");
-        }
-        AppUser a = appUserRepository.findAppUserByEmail(email);
-        return a;
-    }
-
-    /**
      * Returns all Advertisements in the database.
      *
      * @return List of Advertisement objects
      */
     @Transactional
     public List<Advertisement> getAllAdvertisements() {
-        return toList(advertisementRepository.findAll());
+        return new ArrayList<>((Collection<? extends Advertisement>) advertisementRepository.findAll());
     }
 
-    /////////////////////////////Advertisement Delete Method////////////////////////////////////////
+    /**
+     * Returns all advertisements made by an App-user
+     *
+     * @param appUser
+     * @return List of Advertisements made by App-user
+     */
+    @Transactional
+    public List<Advertisement> getAdvertisementsOfAppUser(AppUser appUser) {
+        return new ArrayList<>(appUser.getAdvertisements());
+    }
 
     /**
      * Deletes the Advertisement with specified id from the database.
@@ -151,7 +115,7 @@ public class AdvertisementService {
     @Transactional
     public boolean deleteAdvertisement(String id) {
         Advertisement adToDelete = advertisementRepository.findAdvertisementByAdvertisementId(id);
-        if (adToDelete != null){
+        if (adToDelete != null) {
             //Delete all multiple associations with an application
             while (adToDelete.getApplications().size() != 0) {
                 Set<Application> applications = adToDelete.getApplications();
@@ -171,7 +135,6 @@ public class AdvertisementService {
         return false;
     }
 
-//////////////////////////////Advertisement update method////////////////////////////////////
     /**
      * Updates the isExpired attribute of Advertisement class in the database.
      *
@@ -179,9 +142,64 @@ public class AdvertisementService {
      * @return Advertisement
      */
     @Transactional
-    public Advertisement updateAdvertisementIsExpired(Advertisement ad, boolean isExpired) {
-        ad.setIsExpired(isExpired);
-        advertisementRepository.save(ad);
-        return ad;
+    public Advertisement updateAdvertisementIsExpired(String adId, boolean isExpired) {
+        Advertisement advertisement = advertisementRepository.findAdvertisementByAdvertisementId(adId);
+        if (advertisement == null) {
+            throw new IllegalArgumentException("Invalid advertisement requested. Please check advertisement ID.");
+        }
+        advertisement.setIsExpired(isExpired);
+        advertisementRepository.save(advertisement);
+        return advertisement;
+    }
+
+    /**
+     * Updates advertisement details for a pet in the database.
+     * @param adId
+     * @param petName
+     * @param petAge
+     * @param petDescription
+     * @param petSex
+     * @param petSpecies
+     * @return Updated Advertisement
+     */
+    @Transactional
+    public Advertisement updateAdvertisement(String adId, String petName, Integer petAge, String petDescription,
+                                             Sex petSex, Species petSpecies) {
+        Advertisement advertisement = advertisementRepository.findAdvertisementByAdvertisementId(adId);
+        if (advertisement == null) {
+            throw new IllegalArgumentException("Invalid advertisement requested. Please check advertisement ID.");
+        }
+        advertisementParamCheck(petName, petAge, petDescription, petSex, petSpecies);
+        advertisement.setPetName(petName);
+        advertisement.setPetAge(petAge);
+        advertisement.setPetDescription(petDescription);
+        advertisement.setPetSex(petSex);
+        advertisement.setPetSpecies(petSpecies);
+        advertisementRepository.save(advertisement);
+        return advertisement;
+    }
+
+    private void advertisementParamCheck(String petName, Integer petAge, String petDescription,
+                                         Sex petSex, Species petSpecies) {
+        String error = "";
+        if (petName == null || petName.trim().length() == 0) {
+            error = error + "Pet name cannot be empty! ";
+        }
+        if (petAge <= 0) {
+            error = error + "Pet age cannot be less than or equal to 0! ";
+        }
+        if (petDescription == null || petDescription.trim().length() == 0) {
+            error = error + "Pet description cannot be empty! ";
+        }
+        if (petSex != Sex.F && petSex != Sex.M) {
+            error = error + "Pet sex must be specified! ";
+        }
+        if (petSpecies != Species.bird && petSpecies != Species.cat && petSpecies != Species.dog &&
+                petSpecies != Species.rabbit && petSpecies != Species.other) {
+            error = error + "Pet Species is invalid! ";
+        }
+        if (error.length() != 0) {
+            throw new IllegalArgumentException(error);
+        }
     }
 }
