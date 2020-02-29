@@ -34,7 +34,7 @@ public class AppUserController {
 
     @PutMapping(value = {"/updateUser","/updateUser"})
     public AppUserDto updateAppUser(@RequestBody AppUserDto appUser){
-        AppUser updatedUser = service.updaterAppUser(appUser.getName(), appUser.getEmail(),"password", appUser.getBiography(), appUser.getHomeDescription(),
+        AppUser updatedUser = service.updateAppUser(appUser.getName(), appUser.getEmail(),"password", appUser.getBiography(), appUser.getHomeDescription(),
                 appUser.getAge(), appUser.isIsAdmin(), appUser.getSex());
         return convertToDto(updatedUser);
     }
@@ -43,6 +43,11 @@ public class AppUserController {
     public AppUserDto getAppUser(@PathVariable("email") String email) {
         AppUser user = service.getAppUserByEmail(email);
         return convertToDto(user);
+    }
+
+    @PostMapping(value = {"/delete/user/{email}", "/delete/user/{email}/"})
+    public void deleteAppUser(@PathVariable("email") String email) {
+        service.deleteAppUser(email);
     }
 
     private AppUserDto convertToDto(AppUser appUser){
