@@ -2,6 +2,8 @@ package ca.mcgill.ecse321.petadoption.TestSuits.UnitTests;
 
 import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
 import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
+import ca.mcgill.ecse321.petadoption.model.Advertisement;
+import ca.mcgill.ecse321.petadoption.model.AppUser;
 import ca.mcgill.ecse321.petadoption.model.Sex;
 import ca.mcgill.ecse321.petadoption.model.Species;
 import ca.mcgill.ecse321.petadoption.service.AdvertisementService;
@@ -15,6 +17,11 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashSet;
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 
@@ -33,23 +40,8 @@ public class AdvertisementUnitTest {
     private AppUserService appUserService;
 
     // Constants to create test appUser and advertisement objects
-    private static final String USER_NAME_1 = "Test User 1";
     private static final String USER_EMAIL_1 = "user1@mcgill.ca";
-    private static final String USER_PASSWORD_1 = "password 1";
-    private static final String USER_BIO_1 = "cool";
-    private static final String USER_HOME_1 = "pleasant";
-    private static final Integer USER_AGE_1 = 34;
-    private static final Sex USER_SEX_1 = Sex.M;
-    private static final boolean USER_ADMIN_1 = true;
-
-    private static final String USER_NAME_2 = "user 2";
     private static final String USER_EMAIL_2 = "user2@mcgill.ca";
-    private static final String USER_PASSWORD_2 = "password 2";
-    private static final String USER_BIO_2 = "cooler";
-    private static final String USER_HOME_2 = "awful";
-    private static final Integer USER_AGE_2 = 23;
-    private static final Sex USER_SEX_2 = Sex.F;
-    private static final boolean USER_ADMIN_2 = false;
 
     //TODO: Check/ Put constraint that advertisement cannot be updated if it is expired
     private static final boolean IS_EXPIRED_1 = false;
@@ -73,7 +65,24 @@ public class AdvertisementUnitTest {
     private static final Sex PET_SEX_3 = Sex.F;
     private static final Species PET_SPECIES_3 = Species.bird;
 
+    private static final Date DATE_1 = Date.valueOf("2020-07-02");
+    private static final Date DATE_2 = Date.valueOf("2020-06-07");
 
+    //Mock unique ID keys for advertisements
+    private static final String ADVERTISEMENT_1_ID = "zwVC9mb";
+    private static final String ADVERTISEMENT_2_ID = "3klFrbp";
+    private static final String ADVERTISEMENT_3_ID = "MEM6jFl";
+
+    private static final AppUser APP_USER_1 = new AppUser();
+    private static final AppUser APP_USER_2 = new AppUser();
+
+    //Create Mock Advertisement Objects
+    private static final Advertisement ADVERTISEMENT_1 = createAdvertisement(APP_USER_1, DATE_1, ADVERTISEMENT_1_ID,
+            IS_EXPIRED_1,PET_NAME_1, PET_AGE_1, PET_DESCRIPTION_1, PET_SEX_1, PET_SPECIES_1);
+    private static final Advertisement ADVERTISEMENT_2 = createAdvertisement(APP_USER_2, DATE_1, ADVERTISEMENT_2_ID,
+            IS_EXPIRED_2,PET_NAME_2, PET_AGE_2, PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
+    private static final Advertisement ADVERTISEMENT_3 = createAdvertisement(APP_USER_2, DATE_2, ADVERTISEMENT_3_ID,
+            IS_EXPIRED_3,PET_NAME_3, PET_AGE_3, PET_DESCRIPTION_3, PET_SEX_3, PET_SPECIES_3);
 
     //TODO: Set up lenient blocks for all methods that are called from the CRUD repository for advertisement
     //Methods include: (AU)findAppUserByEmail,(Ad)findAdvertisementByPostedBy,(Ad)findAdvertisementByAdvertisementID,
@@ -81,8 +90,37 @@ public class AdvertisementUnitTest {
     //IF YOU ARE NOT MOCKING IT THEN YOU ARE CALLING THE ACTUAL DATABASE AND YOU DO NOT WANT THAT.
     @BeforeEach
     public void setMockOutput() {
+        //Set up Mock data base with App User account and Advertisements
+        configureAppUser(APP_USER_1, USER_EMAIL_1, ADVERTISEMENT_1);
+        configureAppUser(APP_USER_2, USER_EMAIL_2, ADVERTISEMENT_2, ADVERTISEMENT_3);
+
+        // Mock Actions of data base
         lenient().when(appUserDao.findAppUserByEmail(anyString())).thenAnswer(
                 (InvocationOnMock invocation) -> {
+                    if (invocation.getArgument(0).equals(USER_EMAIL_1)) {
+                        return APP_USER_1;
+                    } else if (invocation.getArgument(0).equals((USER_EMAIL_2))) {
+                        return APP_USER_2;
+                    }
+                    return null;
+                });
+
+        lenient().when(advertisementDao.findAdvertisementsByPostedBy(any(AppUser.class))).thenAnswer(
+                (InvocationOnMock invocation) -> {
+                    if (((AppUser) invocation.getArgument(0)).getEmail().equals(USER_EMAIL_1)) {
+                        //Return as ArrayList because method in DAO class returns List<Advertisement>
+                        return new ArrayList<>(APP_USER_1.getAdvertisements());
+                    } else if (((AppUser) invocation.getArgument(0)).getEmail().equals(USER_EMAIL_2)) {
+                        return new ArrayList<>(APP_USER_2.getAdvertisements());
+                    }
+                    return null;
+                });
+
+        lenient().when(advertisementDao.findAdvertisementByAdvertisementId(anyString())).thenAnswer(
+                (InvocationOnMock invocation) -> {
+                    if (invocation.getArgument(0).equals(ADVERTISEMENT_1)){
+
+                    }
                     return null;
                 });
     }
@@ -90,5 +128,32 @@ public class AdvertisementUnitTest {
     @Test
     public void createAdvertisement() {
 
+    }
+
+
+    private static Advertisement createAdvertisement(AppUser appUser,Date datePosted, String id, boolean isExpired, String petName,
+                                                     Integer petAge, String petDescription, Sex petSex, Species petSpecies) {
+        Advertisement advertisement = new Advertisement();
+        advertisement.setDatePosted(datePosted);
+        advertisement.setAdvertisementId(id);
+        advertisement.setIsExpired(isExpired);
+        advertisement.setPetName(petName);
+        advertisement.setPetAge(petAge);
+        advertisement.setPetDescription(petDescription);
+        advertisement.setPetSex(petSex);
+        advertisement.setPetSpecies(petSpecies);
+
+        advertisement.setPostedBy(appUser);
+        advertisement.setPetImages(new HashSet<>());
+        advertisement.setApplications(new HashSet<>());
+
+        return advertisement;
+    }
+
+    private static void configureAppUser(AppUser appUser, String userEmail, Advertisement... advertisement){
+        appUser.setEmail(userEmail);
+        for (Advertisement ad : advertisement){
+            appUser.addAdvertisement(ad);
+        }
     }
 }
