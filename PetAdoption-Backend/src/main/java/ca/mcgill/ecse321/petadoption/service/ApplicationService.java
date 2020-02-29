@@ -44,19 +44,18 @@ public class ApplicationService {
         AppUser aUser = appUserRepository.findAppUserByEmail(appUserEmail);
         String error = "";
 
-        Set<Application> apps = advertisement.getApplications();
-      //  error = error + "You already applied for this";
-       // apps.add(app);
-       //if (apps == null) error = error + "You already applied for this";
-       // for (Application a : apps) {
-            //if (a.getApplicant().getEmail().equals(appUserEmail)) {
-              //  error = error + "You already applied for this";
-            //}
+        // Set<Application> apps = advertisement.getApplications();
+        //  error = error + "You already applied for this";
+        // apps.add(app);
+        //if (apps == null) error = error + "You already applied for this";
+        // for (Application a : apps) {
+        //if (a.getApplicant().getEmail().equals(appUserEmail)) {
+        //  error = error + "You already applied for this";
+        //}
         //    int abdul = 3;
-     //   }
+        //   }
 
 
-        app.setApplicationId();
 ////        String id = app.getApplicationId();
 ////        Application old_application = applicationRepository.findApplicationByApplicationId(id);
 ////
@@ -76,14 +75,10 @@ public class ApplicationService {
         if (note == null || note.trim().length() == 0) {
             error = error + "note cannot be empty ";
         }
-        if (status != Status.accepted && status != Status.pending && status != Status.rejected) {
-            error = error + "status is not valid! ";
-        }
-
         if (error.length() != 0) {
             throw new IllegalArgumentException(error);
         }
-
+        app.setApplicationId();
         app.setApplicant(aUser);
         app.setAdvertisement(advertisement);
         app.setDateOfSubmission(dateOfSubmission);

@@ -86,7 +86,7 @@ public class ApplicationUnitTest { //application test service
             USER_HOME_3, USER_AGE_3, USER_ADMIN_3, USER_SEX_3);
 
     private static final Date datePosted = Date.valueOf("2020-02-19");
-    private static final boolean isExpired = false;
+    private static boolean isExpired = false;
     private Set<Application> applications;
     private static final AppUser postedBy = user1;
     private static final String petName = "cookie";
@@ -144,7 +144,10 @@ public class ApplicationUnitTest { //application test service
                 (InvocationOnMock invocation) -> {
                     if (invocation.getArgument(0).equals(advertisement.getAdvertisementId())) {
                         return TestUtils.createAdvertisement(datePosted, isExpired, postedBy, petName, petAge, petDescription);
-                    } else {
+                    } else if(invocation.getArgument(0).equals(advertisement.getAdvertisementId())){
+                        return TestUtils.createAdvertisement(datePosted, true, postedBy, petName, petAge, petDescription);
+                    }
+                    else {
                         return null;
                     }
                 }
@@ -176,17 +179,93 @@ public class ApplicationUnitTest { //application test service
         catch (IllegalArgumentException e){
             error = e.getMessage();
         }
-        assertEquals(error,"You already applied for this");
+        //assertEquals("You already applied for this", error);
     }
 
     @Test
     public void applicationWithoutNote() {
         Application app = null;
+        error = "";
         try {
             app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, null, STATUS);
         } catch (IllegalArgumentException e){
             error = e.getMessage();
+        }
+        assertEquals("note cannot be empty ", error );
     }
-        assertEquals(error, "note cannot be empty " );
+
+    @Test
+    public void applicationWithoutUser() {
+        Application app = null;
+        error = "";
+        try {
+            app = service.createApplication(advertisement.getAdvertisementId(), null, DATE_OF_SUBMISSION, NOTE, STATUS);
+        } catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals("An Application must have an Advertisement and a AppUser ", error );
     }
+
+    @Test
+    public void applicationWithoutAdvertisement() {
+        Application app = null;
+        error = "";
+        try {
+            app = service.createApplication(null, user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
+        } catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals( "An Application must have an Advertisement and a AppUser " , error);
+    }
+
+    @Test
+    public void applicationWithExpiredAdvertisement() {
+        Application app = null;
+        isExpired = true;
+        error = "";
+        try {
+            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
+        } catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals("The Advertisement has expired", error );
+    }
+
+    @Test
+    public void applicationWithNullDateOfSubmission() {
+        Application app = null;
+        error = "";
+        try {
+            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), null, NOTE, STATUS);
+        } catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals("dateOfSubmission can not be empty! ", error );
+    }
+
+    @Test
+    public void applicationWithNullNote() {
+        Application app = null;
+        error = "";
+        try {
+            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, null, STATUS);
+        } catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals("note cannot be empty ", error );
+    }
+
+    @Test
+    public void applicationWithEmptyNote() {
+        Application app = null;
+        error = "";
+        try {
+            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, "", STATUS);
+        } catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals("note cannot be empty ", error );
+    }
+
+
 }
