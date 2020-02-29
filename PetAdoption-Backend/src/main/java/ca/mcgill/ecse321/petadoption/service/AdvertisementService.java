@@ -104,7 +104,7 @@ public class AdvertisementService {
      */
     @Transactional
     public List<Advertisement> getAdvertisementsOfAppUser(AppUser appUser) {
-        return new ArrayList<>(appUser.getAdvertisements());
+        return advertisementRepository.findAdvertisementsByPostedBy(appUser);
     }
 
     /**
