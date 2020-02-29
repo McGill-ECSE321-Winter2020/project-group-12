@@ -52,7 +52,7 @@ public class AppUserController {
 
     private AppUserDto convertToDto(AppUser appUser){
         return new AppUserDto(appUser.getName(), appUser.getEmail(), appUser.getBiography(), appUser.getHomeDescription(),
-                              appUser.getAge(), appUser.isIsAdmin(), appUser.getSex(), null,null,null);
+                              appUser.getAge(), appUser.isIsAdmin(), appUser.getSex());
     }
 
 }

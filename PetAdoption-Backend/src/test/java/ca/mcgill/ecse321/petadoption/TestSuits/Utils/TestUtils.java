@@ -45,6 +45,4 @@ public class TestUtils {
         assertEquals(sex, user.getSex());
         assertEquals(isAdmin, user.isIsAdmin());
     }
-
-
 }
