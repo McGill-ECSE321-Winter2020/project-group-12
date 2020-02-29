@@ -14,14 +14,11 @@ public class AdvertisementDto {
     private String petDescription;
     private Sex petSex;
     private Species petSpecies;
-    private AppUser postedBy;
+    private String userEmail;
     private Set<Application> applications;
     private Set<Image> petImages;
 
-    public AdvertisementDto() {
-    }
-
-    public AdvertisementDto(AppUser postedBy, Date datePosted, String advertisementId, boolean isExpired,
+    public AdvertisementDto(String userEmail, Date datePosted, String advertisementId, boolean isExpired,
                             String petName, Integer petAge, String petDescription, Sex petSex, Species petSpecies,
                             Set<Application> applications, Set<Image> petImages) {
         this.datePosted = datePosted;
@@ -32,7 +29,7 @@ public class AdvertisementDto {
         this.petDescription = petDescription;
         this.petSex = petSex;
         this.petSpecies = petSpecies;
-        this.postedBy = postedBy;
+        this.userEmail = userEmail;
         this.applications = applications;
         this.petImages = petImages;
     }
@@ -61,8 +58,8 @@ public class AdvertisementDto {
         return applications;
     }
 
-    public AppUser getPostedBy() {
-        return postedBy;
+    public String getUserEmail() {
+        return userEmail;
     }
 
     public String getPetName() {

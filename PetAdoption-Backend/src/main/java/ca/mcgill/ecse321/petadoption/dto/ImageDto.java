@@ -11,13 +11,13 @@ public class ImageDto {
     private String name;
     private String link;
     private String imageId;
-    private AdvertisementDto advertisement;
+    private String advertisementId;
 
-    public ImageDto(String name, String link, String imageId, AdvertisementDto advertisement){
+    public ImageDto(String name, String link, String imageId, String advertisementId){
         this.name = name;
         this.link = link;
         this.imageId = imageId;
-        this.advertisement = advertisement;
+        this.advertisementId = advertisementId;
     }
     public String getName() {
         return this.name;
@@ -31,8 +31,8 @@ public class ImageDto {
         return this.imageId;
     }
 
-    public AdvertisementDto getAdvertisement() {
-        return this.advertisement;
+    public String getAdvertisementId() {
+        return this.advertisementId;
     }
 
 

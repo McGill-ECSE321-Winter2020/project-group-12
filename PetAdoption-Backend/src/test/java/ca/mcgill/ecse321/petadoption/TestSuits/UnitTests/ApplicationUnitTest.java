@@ -36,26 +36,33 @@ import ca.mcgill.ecse321.petadoption.service.ApplicationService;
 public class ApplicationUnitTest { //application test service
     @Mock
     private ApplicationRepository applicationDao;
-
+    private AppUserRepository appUserDao;
+    private AdvertisementRepository advertisementDao;
     @InjectMocks
     private ApplicationService service;
 
-    private static final String APPLICATION_ID = "ApplicationId";
+    private static final String USER_NAME = "User1";
 
-    @BeforeEach
-    public void setMockOutput() {
-        lenient().when(applicationDao.findApplicationByApplicationId(anyString())).thenAnswer( (InvocationOnMock invocation) -> {
-            if(invocation.getArgument(0).equals(APPLICATION_ID)) {
-                Application app = new Application();
-                app.setApplicationId(APPLICATION_ID);
-                return app;
-            } else {
-                return null;
-            }
-        });
-    }
 
-    
+//    @BeforeEach
+//    public void setMockOutput() {
+//        lenient().when(applicationDao.findApplicationByApplicationId(anyString())).thenAnswer( (InvocationOnMock invocation) -> {
+//            if(invocation.getArgument(0).equals(APPLICATION_ID)) {
+//                Application app = new Application();
+//                app.setApplicationId();
+//                return app;
+//            } else {
+//                return null;
+//            }
+//        });
+//    }
+//    lenient().when(personDao.save(any(Person.class))).thenAnswer(returnParameterAsAnswer);
+//    lenient().when(eventDao.save(any(Event.class))).thenAnswer(returnParameterAsAnswer);
+//    lenient().when(registrationDao.save(any(Registration.class))).thenAnswer(returnParameterAsAnswer);
+//}
+
+
+
 
 
 }
