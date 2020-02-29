@@ -19,6 +19,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -144,12 +145,17 @@ public class ApplicationUnitTest { //application test service
                 (InvocationOnMock invocation) -> {
                     if (invocation.getArgument(0).equals(advertisement.getAdvertisementId())) {
                         return TestUtils.createAdvertisement(datePosted, isExpired, postedBy, petName, petAge, petDescription);
-                    } else if(invocation.getArgument(0).equals(advertisement.getAdvertisementId())){
+                    } else if (invocation.getArgument(0).equals(advertisement.getAdvertisementId())) {
                         return TestUtils.createAdvertisement(datePosted, true, postedBy, petName, petAge, petDescription);
-                    }
-                    else {
+                    } else {
                         return null;
                     }
+                }
+        );
+
+        lenient().when(applicationDao.findApplicationByApplicationId(anyString())).thenAnswer(
+                (InvocationOnMock invocation) -> {
+                    return TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS);
                 }
         );
     }
@@ -160,23 +166,21 @@ public class ApplicationUnitTest { //application test service
         error = "";
         try {
             app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             fail();
         }
         TestUtils.assertApplication(app, advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS);
     }
 
     @Test
-    public void duplicateApplicationsPerAdvertisement(){
+    public void duplicateApplicationsPerAdvertisement() {
         Application app = null;
         Application app2 = null;
         error = "";
         try {
             app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
             app2 = service.createApplication(advertisement.getAdvertisementId(), user3.getEmail(), DATE_OF_SUBMISSION2, NOTE2, STATUS2);
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
         //assertEquals("You already applied for this", error);
@@ -188,10 +192,10 @@ public class ApplicationUnitTest { //application test service
         error = "";
         try {
             app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, null, STATUS);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
-        assertEquals("note cannot be empty ", error );
+        assertEquals("note cannot be empty ", error);
     }
 
     @Test
@@ -200,10 +204,10 @@ public class ApplicationUnitTest { //application test service
         error = "";
         try {
             app = service.createApplication(advertisement.getAdvertisementId(), null, DATE_OF_SUBMISSION, NOTE, STATUS);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
-        assertEquals("An Application must have an Advertisement and a AppUser ", error );
+        assertEquals("An Application must have an Advertisement and a AppUser ", error);
     }
 
     @Test
@@ -212,10 +216,10 @@ public class ApplicationUnitTest { //application test service
         error = "";
         try {
             app = service.createApplication(null, user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
-        assertEquals( "An Application must have an Advertisement and a AppUser " , error);
+        assertEquals("An Application must have an Advertisement and a AppUser ", error);
     }
 
     @Test
@@ -225,10 +229,11 @@ public class ApplicationUnitTest { //application test service
         error = "";
         try {
             app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
-        assertEquals("The Advertisement has expired", error );
+        assertEquals("The Advertisement has expired", error);
+        isExpired = false;
     }
 
     @Test
@@ -237,10 +242,10 @@ public class ApplicationUnitTest { //application test service
         error = "";
         try {
             app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), null, NOTE, STATUS);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
-        assertEquals("dateOfSubmission can not be empty! ", error );
+        assertEquals("dateOfSubmission can not be empty! ", error);
     }
 
     @Test
@@ -249,10 +254,10 @@ public class ApplicationUnitTest { //application test service
         error = "";
         try {
             app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, null, STATUS);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
-        assertEquals("note cannot be empty ", error );
+        assertEquals("note cannot be empty ", error);
     }
 
     @Test
@@ -261,11 +266,100 @@ public class ApplicationUnitTest { //application test service
         error = "";
         try {
             app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, "", STATUS);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
-        assertEquals("note cannot be empty ", error );
+        assertEquals("note cannot be empty ", error);
     }
 
+    @Test
+    public void getApplicationTest() {
+        Application app = null;
+        Application app2 = null;
+        error = "";
+        try {
+            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
+            app2 = service.getApplicationByID(app.getApplicationId());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        TestUtils.assertApplication(app2, advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS);
+    }
+
+    @Test
+    public void getApplicationNullIdTest() {
+        Application app = null;
+        Application app2 = null;
+        error = "";
+        try {
+            app2 = service.getApplicationByID(null);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertEquals("Application must have an ID", error);
+    }
+
+    @Test
+    public void getApplicationEmptyIdTest() {
+        Application app = null;
+        Application app2 = null;
+        error = "";
+        try {
+            app2 = service.getApplicationByID("");
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertEquals("Application must have an ID", error);
+    }
+
+    @Test
+    public void getApplicationIncorrectIdTest() {
+        Application app = null;
+        Application app2 = null;
+        error = "";
+        try {
+            app2 = service.getApplicationByID("");
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNull(app2); //if the id passed does not match any other id, the application returned is null
+    }
+
+    @Test
+    public void testGetAllApplications() {
+        List<Application> list = service.getAllApplications();
+        TestUtils.assertApplication(list.get(0), advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS);
+        TestUtils.assertApplication(list.get(1), advertisement, user3, DATE_OF_SUBMISSION2, NOTE2, STATUS2);
+    }
+
+    @Test
+    public void testDelete() {
+        Application app = null;
+        try {
+            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
+            service.deleteApplication(app.getApplicationId());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testUpdateApplicationStatus() {
+        Application app = null;
+        try {
+            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
+            app = service.updateApplicationStatus(app, Status.accepted);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        TestUtils.assertApplication(app, advertisement, user2, DATE_OF_SUBMISSION, NOTE, Status.accepted);
+        try{
+            app = service.updateApplicationStatus(app, Status.rejected);
+        }
+        catch (IllegalArgumentException e) {
+            fail();
+        }
+        TestUtils.assertApplication(app, advertisement, user2, DATE_OF_SUBMISSION, NOTE, Status.rejected);
+    }
 
 }

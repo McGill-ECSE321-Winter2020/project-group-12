@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -111,7 +113,7 @@ public class ApplicationService {
      */
     @Transactional
     public List<Application> getAllApplications() {
-        return toList(applicationRepository.findAll());
+        return new ArrayList<>((Collection<? extends Application>)applicationRepository.findAll());
     }
 
     /////////////////////////////Application Delete Method////////////////////////////////////////
