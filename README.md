@@ -33,8 +33,8 @@ Click to find out more about [Deliverable 1](https://github.com/McGill-ECSE321-W
 | Zakaria Essadaoui   | 30| AppUser class business methods, RESTful API, testing, Integration Test task setup
 | Christina Riachi    | 27| Donation class business methods, RESTful API, testing, Q&A Plan and Testing Documentation
 | Bozhong Lu          | 20| Image class business methods, RESTful API, testing, API Documentation
-| Abhimukth Chaudhuri | 30| Application class business methods, RESTful API, testing
-| Abdullatif Hassan   | 25| Advertisement class business methods, RESTful API, testing, Deliverable 2 Report 
+| Abhimukth Chaudhuri | 30| Advertisement class business methods, RESTful API, testing
+| Abdullatif Hassan   | 25| Application class business methods, RESTful API, testing, Deliverable 2 Report 
 
 Click to find out more about [Deliverable 2](https://github.com/McGill-ECSE321-Winter2020/project-group-12/wiki/Deliverable-2) and the [Testing Documentation](https://github.com/McGill-ECSE321-Winter2020/project-group-12/wiki/Testing-Documentation)!
 
