@@ -8,6 +8,5 @@ import org.springframework.data.repository.CrudRepository;
 public interface ApplicationRepository extends CrudRepository<Application, Long> {
 
     Application findApplicationByApplicationId(String id);
-
     void deleteApplicationByApplicationId(String id);
 }

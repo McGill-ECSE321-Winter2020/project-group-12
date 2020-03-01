@@ -5,16 +5,11 @@ import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
 import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
 import ca.mcgill.ecse321.petadoption.dao.ApplicationRepository;
 import ca.mcgill.ecse321.petadoption.dao.DonationRepository;
-import ca.mcgill.ecse321.petadoption.model.*;
+import ca.mcgill.ecse321.petadoption.model.AppUser;
+import ca.mcgill.ecse321.petadoption.model.Sex;
 import ca.mcgill.ecse321.petadoption.service.AppUserService;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.BeforeEach;
-
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,11 +19,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.lenient;
-
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
 public class AppUserUnitTest {
@@ -263,6 +257,7 @@ public class AppUserUnitTest {
         assertEquals(error, "homeDescription cannot be empty ");
     }
 
+    // TODO: test negative age and UNREASONABLE age (>100)
     @Test
     public void testCreateAppUserZeroAge(){
         AppUser user = null;
@@ -361,8 +356,9 @@ public class AppUserUnitTest {
                 USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2);
     }
 
-    @Test
-    public void testDeleteUsers(){
-        service.deleteAppUser(USER_EMAIL_2);
-    }
+//    @Test
+//    public void testDeleteUsers(){
+//        service.deleteAppUser(USER_EMAIL_2);
+//    }
+
 }
