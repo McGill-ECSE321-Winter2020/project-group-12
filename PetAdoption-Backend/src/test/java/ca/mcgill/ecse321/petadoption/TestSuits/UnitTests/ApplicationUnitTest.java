@@ -444,4 +444,18 @@ public class ApplicationUnitTest { //application test service
         }
         assertEquals("You already applied for this", error);
     }
+
+    @Test
+    public void ApplicationDateBeforeAdvertisement(){
+        Application app = new Application();
+        error = "";
+        try{
+            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), Date.valueOf("2000-01-01"), NOTE, STATUS);
+        }
+        catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals("Advertisement Date Must Be Prior or Equal To Application Date", error);
+
+    }
 }

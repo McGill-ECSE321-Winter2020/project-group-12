@@ -44,7 +44,12 @@ public class ApplicationService {
         AppUser aUser = appUserRepository.findAppUserByEmail(appUserEmail);
         String error = "";
         Set<Application> apps = new HashSet<Application>();
-        if (advertisement != null) {
+        if (advertisementId == null || appUserEmail == null || appUserEmail == "" || appUserEmail.trim().length() == 0) {
+            error = error + "An Application must have an Advertisement and a AppUser ";
+        } else if (advertisement.isIsExpired()) {
+            error = error + "The Advertisement has expired";
+        }
+       else if (advertisement != null) {
             apps = applicationRepository.findApplicationByAdvertisementAdvertisementId(advertisement.getAdvertisementId());
             AppUser owner = advertisement.getPostedBy();
             String ownerEmail = owner.getEmail();
@@ -57,112 +62,87 @@ public class ApplicationService {
                         if (bool) throw new IllegalArgumentException("You already applied for this");
                         bool = true;
                     }
-
                 }
                 apps.add(app);
-
             } else apps.add(app);
-        }
-            //  error = error + "You already applied for this";
-            // apps.add(app);
-            //if (apps == null) error = error + "You already applied for this";
-            // for (Application a : apps) {
-            //if (a.getApplicant().getEmail().equals(appUserEmail)) {
-            //  error = error + "You already applied for this";
-            //}
-            //    int abdul = 3;
-            //   }
-
-
-////        String id = app.getApplicationId();
-////        Application old_application = applicationRepository.findApplicationByApplicationId(id);
-////
-////        if(old_application != null){
-////            throw new IllegalArgumentException("The application id: " + id + " already exists");
-////        }
-//        if (advertisement.getPostedBy().getEmail().equals(appUserEmail)){
-//            error = error + "You Cannot be the applicant of an advertisement posted by you";
-//        }
-
-
-            if (advertisementId == null || appUserEmail == null || appUserEmail == "" || appUserEmail.trim().length() == 0) {
-                error = error + "An Application must have an Advertisement and a AppUser ";
-            } else if (advertisement.isIsExpired()) {
-                error = error + "The Advertisement has expired";
-            }
 
             if (dateOfSubmission == null) {
                 error = "dateOfSubmission can not be empty! ";
+            } else if ((dateOfSubmission.compareTo(advertisement.getDatePosted())) < 0) {
+                error = error + "Advertisement Date Must Be Prior or Equal To Application Date";
             }
+
             if (note == null || note.trim().length() == 0) {
                 error = error + "note cannot be empty ";
             }
-            if (error.length() != 0) {
-                throw new IllegalArgumentException(error);
-            }
-            app.setApplicationId();
-            app.setApplicant(aUser);
-            app.setAdvertisement(advertisement);
-            app.setDateOfSubmission(dateOfSubmission);
-            app.setNote(note);
-            app.setStatus(status);
-
-            applicationRepository.save(app);
-            return app;
+        }
+        if (error.length() != 0) {
+            throw new IllegalArgumentException(error);
         }
 
-        /**
-         * Returns the Application with specified id from the database.
-         *
-         * @param id
-         * @return Application object
-         */
-        @Transactional
-        public Application getApplicationByID (String id){
-            if (id == null || id.trim().length() == 0) {
-                throw new IllegalArgumentException("Application must have an ID");
-            }
-            Application a = applicationRepository.findApplicationByApplicationId(id);
-            return a;
-        }
+        app.setApplicationId();
+        app.setApplicant(aUser);
+        app.setAdvertisement(advertisement);
+        app.setDateOfSubmission(dateOfSubmission);
+        app.setNote(note);
+        app.setStatus(status);
 
-        /**
-         * Returns all Applications in the database.
-         *
-         * @return List of Application objects
-         */
-        @Transactional
-        public List<Application> getAllApplications () {
-            return new ArrayList<>((Collection<? extends Application>) applicationRepository.findAll());
-        }
-
-        /////////////////////////////Application Delete Method////////////////////////////////////////
-
-        /**
-         * Deletes the Application with specified id from the database.
-         *
-         * @param id
-         */
-        @Transactional
-        public void deleteApplication (String id){
-            applicationRepository.deleteApplicationByApplicationId(id);
-        }
-
-
-        //////////////////////////////Application update method////////////////////////////////////
-
-        /**
-         * Updates the status attribute of Application class in the database.
-         *
-         * @param status
-         * @return Application
-         */
-        @Transactional
-        public Application updateApplicationStatus (Application app, Status status){
-            app.setStatus(status);
-            applicationRepository.save(app);
-            return app;
-        }
-
-
+        applicationRepository.save(app);
+        return app;
     }
+
+    /**
+     * Returns the Application with specified id from the database.
+     *
+     * @param id
+     * @return Application object
+     */
+    @Transactional
+    public Application getApplicationByID(String id) {
+        if (id == null || id.trim().length() == 0) {
+            throw new IllegalArgumentException("Application must have an ID");
+        }
+        Application a = applicationRepository.findApplicationByApplicationId(id);
+        return a;
+    }
+
+    /**
+     * Returns all Applications in the database.
+     *
+     * @return List of Application objects
+     */
+    @Transactional
+    public List<Application> getAllApplications() {
+        return new ArrayList<>((Collection<? extends Application>) applicationRepository.findAll());
+    }
+
+    /////////////////////////////Application Delete Method////////////////////////////////////////
+
+    /**
+     * Deletes the Application with specified id from the database.
+     *
+     * @param id
+     */
+    @Transactional
+    public void deleteApplication(String id) {
+        applicationRepository.deleteApplicationByApplicationId(id);
+    }
+
+
+    //////////////////////////////Application update method////////////////////////////////////
+
+    /**
+     * Updates the status attribute of Application class in the database.
+     *
+     * @param status
+     * @return Application
+     */
+    @Transactional
+    public Application updateApplicationStatus(Application app, Status status) {
+        app.setStatus(status);
+        applicationRepository.save(app);
+        return app;
+    }
+
+
+}
