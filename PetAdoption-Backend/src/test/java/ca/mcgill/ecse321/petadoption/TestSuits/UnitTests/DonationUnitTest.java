@@ -64,8 +64,7 @@ public class DonationUnitTest {
     private static final String TRANSACTION_ID = "12hjkv";
 
     @BeforeEach
-    public void setMockOutput() { //I ALSO CALL FIND APP USER BY EMAIL IN MY SERVICE CLASS SO.....
-        // most probably wont need this cuz ID is randomly pseudo auto-generated
+    public void setMockOutput() {
         lenient().when(donationDao.findDonationByTransactionID(anyString())).thenAnswer((InvocationOnMock invocation) -> {
             if((invocation.getArgument(0)).equals(TRANSACTION_ID)) {
                 Donation donation = new Donation();
@@ -83,7 +82,7 @@ public class DonationUnitTest {
                 userDonations.add(DONATION_2);
                 return userDonations;
             } else {
-                return null;
+                return new ArrayList<Donation>();
             }
         });
 
@@ -93,7 +92,7 @@ public class DonationUnitTest {
                 donations.add(DONATION_1);
                 return donations;
             } else {
-                return null;
+                return new ArrayList<Donation>();
             }
         });
 
@@ -103,7 +102,7 @@ public class DonationUnitTest {
                 donations.add(DONATION_1);
                 return donations;
             } else {
-                return null;
+                return new ArrayList<Donation>();
             }
         });
 
@@ -142,7 +141,7 @@ public class DonationUnitTest {
     }
 
     @Test
-    public void testCreateDonationDonorNonExistingEmail() {
+    public void testCreateDonationDonorNullEmail() {
         String error = null;
         Donation donation = null;
         try {
@@ -169,7 +168,7 @@ public class DonationUnitTest {
     }
 
     @Test
-    public void testCreateDonationNonExistingDonor() { // TODO: NOT SURE HOW TO IMPLEMENT IT CUZ ABOVE IN THE MOCK SETUP WE SAID THAT IF WE QUERY W/ ANY STRING IT WILL RETURN STH
+    public void testCreateDonationNonExistingDonor() {
         String error = "";
         Donation donation = null;
         try {
@@ -274,9 +273,17 @@ public class DonationUnitTest {
 
     @Test
     public void testGetDonationByNonExistingID() {
-        Donation donation = donationService.getDonationByTransactionID(NON_EXISTING_ID);
+        String error = "";
+        Donation donation = null;
+        try {
+            donation = donationService.getDonationByTransactionID(NON_EXISTING_ID);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
         assertNull(donation);
+        assertEquals("A Donation with such an ID does not exist", error);
     }
+
     @Test
     public void testGetDonationByUserEmail() {
         for(Donation don: donationService.getDonationsByUser(USER_EMAIL_1)) {
@@ -286,7 +293,15 @@ public class DonationUnitTest {
 
     @Test
     public void testGetDonationByNonExistingUserEmail() {
-        assertNull(donationService.getDonationsByUser(NON_EXISTING_USER_EMAIL));
+        String error = "";
+        List<Donation> donations = null;
+        try {
+            donations = donationService.getDonationsByUser(NON_EXISTING_USER_EMAIL);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNull(donations);
+        assertEquals("A donation with such an email does not exist.", error);
     }
 
     @Test
@@ -334,15 +349,22 @@ public class DonationUnitTest {
         assertNull(donations);
         assertEquals("Date of payment cannot be empty", error);
     }
+
     @Test
     public void testGetDonationByNonExistingDateOfPayment() {
-        assertNull(donationService.getDonationsByDateOfPayment(NON_EXISTING_DONATION_DATE));
+        String error = "";
+        List<Donation> donations = null;
+        try {
+            donations = donationService.getDonationsByDateOfPayment(NON_EXISTING_DONATION_DATE);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertEquals("No donations were made on this date", error);
+        assertNull(donations);
     }
 
     @Test
     public void testGetDonationByDateOfPaymentAndUser() { //null pointer exception for some reason
-        //System.out.println(donationService.getDonationsByDateAndDonor(DONATION_DATE_1, USER_EMAIL_1));
- //       assertNull(donationService.getDonationsByDateAndDonor(DONATION_DATE_1, USER_EMAIL_1));
         for(Donation don: donationService.getDonationsByDateAndDonor(DONATION_DATE_1, USER_EMAIL_1)) {
             assertEquals(DONATION_DATE_1, don.getDateOfPayment());
             assertEquals(USER_EMAIL_1, don.getDonor().getEmail());
@@ -351,7 +373,15 @@ public class DonationUnitTest {
 
     @Test
     public void testGetDonationByNonExistingDateAndNonExistingUser() {
-        assertNull(donationService.getDonationsByDateAndDonor(NON_EXISTING_DONATION_DATE, NON_EXISTING_USER_EMAIL));
+        String error = "";
+        List<Donation> donations = null;
+        try {
+            donations = donationService.getDonationsByDateAndDonor(NON_EXISTING_DONATION_DATE, NON_EXISTING_USER_EMAIL);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNull(donations);
+        assertEquals("No donations were found on this date by this donor.", error);
     }
 
     @Test
