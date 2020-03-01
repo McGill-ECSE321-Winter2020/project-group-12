@@ -458,137 +458,129 @@ public class AdvertisementUnitTest {
 
     @Test
     public void testUpdateAdvertisementNullPetName() {
-        ADVERTISEMENT_1.setPetName(PET_NAME_1);
-        Advertisement advertisement = ADVERTISEMENT_1;
+        Advertisement advertisement = ADVERTISEMENT_3;
         String error = null;
         try {
-            advertisement = advertisementService.updateAdvertisement(ADVERTISEMENT_1_ID, null, PET_AGE_2,
-                    PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
+            advertisement = advertisementService.updateAdvertisement(ADVERTISEMENT_3_ID, null, PET_AGE_3,
+                    PET_DESCRIPTION_3, PET_SEX_3, PET_SPECIES_3);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
         assertNotNull(advertisement);
-        assertEquals(ADVERTISEMENT_1, advertisement);
-        assertEquals(PET_NAME_1, advertisement.getPetName());
+        assertEquals(ADVERTISEMENT_3, advertisement);
+        assertEquals(PET_NAME_3, advertisement.getPetName());
         assertEquals(PET_NAME_ERROR_MESSAGE, error);
     }
 
     @Test
     public void testUpdateAdvertisementEmptyPetName() {
-        ADVERTISEMENT_1.setPetName(PET_NAME_1);
-        Advertisement advertisement = ADVERTISEMENT_1;
+        Advertisement advertisement = ADVERTISEMENT_3;
         String error = null;
         try {
-            advertisement = advertisementService.updateAdvertisement(ADVERTISEMENT_1_ID, " ", PET_AGE_2,
-                    PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
+            advertisement = advertisementService.updateAdvertisement(ADVERTISEMENT_3_ID, " ", PET_AGE_3,
+                    PET_DESCRIPTION_3, PET_SEX_3, PET_SPECIES_3);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
         assertNotNull(advertisement);
-        assertEquals(ADVERTISEMENT_1, advertisement);
-        assertEquals(PET_NAME_1, advertisement.getPetName());
+        assertEquals(ADVERTISEMENT_3, advertisement);
+        assertEquals(PET_NAME_3, advertisement.getPetName());
         assertEquals(PET_NAME_ERROR_MESSAGE, error);
     }
 
     @Test
     public void testUpdateAdvertisementNullPetAge() {
-        ADVERTISEMENT_1.setPetAge(PET_AGE_1);
-        Advertisement advertisement = ADVERTISEMENT_1;
+        Advertisement advertisement = ADVERTISEMENT_3;
         String error = null;
         try {
-            advertisement = advertisementService.updateAdvertisement(ADVERTISEMENT_1_ID, PET_NAME_2, null,
-                    PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
+            advertisement = advertisementService.updateAdvertisement(ADVERTISEMENT_3_ID, PET_NAME_3, null,
+                    PET_DESCRIPTION_3, PET_SEX_3, PET_SPECIES_3);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
         assertNotNull(advertisement);
-        assertEquals(ADVERTISEMENT_1, advertisement);
-        assertEquals(PET_AGE_1, advertisement.getPetAge());
+        assertEquals(ADVERTISEMENT_3, advertisement);
+        assertEquals(PET_AGE_3, advertisement.getPetAge());
         assertEquals(PET_AGE_ERROR_MESSAGE, error);
     }
 
     @Test
     public void testUpdateAdvertisementNegativePetAge() {
-        ADVERTISEMENT_1.setPetAge(PET_AGE_1);
-        Advertisement advertisement = ADVERTISEMENT_1;
+        Advertisement advertisement = ADVERTISEMENT_3;
         String error = null;
         try {
-            advertisement = advertisementService.updateAdvertisement(ADVERTISEMENT_1_ID, PET_NAME_2, NEGATIVE_AGE,
-                    PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
+            advertisement = advertisementService.updateAdvertisement(ADVERTISEMENT_3_ID, PET_NAME_3, NEGATIVE_AGE,
+                    PET_DESCRIPTION_3, PET_SEX_3, PET_SPECIES_3);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
         assertNotNull(advertisement);
-        assertEquals(ADVERTISEMENT_1, advertisement);
-        assertEquals(PET_AGE_1, advertisement.getPetAge());
+        assertEquals(ADVERTISEMENT_3, advertisement);
+        assertEquals(PET_AGE_3, advertisement.getPetAge());
         assertEquals(PET_AGE_ERROR_MESSAGE, error);
     }
 
     @Test
     public void testUpdateAdvertisementNullPetDescription() {
-        ADVERTISEMENT_1.setPetDescription(PET_DESCRIPTION_1);
-        Advertisement advertisement = ADVERTISEMENT_1;
+        Advertisement advertisement = ADVERTISEMENT_3;
         String error = null;
         try {
-            advertisement = advertisementService.updateAdvertisement(ADVERTISEMENT_1_ID, PET_NAME_2, PET_AGE_2,
-                    null, PET_SEX_2, PET_SPECIES_2);
+            advertisement = advertisementService.updateAdvertisement(ADVERTISEMENT_3_ID, PET_NAME_3, PET_AGE_3,
+                    null, PET_SEX_3, PET_SPECIES_3);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
         assertNotNull(advertisement);
-        assertEquals(ADVERTISEMENT_1, advertisement);
-        assertEquals(PET_DESCRIPTION_1, advertisement.getPetDescription());
+        assertEquals(ADVERTISEMENT_3, advertisement);
+        assertEquals(PET_DESCRIPTION_3, advertisement.getPetDescription());
         assertEquals(PET_DESCRIPTION_ERROR_MESSAGE, error);
     }
 
     @Test
     public void testUpdateAdvertisementEmptyPetDescription() {
-        ADVERTISEMENT_1.setPetDescription(PET_DESCRIPTION_1);
-        Advertisement advertisement = ADVERTISEMENT_1;
+        Advertisement advertisement = ADVERTISEMENT_3;
         String error = null;
         try {
-            advertisement = advertisementService.updateAdvertisement(ADVERTISEMENT_1_ID, PET_NAME_2, PET_AGE_2,
-                    " ", PET_SEX_2, PET_SPECIES_2);
+            advertisement = advertisementService.updateAdvertisement(ADVERTISEMENT_3_ID, PET_NAME_3, PET_AGE_3,
+                    " ", PET_SEX_3, PET_SPECIES_3);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
         assertNotNull(advertisement);
-        assertEquals(ADVERTISEMENT_1, advertisement);
-        assertEquals(PET_DESCRIPTION_1, advertisement.getPetDescription());
+        assertEquals(ADVERTISEMENT_3, advertisement);
+        assertEquals(PET_DESCRIPTION_3, advertisement.getPetDescription());
         assertEquals(PET_DESCRIPTION_ERROR_MESSAGE, error);
     }
 
     @Test
     public void testUpdateAdvertisementNullSex() {
-        ADVERTISEMENT_1.setPetSex(PET_SEX_1);
-        Advertisement advertisement = ADVERTISEMENT_1;
+        Advertisement advertisement = ADVERTISEMENT_3;
         String error = null;
         try {
-            advertisement = advertisementService.updateAdvertisement(ADVERTISEMENT_1_ID, PET_NAME_2, PET_AGE_2,
-                    PET_DESCRIPTION_2, null, PET_SPECIES_2);
+            advertisement = advertisementService.updateAdvertisement(ADVERTISEMENT_3_ID, PET_NAME_3, PET_AGE_3,
+                    PET_DESCRIPTION_3, null, PET_SPECIES_3);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
         assertNotNull(advertisement);
-        assertEquals(ADVERTISEMENT_1, advertisement);
-        assertEquals(PET_SEX_1, advertisement.getPetSex());
+        assertEquals(ADVERTISEMENT_3, advertisement);
+        assertEquals(PET_SEX_3, advertisement.getPetSex());
         assertEquals(PET_SEX_ERROR_MESSAGE, error);
     }
 
     @Test
     public void testUpdateAdvertisementNullSpecies() {
-        ADVERTISEMENT_1.setPetSpecies(PET_SPECIES_1);
-        Advertisement advertisement = ADVERTISEMENT_1;
+        Advertisement advertisement = ADVERTISEMENT_3;
         String error = null;
         try {
-            advertisement = advertisementService.updateAdvertisement(ADVERTISEMENT_1_ID, PET_NAME_2, PET_AGE_2,
-                    PET_DESCRIPTION_2, PET_SEX_2, null);
+            advertisement = advertisementService.updateAdvertisement(ADVERTISEMENT_3_ID, PET_NAME_3, PET_AGE_3,
+                    PET_DESCRIPTION_3, PET_SEX_3, null);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
         assertNotNull(advertisement);
-        assertEquals(ADVERTISEMENT_1, advertisement);
-        assertEquals(PET_SPECIES_1, advertisement.getPetSpecies());
+        assertEquals(ADVERTISEMENT_3, advertisement);
+        assertEquals(PET_SPECIES_3, advertisement.getPetSpecies());
         assertEquals(PET_SPECIES_ERROR_MESSAGE, error);
     }
 
@@ -653,14 +645,7 @@ public class AdvertisementUnitTest {
         }
 
         assertNotNull(advertisement);
-        assertEquals(USER_EMAIL_2, advertisement.getPostedBy().getEmail());
-        assertEquals(DATE_2, advertisement.getDatePosted());
-        assertEquals(ADVERTISEMENT_3_ID, advertisement.getAdvertisementId());
-        assertEquals(PET_NAME_3, advertisement.getPetName());
-        assertEquals(PET_AGE_3, advertisement.getPetAge());
-        assertEquals(PET_DESCRIPTION_3, advertisement.getPetDescription());
-        assertEquals(PET_SEX_3, advertisement.getPetSex());
-        assertEquals(PET_SPECIES_3, advertisement.getPetSpecies());
+        assertAdvertisementEquality(ADVERTISEMENT_3, advertisement);
     }
 
     @Test
@@ -712,23 +697,15 @@ public class AdvertisementUnitTest {
         }
 
         assertNotNull(advertisements);
-        assertEquals(USER_EMAIL_2, advertisements.get(0).getPostedBy().getEmail());
-        assertEquals(DATE_1, advertisements.get(0).getDatePosted());
-        assertEquals(ADVERTISEMENT_2_ID, advertisements.get(0).getAdvertisementId());
-        assertEquals(PET_NAME_2, advertisements.get(0).getPetName());
-        assertEquals(PET_AGE_2, advertisements.get(0).getPetAge());
-        assertEquals(PET_DESCRIPTION_2, advertisements.get(0).getPetDescription());
-        assertEquals(PET_SEX_2, advertisements.get(0).getPetSex());
-        assertEquals(PET_SPECIES_2, advertisements.get(0).getPetSpecies());
-
-        assertEquals(USER_EMAIL_2, advertisements.get(1).getPostedBy().getEmail());
-        assertEquals(DATE_2, advertisements.get(1).getDatePosted());
-        assertEquals(ADVERTISEMENT_3_ID, advertisements.get(1).getAdvertisementId());
-        assertEquals(PET_NAME_3, advertisements.get(1).getPetName());
-        assertEquals(PET_AGE_3, advertisements.get(1).getPetAge());
-        assertEquals(PET_DESCRIPTION_3, advertisements.get(1).getPetDescription());
-        assertEquals(PET_SEX_3, advertisements.get(1).getPetSex());
-        assertEquals(PET_SPECIES_3, advertisements.get(1).getPetSpecies());
+        if (advertisements.get(0).getAdvertisementId().equals(ADVERTISEMENT_2_ID)) {
+            assertAdvertisementEquality(ADVERTISEMENT_2, advertisements.get(0));
+        } else if (advertisements.get(0).getAdvertisementId().equals(ADVERTISEMENT_3_ID)) {
+            assertAdvertisementEquality(ADVERTISEMENT_3, advertisements.get(0));
+        } else if (advertisements.get(1).getAdvertisementId().equals(ADVERTISEMENT_2_ID)) {
+            assertAdvertisementEquality(ADVERTISEMENT_2, advertisements.get(1));
+        } else {
+            assertAdvertisementEquality(ADVERTISEMENT_3, advertisements.get(1));
+        }
     }
 
     @Test
@@ -810,5 +787,16 @@ public class AdvertisementUnitTest {
     private static void configureAppUser(AppUser appUser, String userEmail, Advertisement advertisement) {
         appUser.setEmail(userEmail);
         appUser.addAdvertisement(advertisement);
+    }
+
+    private static void assertAdvertisementEquality(Advertisement expected, Advertisement actual) {
+        assertEquals(expected.getPostedBy().getEmail(), actual.getPostedBy().getEmail());
+        assertEquals(expected.getDatePosted(), actual.getDatePosted());
+        assertEquals(expected.getAdvertisementId(), actual.getAdvertisementId());
+        assertEquals(expected.getPetName(), actual.getPetName());
+        assertEquals(expected.getPetAge(), actual.getPetAge());
+        assertEquals(expected.getPetDescription(),actual.getPetDescription());
+        assertEquals(expected.getPetSex(), actual.getPetSex());
+        assertEquals(expected.getPetSpecies(), actual.getPetSpecies());
     }
 }
