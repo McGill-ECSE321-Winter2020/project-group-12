@@ -37,6 +37,7 @@ public class AdvertisementTest {
     private static final Sex USER_SEX_1 = Sex.M;
     private static final boolean USER_ADMIN_1 = true;
 
+    private static final String USER_EMAIL_2 = "user2@mcgill.ca";
     private static final String NON_EXISTING_APP_USER = "user3@mcgill.ca";
 
     private static final String PET_NAME_1 = "Rusty";
@@ -692,6 +693,36 @@ public class AdvertisementTest {
     }
 
     @Test
+    public void testGetAllAdvertisements() {
+        Advertisement advertisement = createAppUserThenAdvertisement();
+        AppUser appUser = advertisement.getPostedBy();
+        AppUser appUser2 = createAppUser2();
+
+        Advertisement advertisement2 = null;
+        Advertisement advertisement3 = null;
+        Advertisement advertisement4 = null;
+        try {
+            advertisement2 = advertisementService.createAdvertisement(appUser.getEmail(), DATE_2, PET_NAME_2, PET_AGE_2,
+                    PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
+            advertisement3 = advertisementService.createAdvertisement(appUser.getEmail(), DATE_2, PET_NAME_3, PET_AGE_3,
+                    PET_DESCRIPTION_3, PET_SEX_3, PET_SPECIES_3);
+            advertisement4 = advertisementService.createAdvertisement(appUser2.getEmail(), DATE_1, PET_NAME_3, PET_AGE_3,
+                    PET_DESCRIPTION_3, PET_SEX_3, PET_SPECIES_3);
+
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+
+        appUser.addAdvertisement(advertisement2);
+        appUser.addAdvertisement(advertisement3);
+        appUser2.addAdvertisement(advertisement4);
+        List<Advertisement> advertisements = advertisementService.getAllAdvertisements();
+
+        assertNotNull(advertisements);
+        assertEquals(4, advertisements.size());
+    }
+
+    @Test
     public void testDeleteAdvertisement() {
         Advertisement advertisement = createAppUserThenAdvertisement();
         String advertisementId = advertisement.getAdvertisementId();
@@ -732,6 +763,17 @@ public class AdvertisementTest {
         AppUser appUser = null;
         try {
             appUser = appUserService.createAppUser(USER_NAME_1, USER_EMAIL_1,USER_PASSWORD_1, USER_BIO_1, USER_HOME_1,
+                    USER_AGE_1, USER_ADMIN_1, USER_SEX_1);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        return appUser;
+    }
+
+    private AppUser createAppUser2() {
+        AppUser appUser = null;
+        try {
+            appUser = appUserService.createAppUser(USER_NAME_1, USER_EMAIL_2,USER_PASSWORD_1, USER_BIO_1, USER_HOME_1,
                     USER_AGE_1, USER_ADMIN_1, USER_SEX_1);
         } catch (IllegalArgumentException e) {
             fail();
