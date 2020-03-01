@@ -1,8 +1,7 @@
 package ca.mcgill.ecse321.petadoption.integration_service;
 
 import ca.mcgill.ecse321.petadoption.TestSuits.Utils.TestUtils;
-import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
-import ca.mcgill.ecse321.petadoption.dao.DonationRepository;
+import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.model.Donation;
 import ca.mcgill.ecse321.petadoption.model.Sex;
 import ca.mcgill.ecse321.petadoption.service.AppUserService;
@@ -56,8 +55,23 @@ public class DonationTest {
     @Autowired
     DonationRepository donationRepository;
 
+    @Autowired
+    AdvertisementRepository advertisementRepository;
+
+    @Autowired
+    ImageRepository imageRepository;
+
+    @Autowired
+    ApplicationRepository applicationRepository;
+
     @BeforeEach
-    public void cleanDB() { donationRepository.deleteAll(); appUserRepository.deleteAll(); }
+    public void cleanDB() {
+        donationRepository.deleteAll();
+        appUserRepository.deleteAll();
+        advertisementRepository.deleteAll();
+        imageRepository.deleteAll();
+        applicationRepository.deleteAll();
+    }
 
     @Test
     public void testCreateDonation(){
