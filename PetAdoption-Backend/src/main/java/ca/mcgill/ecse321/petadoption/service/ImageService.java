@@ -33,18 +33,18 @@ public class ImageService {
     /**
      * Creates and adds a new Image object to the database.
      *
-     * @param advertisementID
+     * @param advertisement_id
      * @param name(String)
      * @param link(String)
      * @param id(String)
      * @return Image object
      */
     @Transactional
-    public Image createImage(String advertisementID, String name, String link, String id) {
+    public Image createImage(String advertisement_id, String name, String link, String id) {
         Image image = new Image();
         String error = "";
 
-        if (advertisementID == null) {
+        if (advertisement_id == null) {
             error = error + "A Image must have an Advertisement";
         }
         if (link == null || link.trim().length() == 0) {
@@ -64,30 +64,9 @@ public class ImageService {
         image.setImageId();
         image.setName(name);
         image.setLink(link);
-//        image.setAdvertisement(advertisementRepository.findAdvertisementByAdvertisementId(advertisementID));
-        java.sql.Date datePosted = Date.valueOf(LocalDate.of(2020, Month.FEBRUARY, 7));
 
-        AppUser newUser1 = new AppUser();
-        newUser1.setEmail("dr.nafario@evil.com");
-        newUser1.setName("dr.Nafario");
-        newUser1.setAge(99);
-        newUser1.setBiography("Male");
-        newUser1.setHomeDescription("homeless");
-        newUser1.setIsAdmin(true);
-        newUser1.setPassword("abcdefg");
-        newUser1.setSex(Sex.M);
-        appUserRepository.save(newUser1);
-
-        Advertisement newAd = new Advertisement();
-        newAd.setAdvertisementId();
-        newAd.setDatePosted(datePosted);
-        newAd.setPetDescription("lovely,cute,adorable");
-        newAd.setPetAge(2);
-        newAd.setPetName("Mojo");
-        newAd.setIsExpired(false);
-        newAd.setPostedBy(newUser1);
-        advertisementRepository.save(newAd);
-        image.setAdvertisement(newAd);
+        Advertisement ad = advertisementRepository.findAdvertisementByAdvertisementId(advertisement_id);
+        image.setAdvertisement(ad);
         imageRepository.save(image);
         return imageRepository.save(image);
     }
@@ -101,8 +80,12 @@ public class ImageService {
      */
     @Transactional
     public Image getImageByID(String id) {
+        String error = "";
         if (id == null || id.trim().length() == 0) {
-            throw new IllegalArgumentException("Image must have an ID");
+            error = "Image must have an ID";
+        }
+        if (error.length() != 0) {
+            throw new IllegalArgumentException(error);
         }
         Image a = imageRepository.findImageByImageId(id);
         return a;
@@ -115,7 +98,7 @@ public class ImageService {
      */
     @Transactional
     public List<Image> getAllImages() {
-        return toList(imageRepository.findAll());
+        return new ArrayList<Image>((Collection<? extends Image>) imageRepository.findAll());
     }
 
     /**
@@ -125,8 +108,7 @@ public class ImageService {
      */
     @Transactional
     public List<Image> getAllImagesOfAdvertisement(Advertisement ad) {
-        Set<Image> imageSet = ad.getPetImages();
-        ArrayList<Image> listOfImages = new ArrayList<>(imageSet);
+        ArrayList<Image> listOfImages = new ArrayList<>(imageRepository.findImagesByAdvertisement_AdvertisementId(ad.getAdvertisementId()));
         return listOfImages;
     }
 
@@ -157,18 +139,4 @@ public class ImageService {
         return b;
     }
 
-    /////////////////////////////Image Delete Method////////////////////////////////////////
-    /**
-     * update the name attribute of image class with specified id from the database.
-     *
-     * @param id
-     * @param name
-     */
-    @Transactional
-    public Image updateImageName(String id, String name) {
-        Image image = imageRepository.findImageByImageId(id);
-        image.setName(name);
-        imageRepository.save(image);
-        return image;
-    }
 }

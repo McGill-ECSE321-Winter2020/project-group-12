@@ -18,7 +18,7 @@ public class AppUserController {
 
     @PostMapping(value ={"/register","/register/" })
     public AppUserDto createAppUser(@RequestBody AppUserDto appUser){
-        AppUser user = service.createAppUser(appUser.getName(), appUser.getEmail(), "password", appUser.getBiography(), appUser.getHomeDescription(),
+        AppUser user = service.createAppUser(appUser.getName(), appUser.getEmail(), appUser.getPassword(), appUser.getBiography(), appUser.getHomeDescription(),
                 appUser.getAge(), appUser.isIsAdmin(), appUser.getSex());
         return convertToDto(user);
     }
@@ -51,8 +51,8 @@ public class AppUserController {
     }
 
     private AppUserDto convertToDto(AppUser appUser){
-        return new AppUserDto(appUser.getName(), appUser.getEmail(), appUser.getBiography(), appUser.getHomeDescription(),
-                              appUser.getAge(), appUser.isIsAdmin(), appUser.getSex(), null,null,null);
+        return new AppUserDto(appUser.getName(), appUser.getEmail(), "", appUser.getBiography(), appUser.getHomeDescription(),
+                              appUser.getAge(), appUser.isIsAdmin(), appUser.getSex());
     }
 
 }
