@@ -39,8 +39,6 @@ public class DonationTest {
     private static final Date DONATION_DATE_1 = Date.valueOf("2020-01-14");
     private static final Integer DONATION_AMT_2 = 30;
     private static final Date DONATION_DATE_2 = Date.valueOf("2020-02-14");
-    //private static final Donation DONATION_2 = TestUtils.createDonation(DONOR, DONATION_AMT_2, DONATION_DATE_2);
-   // private static final Donation DONATION_1 = TestUtils.createDonation(DONOR, DONATION_AMT_1, DONATION_DATE_1);
 
     private static final String NON_EXISTING_USER_EMAIL = "nonexisting@gmail.com";
     private static final Date NON_EXISTING_DONATION_DATE = Date.valueOf("2025-01-14");
@@ -63,18 +61,7 @@ public class DonationTest {
 
     @Test
     public void testCreateDonation(){
-        Donation donation = null;
-        try {
-            appUserService.createAppUser(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1, USER_HOME_1, USER_AGE_1, USER_ADMIN_1, USER_SEX_1);
-        } catch (IllegalArgumentException e) {
-            fail();
-        }
-
-        try {
-            donation = donationService.createDonation(USER_EMAIL_1, DONATION_AMT_1, DONATION_DATE_1);
-        } catch (IllegalArgumentException e) {
-            fail();
-        }
+        Donation donation = createDonorThenDonation();
         TestUtils.assertDonation(donation, USER_EMAIL_1, DONATION_AMT_1, DONATION_DATE_1);
     }
 
@@ -199,23 +186,7 @@ public class DonationTest {
 
     @Test
     public void testGetAllDonations() {
-        try {
-            appUserService.createAppUser(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1, USER_HOME_1, USER_AGE_1, USER_ADMIN_1, USER_SEX_1);
-        } catch (IllegalArgumentException e) {
-            fail();
-        }
-
-        try {
-            donationService.createDonation(USER_EMAIL_1, DONATION_AMT_1, DONATION_DATE_1);
-        } catch (IllegalArgumentException e) {
-            fail();
-        }
-
-        try {
-            donationService.createDonation(USER_EMAIL_1, DONATION_AMT_2, DONATION_DATE_2);
-        } catch (IllegalArgumentException e) {
-            fail();
-        }
+        createDonorWithTwoDonations();
 
         List<Donation> donations = donationService.getAllDonations();
         TestUtils.assertDonation(donations.get(0), USER_EMAIL_1, DONATION_AMT_1, DONATION_DATE_1);
@@ -224,6 +195,14 @@ public class DonationTest {
 
     @Test
     public void testGetDonationByID() {
+        Donation donation = createDonorThenDonation();
+        //Donation donation;
+
+        String id = donation.getTransactionID();
+        assertEquals(id, donationService.getDonationByTransactionID(id).getTransactionID());
+    }
+
+    private Donation createDonorThenDonation() {
         Donation donation = null;
 
         try {
@@ -237,9 +216,7 @@ public class DonationTest {
         } catch (IllegalArgumentException e) {
             fail();
         }
-
-        String id = donation.getTransactionID();
-        assertEquals(id, donationService.getDonationByTransactionID(id).getTransactionID());
+        return donation;
     }
 
     @Test
@@ -284,6 +261,14 @@ public class DonationTest {
 
     @Test
     public void testGetDonationByUserEmail() {
+        createDonorWithTwoDonations();
+
+        for(Donation don: donationService.getDonationsByUser(USER_EMAIL_1)) {
+            assertEquals(USER_EMAIL_1, don.getDonor().getEmail());
+        }
+    }
+
+    private void createDonorWithTwoDonations() {
         try {
             appUserService.createAppUser(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1, USER_HOME_1, USER_AGE_1, USER_ADMIN_1, USER_SEX_1);
         } catch (IllegalArgumentException e) {
@@ -300,10 +285,6 @@ public class DonationTest {
             donationService.createDonation(USER_EMAIL_1, DONATION_AMT_2, DONATION_DATE_2);
         } catch (IllegalArgumentException e) {
             fail();
-        }
-
-        for(Donation don: donationService.getDonationsByUser(USER_EMAIL_1)) {
-            assertEquals(USER_EMAIL_1, don.getDonor().getEmail());
         }
     }
 
@@ -393,23 +374,7 @@ public class DonationTest {
 
     @Test
     public void testGetDonationByDateOfPaymentAndUser() { //null pointer exception for some reason
-        try {
-            appUserService.createAppUser(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1, USER_HOME_1, USER_AGE_1, USER_ADMIN_1, USER_SEX_1);
-        } catch (IllegalArgumentException e) {
-            fail();
-        }
-
-        try {
-            donationService.createDonation(USER_EMAIL_1, DONATION_AMT_1, DONATION_DATE_1);
-        } catch (IllegalArgumentException e) {
-            fail();
-        }
-
-        try {
-            donationService.createDonation(USER_EMAIL_1, DONATION_AMT_2, DONATION_DATE_2);
-        } catch (IllegalArgumentException e) {
-            fail();
-        }
+        createDonorWithTwoDonations();
 
         for(Donation don: donationService.getDonationsByDateAndDonor(DONATION_DATE_1, USER_EMAIL_1)) {
             assertEquals(DONATION_DATE_1, don.getDateOfPayment());
