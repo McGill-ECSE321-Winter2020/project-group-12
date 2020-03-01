@@ -68,7 +68,7 @@ public class AdvertisementController {
         }
     }
 
-    @GetMapping(value = {"/advertisement/{advertisementID}", "/advertisement/{advertisementID/"})
+    @GetMapping(value = {"/advertisement/{advertisementID}", "/advertisement/{advertisementID}/"})
     public AdvertisementDto getAdvertisementById(@PathVariable("advertisementID") String advertisementID) {
         Advertisement advertisement;
         try {
