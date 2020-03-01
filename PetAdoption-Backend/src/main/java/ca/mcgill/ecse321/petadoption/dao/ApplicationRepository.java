@@ -10,6 +10,8 @@ import java.util.Set;
 public interface ApplicationRepository extends CrudRepository<Application, Long> {
 
     Application findApplicationByApplicationId(String id);
-    Set<Application> findApplicationByAdvertisementAdvertisementId(String advertisementID);
+
+  Set<Application> findApplicationByAdvertisementAdvertisementId(String advertisementID);
+
     void deleteApplicationByApplicationId(String id);
 }

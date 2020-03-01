@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 @Service
 public class AppUserService {
@@ -162,7 +163,10 @@ public class AppUserService {
         }
         if (email == null || email.trim().length() == 0) {
             error = error + "email cannot be empty ";
+        }else if(!isValid(email)){
+            error = error + "the email " + email + " doesn't have a valid format.";
         }
+
         if (password == null || password.trim().length() == 0) {
             error = error + "password cannot be empty ";
         }
@@ -179,5 +183,18 @@ public class AppUserService {
         if (error.length() != 0) {
             throw new IllegalArgumentException(error);
         }
+    }
+
+    private static boolean isValid(String email)
+    {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pat.matcher(email).matches();
     }
 }
