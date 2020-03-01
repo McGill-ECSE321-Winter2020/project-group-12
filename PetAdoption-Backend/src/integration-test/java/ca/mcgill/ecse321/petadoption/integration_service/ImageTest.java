@@ -192,8 +192,15 @@ public class ImageTest {
 
     @Test
     public void testGetImageNonExistent(){
-        Image image = imageservice.getImageByID( IMAGE_ID_2);
+        Image image = null;
+        String error = "";
+        try{
+            image = imageservice.getImageByID(IMAGE_ID_2);
+        }catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
         assertNull(image);
+        assertEquals("There is no such Image!",error);
     }
 
     @Test
@@ -220,31 +227,6 @@ public class ImageTest {
         assertNull(image);
         assertEquals("Image must have an ID",error);
     }
-
-    @Test
-    public void testGetAllImages(){
-        try{
-            imageservice.createImage(ADVERTISEMENT_ID_1, IMAGE_NAME_1, IMAGE_LINK_1);
-        }catch (IllegalArgumentException e){
-            fail();
-        }
-        try{
-            imageservice.createImage(ADVERTISEMENT_ID_1, IMAGE_NAME_2, IMAGE_LINK_2);
-        }catch (IllegalArgumentException e){
-            fail();
-        }
-        List<Image> list = imageservice.getAllImages();
-
-        assertEquals(list.get(0).getAdvertisement().getAdvertisementId(), ADVERTISEMENT_ID_1);
-        assertEquals(list.get(0).getLink(), IMAGE_LINK_1);
-        assertEquals(list.get(0).getName(), IMAGE_NAME_1);
-
-        assertEquals(list.get(1).getAdvertisement().getAdvertisementId(), ADVERTISEMENT_ID_1);
-        assertEquals(list.get(1).getLink(), IMAGE_LINK_2);
-        assertEquals(list.get(1).getName(), IMAGE_NAME_2);
-
-    }
-
 
     @Test
     public void testGetImagesByAdvertisementID(){

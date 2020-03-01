@@ -24,6 +24,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -141,7 +142,7 @@ public class ImageControllerTest {
 
     @Test
     public void testCreateImageNullLink(){
-        ImageDto image = new ImageDto(null, IMAGE_LINK_1, "", ADVERTISEMENT_ID_1);
+        ImageDto image = new ImageDto(IMAGE_NAME_1, null, "", ADVERTISEMENT_ID_1);
 
 
         ResponseEntity<String> response =restTemplate.postForEntity(
@@ -154,7 +155,7 @@ public class ImageControllerTest {
 
     @Test
     public void testCreateImageEmptyLink(){
-        ImageDto image = new ImageDto("", IMAGE_LINK_1, "", ADVERTISEMENT_ID_1);
+        ImageDto image = new ImageDto(IMAGE_NAME_1, "", "", ADVERTISEMENT_ID_1);
 
 
         ResponseEntity<String> response =restTemplate.postForEntity(
@@ -163,6 +164,121 @@ public class ImageControllerTest {
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertTrue(response.getBody().contains("link can not be empty "));
+    }
+
+    @Test
+    public void testCreateImageNullAdvertisementID(){
+        ImageDto image = new ImageDto(IMAGE_NAME_1, IMAGE_LINK_1, "", null);
+
+
+        ResponseEntity<String> response =restTemplate.postForEntity(
+                formatLink("/image/create/"),image,
+                String.class);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertTrue(response.getBody().contains("A Image must have an Advertisement"));
+    }
+
+    @Test
+    public void testCreateImageEmptyAdvertisementID(){
+        ImageDto image = new ImageDto(IMAGE_NAME_1, IMAGE_LINK_1, "", "");
+
+
+        ResponseEntity<String> response =restTemplate.postForEntity(
+                formatLink("/image/create/"),image,
+                String.class);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertTrue(response.getBody().contains("A Image must have an Advertisement"));
+    }
+
+    @Test
+    public void testGetImageByID(){
+        ImageDto image = new ImageDto(IMAGE_NAME_1, IMAGE_LINK_1, "", ADVERTISEMENT_ID_1);
+
+        HttpEntity<ImageDto> entity = new HttpEntity<ImageDto>(image, headers);
+
+        ImageDto returned_image = restTemplate.postForObject(formatLink("/image/create/"),
+                entity, ImageDto.class);
+
+        String id = returned_image.getImageId();
+        image = null;
+
+        image = restTemplate.getForObject(formatLink("/image/"+id),
+                ImageDto.class);
+        assertEquals(ADVERTISEMENT_ID_1, image.getAdvertisementId());
+        assertEquals(IMAGE_NAME_1, image.getName());
+        assertEquals(IMAGE_LINK_1, image.getLink());
+    }
+
+    @Test
+    public void testGetImageNonExistent(){
+        ResponseEntity<String> response = restTemplate.getForEntity(formatLink("/image/"+IMAGE_ID_1),
+                String.class);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertTrue(response.getBody().contains("There is no such Image!"));
+    }
+    @Test
+    public void testGetImageNullID(){
+        ImageDto image = new ImageDto(IMAGE_NAME_1, IMAGE_LINK_1, "", ADVERTISEMENT_ID_1);
+
+        HttpEntity<ImageDto> entity = new HttpEntity<ImageDto>(image, headers);
+
+        ImageDto returned_image = restTemplate.postForObject(formatLink("/image/create/"),
+                entity, ImageDto.class);
+
+        ResponseEntity<String> response =restTemplate.getForEntity(
+                formatLink("/image/"+null),
+                String.class);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertTrue(response.getBody().contains("There is no such Image!"));
+
+    }
+    @Test
+    public void testGetImageByEmptyID(){
+        ImageDto image = new ImageDto(IMAGE_NAME_1, IMAGE_LINK_1, "", ADVERTISEMENT_ID_1);
+
+        HttpEntity<ImageDto> entity = new HttpEntity<ImageDto>(image, headers);
+
+        ImageDto returned_image = restTemplate.postForObject(formatLink("/image/create/"),
+                entity, ImageDto.class);
+        ResponseEntity<String> response =restTemplate.getForEntity(formatLink("/image/"),String.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+
+    @Test
+    public void testGetImagesByAdvertisementID(){
+        List<Image> list = null;
+
+        ImageDto image = new ImageDto(IMAGE_NAME_1, IMAGE_LINK_1, "", ADVERTISEMENT_ID_1);
+
+        HttpEntity<ImageDto> entity = new HttpEntity<ImageDto>(image, headers);
+
+        ImageDto returned_image = restTemplate.postForObject(formatLink("/image/create/"),
+                entity, ImageDto.class);
+
+        image = new ImageDto(IMAGE_NAME_2, IMAGE_LINK_2, "", ADVERTISEMENT_ID_1);
+
+        entity = new HttpEntity<ImageDto>(image, headers);
+
+        returned_image = restTemplate.postForObject(formatLink("/image/create/"),
+                entity, ImageDto.class);
+
+        ResponseEntity<ImageDto[]> response =restTemplate.getForEntity(
+                formatLink("/"+ ADVERTISEMENT_ID_1 + "/images"),
+                ImageDto[].class);
+        ImageDto[] lst = response.getBody();
+
+        assertEquals(lst[0].getAdvertisementId(), ADVERTISEMENT_ID_1);
+        assertEquals(lst[0].getLink(), IMAGE_LINK_1);
+        assertEquals(lst[0].getName(), IMAGE_NAME_1);
+
+        assertEquals(lst[1].getAdvertisementId(), ADVERTISEMENT_ID_1);
+        assertEquals(lst[1].getLink(), IMAGE_LINK_2);
+        assertEquals(lst[1].getName(), IMAGE_NAME_2);
     }
 
 

@@ -56,7 +56,7 @@ public class ImageUnitTest {
     private static final String IMAGE_ID_2 = "id2";
 
     private static final Date ADVERTISEMENT_POSTDATE_1 = Date.valueOf(LocalDate.of(2020, Month.FEBRUARY, 7));
-    private static final String ADVERTISEMENT_ID_1 = "";
+    private static final String ADVERTISEMENT_ID_1 = "Ad_id1";
     private static final boolean ADVERTISEMENT_ISEXPIRED_1 = false;
     private static final String PET_NAME = "";
     private static final int  PET_AGE = 3;
@@ -207,8 +207,15 @@ public class ImageUnitTest {
 
     @Test
     public void testGetImageNonExistent(){
-        Image image = imageservice.getImageByID( IMAGE_ID_2);
+        Image image = null;
+        String error = "";
+        try{
+            image = imageservice.getImageByID(IMAGE_ID_2);
+        }catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
         assertNull(image);
+        assertEquals("There is no such Image!",error);
     }
 
     @Test
@@ -235,23 +242,6 @@ public class ImageUnitTest {
         assertNull(image);
         assertEquals("Image must have an ID",error);
     }
-
-    @Test
-    public void testGetAllImages(){
-        List<Image> list = imageservice.getAllImages();
-
-        assertEquals(list.get(0).getAdvertisement().getAdvertisementId(), ADVERTISEMENT_ID_1);
-        assertEquals(list.get(0).getImageId(), IMAGE_ID_1);
-        assertEquals(list.get(0).getLink(), IMAGE_LINK_1);
-        assertEquals(list.get(0).getName(), IMAGE_NAME_1);
-
-        assertEquals(list.get(1).getAdvertisement().getAdvertisementId(), ADVERTISEMENT_ID_1);
-        assertEquals(list.get(1).getImageId(), IMAGE_ID_2);
-        assertEquals(list.get(1).getLink(), IMAGE_LINK_2);
-        assertEquals(list.get(1).getName(), IMAGE_NAME_2);
-
-    }
-
 
     @Test
     public void testGetImagesByAdvertisementID(){

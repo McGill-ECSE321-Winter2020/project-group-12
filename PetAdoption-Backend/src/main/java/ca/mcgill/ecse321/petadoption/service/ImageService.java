@@ -77,18 +77,11 @@ public class ImageService {
         if (error.length() != 0) {
             throw new IllegalArgumentException(error);
         }
-        Image a = imageRepository.findImageByImageId(id);
-        return a;
-    }
-
-    /**
-     * Returns all Images in the database.
-     *
-     * @return List of Image objects
-     */
-    @Transactional
-    public List<Image> getAllImages() {
-        return new ArrayList<Image>((Collection<? extends Image>) imageRepository.findAll());
+        Image image = imageRepository.findImageByImageId(id);
+        if (image == null) {
+            throw new IllegalArgumentException("There is no such Image!");
+        }
+        return image;
     }
 
     /**
