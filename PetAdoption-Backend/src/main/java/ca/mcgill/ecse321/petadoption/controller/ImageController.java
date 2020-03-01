@@ -38,12 +38,6 @@ public class ImageController {
         return convertToDto(image);
     }
 
-    @PutMapping(value = {"/image/updateName", "/image/updateName/"})
-    public ImageDto updateImageName(@RequestParam("imageID") String imageID, @RequestParam("imageName") String imageName) {
-        Image image = imageService.updateImageName(imageID, imageName);
-        return convertToDto(image);
-    }
-
     @DeleteMapping(value = {"/image/delete", "/image/delete/"})
     public boolean deleteImage(@RequestParam("imageID") String imageID) {
         boolean returnStatement = imageService.deleteImage(imageID);

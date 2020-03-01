@@ -1,31 +1,29 @@
-package ca.mcgill.ecse321.petadoption.TestSuits.UnitTests;
+package ca.mcgill.ecse321.petadoption.integration_service;
 
 import ca.mcgill.ecse321.petadoption.TestSuits.Utils.TestUtils;
-import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
+
 import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
-import ca.mcgill.ecse321.petadoption.dao.ApplicationRepository;
-import ca.mcgill.ecse321.petadoption.dao.DonationRepository;
-import ca.mcgill.ecse321.petadoption.model.AppUser;
-import ca.mcgill.ecse321.petadoption.model.Sex;
+import ca.mcgill.ecse321.petadoption.model.*;
 import ca.mcgill.ecse321.petadoption.service.AppUserService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.lenient;
 
-@ExtendWith(MockitoExtension.class)
-public class AppUserUnitTest {
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@ActiveProfiles("test")
+public class AppUserTest {
     private static final String USER_NAME_1 = "user 1";
     private static final String USER_EMAIL_1 = "user1@mcgill.ca";
     private static final String USER_PASSWORD_1 = "password 1";
@@ -44,53 +42,14 @@ public class AppUserUnitTest {
     private static final Sex USER_SEX_2 = Sex.F;
     private static final boolean USER_ADMIN_2 = false;
 
-    @InjectMocks
+    @Autowired
     private AppUserService service;
-
-    @Mock
-    private AppUserRepository appUserRepository;
-    @Mock
-    ApplicationRepository applicationRepository;
-    @Mock
-    AdvertisementRepository advertisementRepository;
-    @Mock
-    DonationRepository donationRepository;
+    @Autowired
+    AppUserRepository appUserRepository;
 
     @BeforeEach
-    public void mockSetUp(){
-        lenient().when(appUserRepository.save(any(AppUser.class))).thenAnswer(
-                (InvocationOnMock invocation) -> {
-                    if(((AppUser) invocation.getArgument(0)).getName().equals(USER_NAME_1)){
-                        return TestUtils.createAppUser(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
-                                USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
-                    }else if (((AppUser) invocation.getArgument(0)).getName().equals(USER_NAME_2)){
-                        return TestUtils.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
-                                USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 );
-                    } else {
-                        return null;
-                    }
-                }
-        );
-        lenient().when(appUserRepository.findAppUserByEmail(anyString())).thenAnswer(
-            (InvocationOnMock invocation) -> {
-                if (invocation.getArgument(0).equals(USER_EMAIL_2)) {
-                    return TestUtils.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
-                            USER_HOME_2, USER_AGE_2, USER_ADMIN_2, USER_SEX_2);
-                } else {
-                    return null;
-                }
-            }
-        );
-        lenient().when(appUserRepository.findAll()).thenAnswer(
-                (InvocationOnMock invocation) -> {
-                    ArrayList<AppUser> lst = new ArrayList<AppUser>();
-                    lst.add(TestUtils.createAppUser(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
-                            USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 ));
-                    lst.add(TestUtils.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
-                            USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 ));
-                    return lst;
-                }
-        );
+    public void cleanDB(){
+        appUserRepository.deleteAll();
     }
 
     @Test
@@ -110,6 +69,13 @@ public class AppUserUnitTest {
     @Test
     public void testCreateDuplicateAppUser(){
         AppUser user = null;
+        try{
+            user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+                    USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 );
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        user = null;
         String error = "";
         try{
             user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
@@ -117,8 +83,9 @@ public class AppUserUnitTest {
         }catch (IllegalArgumentException e){
             error = e.getMessage();
         }
-        assertEquals("The email " + USER_EMAIL_2+ " is already used.", error);
+        assertEquals(error,"The email " + USER_EMAIL_2+ " is already used.");
     }
+
 
     @Test
     public void testCreateAppUserNullName(){
@@ -257,7 +224,6 @@ public class AppUserUnitTest {
         assertEquals("homeDescription cannot be empty ", error);
     }
 
-    // TODO: test negative age and UNREASONABLE age (>100)
     @Test
     public void testCreateAppUserZeroAge(){
         AppUser user = null;
@@ -276,6 +242,12 @@ public class AppUserUnitTest {
     public void testGetAppUser(){
         AppUser user = null;
         try{
+            user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+                    USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 );
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        try{
             user = service.getAppUserByEmail(USER_EMAIL_2);
         }catch (IllegalArgumentException e){
             fail();
@@ -288,6 +260,13 @@ public class AppUserUnitTest {
     public void testGetAppUserNonExistent(){
         AppUser user = null;
         String error = "";
+        try{
+            user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+                    USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 );
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        user = null;
         try{
             user = service.getAppUserByEmail( USER_EMAIL_1);
         }catch (IllegalArgumentException e){
@@ -302,6 +281,13 @@ public class AppUserUnitTest {
         AppUser user = null;
         String error = "";
         try{
+            user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+                    USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 );
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        user = null;
+        try{
             user = service.getAppUserByEmail( null);
         }catch (IllegalArgumentException e){
             error = e.getMessage();
@@ -309,10 +295,18 @@ public class AppUserUnitTest {
         assertNull(user);
         assertEquals("The email entered is not valid.", error);
     }
+
     @Test
     public void testGetAppUserEmptyEmail(){
         AppUser user = null;
         String error = "";
+        try{
+            user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+                    USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 );
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        user = null;
         try{
             user = service.getAppUserByEmail("");
         }catch (IllegalArgumentException e){
@@ -326,12 +320,19 @@ public class AppUserUnitTest {
     public void testUpdateAppUser(){
         AppUser user = null;
         try{
-            user = service.updateAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+            user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+                    USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 );
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        user = null;
+        try{
+            user = service.updateAppUser(USER_NAME_1, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_1,
                     USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2);
         }catch (IllegalArgumentException e){
             fail();
         }
-        TestUtils.assertAppUser(user,USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+        TestUtils.assertAppUser(user,USER_NAME_1, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_1,
                 USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2  );
     }
 
@@ -349,6 +350,19 @@ public class AppUserUnitTest {
     }
     @Test
     public void testGetAllUsers(){
+        AppUser user = null;
+        try{
+            user = service.createAppUser(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
+                    USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1);
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        try{
+            user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+                    USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 );
+        }catch (IllegalArgumentException e){
+            fail();
+        }
         List<AppUser> lst = service.getAllAppUsers();
         TestUtils.assertAppUser(lst.get(0),USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
                 USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
@@ -356,9 +370,26 @@ public class AppUserUnitTest {
                 USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2);
     }
 
-//    @Test
-//    public void testDeleteUsers(){
-//        service.deleteAppUser(USER_EMAIL_2);
-//    }
+    @Test
+    public void testDeleteUsers(){
+        AppUser user = null;
+        try{
+            user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+                    USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 );
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        service.deleteAppUser(USER_EMAIL_2);
+        String error = "";
+        user = null;
+        try{
+            user = service.getAppUserByEmail( USER_EMAIL_2);
+        }catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertNull(user);
+        assertEquals("The user with email "+ USER_EMAIL_2 +" does not exist." ,error);
+    }
+
 
 }
