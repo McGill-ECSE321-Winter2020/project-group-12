@@ -298,6 +298,7 @@ public class DonationUnitTest {
         } catch(IllegalArgumentException e) {
             error = e.getMessage();
         }
+        assertNull(donations);
         assertEquals("The email entered is not valid.", error);
     }
 
@@ -310,6 +311,7 @@ public class DonationUnitTest {
         } catch(IllegalArgumentException e) {
             error = e.getMessage();
         }
+        assertNull(donations);
         assertEquals("The email entered is not valid.", error);
     }
 
@@ -329,6 +331,7 @@ public class DonationUnitTest {
         } catch(IllegalArgumentException e) {
             error = e.getMessage();
         }
+        assertNull(donations);
         assertEquals("Date of payment cannot be empty", error);
     }
     @Test
@@ -360,6 +363,7 @@ public class DonationUnitTest {
         } catch(IllegalArgumentException e) {
             error = e.getMessage();
         }
+        assertNull(donations);
         assertEquals("A user email must be provided! Date of payment cannot be empty!", error);
     }
 
@@ -372,6 +376,7 @@ public class DonationUnitTest {
         } catch(IllegalArgumentException e) {
             error = e.getMessage();
         }
+        assertNull(donations);
         assertEquals("A user email must be provided! ", error);
     }
 
