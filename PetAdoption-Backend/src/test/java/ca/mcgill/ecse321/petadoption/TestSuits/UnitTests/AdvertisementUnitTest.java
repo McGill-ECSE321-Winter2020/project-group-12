@@ -271,8 +271,6 @@ public class AdvertisementUnitTest {
         assertEquals(PET_NAME_ERROR_MESSAGE, error);
     }
 
-    //TODO: testCreateAdvertisementInvalidPetName with special characters and numbers
-
     @Test
     public void testCreateAdvertisementNullAge() {
         Advertisement advertisement = null;
