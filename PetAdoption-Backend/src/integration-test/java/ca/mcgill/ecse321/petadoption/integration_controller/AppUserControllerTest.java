@@ -395,4 +395,106 @@ public class AppUserControllerTest {
         assertTrue(response.getBody().contains("The user with email "+ USER_EMAIL_1 +" does not exist."));
     }
 
+    @Test
+    public void testLoginValid(){
+        AppUserDto user = new AppUserDto(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
+                USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
+        HttpEntity<AppUserDto> entity = new HttpEntity<AppUserDto>(user, headers);
+
+        AppUserDto returned_user = restTemplate.postForObject(formatLink("/register"),
+                entity, AppUserDto.class);
+
+        Boolean response =restTemplate.getForObject(
+                formatLink("/login/"+USER_EMAIL_1 +"/"+USER_PASSWORD_1),
+                Boolean.class);
+        assertTrue(response);
+    }
+
+    @Test
+    public void testLoginInexistent(){
+        AppUserDto user = new AppUserDto(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
+                USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
+        HttpEntity<AppUserDto> entity = new HttpEntity<AppUserDto>(user, headers);
+
+        AppUserDto returned_user = restTemplate.postForObject(formatLink("/register"),
+                entity, AppUserDto.class);
+        Boolean response =restTemplate.getForObject(
+                formatLink("/login/"+USER_EMAIL_2 +"/"+USER_PASSWORD_2),
+                Boolean.class);
+        assertFalse(response);
+    }
+    @Test
+    public void testLoginWrongPassword(){
+        AppUserDto user = new AppUserDto(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
+                USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
+        HttpEntity<AppUserDto> entity = new HttpEntity<AppUserDto>(user, headers);
+
+        AppUserDto returned_user = restTemplate.postForObject(formatLink("/register"),
+                entity, AppUserDto.class);
+        Boolean response =restTemplate.getForObject(
+                formatLink("/login/"+USER_EMAIL_1 +"/"+USER_PASSWORD_2),
+                Boolean.class);
+        assertFalse(response);
+    }
+
+    @Test
+    public void testLoginNullEmail(){
+        AppUserDto user = new AppUserDto(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
+                USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
+        HttpEntity<AppUserDto> entity = new HttpEntity<AppUserDto>(user, headers);
+
+        AppUserDto returned_user = restTemplate.postForObject(formatLink("/register"),
+                entity, AppUserDto.class);
+
+        Boolean response =restTemplate.getForObject(
+                formatLink("/login/"+null +"/"+USER_PASSWORD_2),
+                Boolean.class);
+        assertFalse(response);
+    }
+
+    @Test
+    public void testLoginEmptyEmail(){
+        AppUserDto user = new AppUserDto(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
+                USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
+        HttpEntity<AppUserDto> entity = new HttpEntity<AppUserDto>(user, headers);
+
+        AppUserDto returned_user = restTemplate.postForObject(formatLink("/register"),
+                entity, AppUserDto.class);
+        String error = "";
+        ResponseEntity<String> response =restTemplate.getForEntity(
+                formatLink("/login/"+"" +"/"+USER_PASSWORD_2),
+                String.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+    @Test
+    public void testLoginNullPassword(){
+        AppUserDto user = new AppUserDto(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
+                USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
+        HttpEntity<AppUserDto> entity = new HttpEntity<AppUserDto>(user, headers);
+
+        AppUserDto returned_user = restTemplate.postForObject(formatLink("/register"),
+                entity, AppUserDto.class);
+        String error = "";
+        Boolean response =restTemplate.getForObject(
+                formatLink("/login/"+USER_NAME_1 +"/"+null),
+                Boolean.class);
+        assertFalse(response);
+    }
+    @Test
+    public void testLoginEmptyPassword(){
+        AppUserDto user = new AppUserDto(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
+                USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
+        HttpEntity<AppUserDto> entity = new HttpEntity<AppUserDto>(user, headers);
+
+        AppUserDto returned_user = restTemplate.postForObject(formatLink("/register"),
+                entity, AppUserDto.class);
+        String error = "";
+        ResponseEntity<String> response =restTemplate.getForEntity(
+                formatLink("/login/"+USER_EMAIL_2 +"/"+""),
+                String.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
 }

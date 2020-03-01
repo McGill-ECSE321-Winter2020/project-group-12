@@ -51,9 +51,13 @@ public class AppUserController {
         return convertToDto(user);
     }
 
+    @GetMapping(value = {"/login/{email}/{password}","/getUser/{email}/{password}"})
+    public boolean getAppUser(@PathVariable("email") String email, @PathVariable("password") String password) {
+        return service.checkLoginParam(email, password);
+    }
+
     @DeleteMapping(value = {"/delete/user/{email}", "/delete/user/{email}/"})
     public void deleteAppUser(@PathVariable("email") String email) {
-
         service.deleteAppUser(email);
     }
 
