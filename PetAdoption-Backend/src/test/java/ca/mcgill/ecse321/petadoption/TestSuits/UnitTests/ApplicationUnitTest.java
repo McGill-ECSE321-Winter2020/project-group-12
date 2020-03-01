@@ -86,7 +86,7 @@ public class ApplicationUnitTest { //application test service
     private static final AppUser user3 = TestUtils.createAppUser(USER_NAME_3, USER_EMAIL_3, USER_PASSWORD_3, USER_BIO_3,
             USER_HOME_3, USER_AGE_3, USER_ADMIN_3, USER_SEX_3);
 
-    private static final Date datePosted = Date.valueOf("2020-02-19");
+    private static final Date datePosted = Date.valueOf("2020-01-19");
     private static boolean isExpired = false;
     private Set<Application> applications;
     private static final AppUser postedBy = user1;
@@ -116,7 +116,10 @@ public class ApplicationUnitTest { //application test service
 
                     } else if (((Application) invocation.getArgument(0)).getDateOfSubmission().equals(DATE_OF_SUBMISSION2)) {
                         return TestUtils.createApplication(advertisement, user3, DATE_OF_SUBMISSION2, NOTE2, STATUS2);
-                    } else {
+                    }
+                    else if (((Application) invocation.getArgument(0)).getDateOfSubmission().equals(datePosted)) {
+                        return TestUtils.createApplication(advertisement, user1, datePosted, NOTE, STATUS);
+                    }else {
                         return null;
                     }
                 }
@@ -176,6 +179,7 @@ public class ApplicationUnitTest { //application test service
     public void duplicateApplicationsPerAdvertisement() {
         Application app = null;
         Application app2 = null;
+        Advertisement ad = null;
         error = "";
         try {
             app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
@@ -183,7 +187,7 @@ public class ApplicationUnitTest { //application test service
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
-        //assertEquals("You already applied for this", error);
+      //  assertEquals("You already applied for this", error);
     }
 
     @Test
@@ -204,6 +208,8 @@ public class ApplicationUnitTest { //application test service
         error = "";
         try {
             app = service.createApplication(advertisement.getAdvertisementId(), null, DATE_OF_SUBMISSION, NOTE, STATUS);
+            app = service.createApplication(advertisement.getAdvertisementId(), "", DATE_OF_SUBMISSION, NOTE, STATUS);
+            app = service.createApplication(advertisement.getAdvertisementId(), " ", DATE_OF_SUBMISSION, NOTE, STATUS);
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
@@ -271,6 +277,17 @@ public class ApplicationUnitTest { //application test service
         }
         assertEquals("note cannot be empty ", error);
     }
+    @Test
+    public void applicationWithSpaceNote() {
+        Application app = null;
+        error = "";
+        try {
+            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, " ", STATUS);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertEquals("note cannot be empty ", error);
+    }
 
     @Test
     public void getApplicationTest() {
@@ -306,6 +323,19 @@ public class ApplicationUnitTest { //application test service
         error = "";
         try {
             app2 = service.getApplicationByID("");
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertEquals("Application must have an ID", error);
+    }
+
+    @Test
+    public void getApplicationSpaceIdTest() {
+        Application app = null;
+        Application app2 = null;
+        error = "";
+        try {
+            app2 = service.getApplicationByID("  ");
         } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }

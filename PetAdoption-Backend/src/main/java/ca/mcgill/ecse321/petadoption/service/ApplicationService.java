@@ -45,8 +45,18 @@ public class ApplicationService {
         Advertisement advertisement = advertisementRepository.findAdvertisementByAdvertisementId(advertisementId);
         AppUser aUser = appUserRepository.findAppUserByEmail(appUserEmail);
         String error = "";
-
-        // Set<Application> apps = advertisement.getApplications();
+        Set<Application> apps;
+       if (advertisement != null) {
+            advertisement.addApplication(app);
+            apps = advertisement.getApplications();
+//            if (apps != null) {
+//                for (Application a : apps) {
+//                    if (a.getApplicant().getEmail().equals(appUserEmail)){
+//                        error = error + apps.size() +"You already applied for this";
+//                        break;
+//                }
+//            }
+        }
         //  error = error + "You already applied for this";
         // apps.add(app);
         //if (apps == null) error = error + "You already applied for this";
@@ -64,8 +74,11 @@ public class ApplicationService {
 ////        if(old_application != null){
 ////            throw new IllegalArgumentException("The application id: " + id + " already exists");
 ////        }
+//        if (advertisement.getPostedBy().getEmail().equals(appUserEmail)){
+//            error = error + "You Cannot be the applicant of an advertisement posted by you";
+//        }
 
-        if (advertisementId == null || appUserEmail == null) {
+        if (advertisementId == null || appUserEmail == null || appUserEmail == "" || appUserEmail.trim().length() == 0) {
             error = error + "An Application must have an Advertisement and a AppUser ";
         } else if (advertisement.isIsExpired()) {
             error = error + "The Advertisement has expired";
@@ -113,7 +126,7 @@ public class ApplicationService {
      */
     @Transactional
     public List<Application> getAllApplications() {
-        return new ArrayList<>((Collection<? extends Application>)applicationRepository.findAll());
+        return new ArrayList<>((Collection<? extends Application>) applicationRepository.findAll());
     }
 
     /////////////////////////////Application Delete Method////////////////////////////////////////
