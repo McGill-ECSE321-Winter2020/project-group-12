@@ -2,6 +2,9 @@ package ca.mcgill.ecse321.petadoption.TestSuits.Utils;
 
 import ca.mcgill.ecse321.petadoption.model.*;
 
+import java.sql.Date;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -45,6 +48,34 @@ public class TestUtils {
         assertEquals(sex, user.getSex());
         assertEquals(isAdmin, user.isIsAdmin());
     }
+
+
+    public static Image createImage(Advertisement ad, String name, String link, String id) {
+
+        Image newImage = new Image();
+        newImage.setName(name);
+        newImage.setLink(link);
+        newImage.setImageId(id);
+        newImage.setAdvertisement(ad);
+
+        return newImage;
+    }
+
+    public static Advertisement createAdvertisement( AppUser user, Date datePosted, String id, boolean isExpired, String name,
+                                                     Integer age, String description, Sex sex, Species specie) {
+        Advertisement ad = new Advertisement();
+        ad.setDatePosted(datePosted);
+        ad.setAdvertisementId(id);
+        ad.setIsExpired(isExpired);
+        ad.setPetName(name);
+        ad.setPetAge(age);
+        ad.setPetDescription(description);
+        ad.setPetSex(sex);
+        ad.setPetSpecies(specie);
+        ad.setPostedBy(user);
+        return ad;
+    }
+
 
 
 }
