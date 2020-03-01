@@ -1,21 +1,18 @@
-package ca.mcgill.ecse321.petadoption.service_integration;
+package ca.mcgill.ecse321.petadoption.integration_service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.sql.Date;
-import java.time.LocalDate;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class DonationTest {
+@ActiveProfiles("test")
+public class ApplicationTest {
 
     @Test
-    public void createDonation(){
+    public void createAdvertisement(){
 
     }
-
 }

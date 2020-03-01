@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.petadoption.TestSuits.Utils;
 
+import ca.mcgill.ecse321.petadoption.dto.AppUserDto;
 import ca.mcgill.ecse321.petadoption.model.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,4 +46,18 @@ public class TestUtils {
         assertEquals(sex, user.getSex());
         assertEquals(isAdmin, user.isIsAdmin());
     }
+
+    public static void assertAppUser(AppUserDto user, String name, String email, String password,
+                                     String biography, String homeDescription, Integer age, boolean isAdmin, Sex sex ){
+        assertNotNull(user);
+        assertEquals(name, user.getName());
+        assertEquals(email, user.getEmail());
+        assertEquals(password, user.getPassword());
+        assertEquals(biography, user.getBiography());
+        assertEquals(homeDescription, user.getHomeDescription());
+        assertEquals(age, user.getAge());
+        assertEquals(sex, user.getSex());
+        assertEquals(isAdmin, user.isIsAdmin());
+    }
+
 }

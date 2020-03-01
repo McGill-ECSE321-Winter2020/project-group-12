@@ -6,17 +6,19 @@ import java.util.List;
 public class AppUserDto {
     private String name;
     private String email;
+    private String password;
     private String biography;
     private String homeDescription;
     private Integer age;
     private boolean isAdmin;
     private Sex sex;
 
-    public AppUserDto(String name, String email, String biography, String homeDescription, int age, boolean isAdmin,
+    public AppUserDto(String name, String email,String password, String biography, String homeDescription, int age, boolean isAdmin,
                       Sex sex)
     {
         this.name = name;
         this.email = email;
+        this.password = password;
         this.biography = biography;
         this.homeDescription = homeDescription;
         this.age =age;
@@ -32,8 +34,8 @@ public class AppUserDto {
         return this.name;
     }
 
-    public void setEmail(String value) {
-        this.email = value;
+    public String getPassword(){
+        return this.password;
     }
 
     public String getEmail() {
