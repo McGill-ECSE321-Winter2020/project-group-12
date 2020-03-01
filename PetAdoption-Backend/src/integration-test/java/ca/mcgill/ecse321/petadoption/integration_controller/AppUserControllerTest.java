@@ -19,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = PetAdoptionApplication.class,
@@ -75,6 +76,16 @@ public class AppUserControllerTest {
         TestUtils.assertAppUser(returned_user,USER_NAME_1, USER_EMAIL_1, "", USER_BIO_1,
                 USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1  );
     }
+    @Test
+    public void createAppUserInvalid(){
+        AppUserDto user = new AppUserDto("", USER_EMAIL_1, "", USER_BIO_1,
+                USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
+        HttpEntity<AppUserDto> entity = new HttpEntity<AppUserDto>(user, headers);
 
+        AppUserDto returned_user = restTemplate.postForObject(formatLink("/register"),
+                entity, AppUserDto.class);
+
+        //assertNull(returned_user);
+    }
 
 }
