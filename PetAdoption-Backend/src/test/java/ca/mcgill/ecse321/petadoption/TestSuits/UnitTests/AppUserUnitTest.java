@@ -179,6 +179,20 @@ public class AppUserUnitTest {
         assertNull(user);
         assertEquals("email cannot be empty ", error);
     }
+    @Test
+    public void testCreateAppUserInvalidEmail(){
+        AppUser user = null;
+        String error ="";
+        String invalidEmail = "inavlid";
+        try{
+            user = service.createAppUser(USER_NAME_1, invalidEmail, USER_PASSWORD_1, USER_BIO_1,
+                    USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
+        }catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertNull(user);
+        assertEquals("the email " + invalidEmail + " doesn't have a valid format.", error);
+    }
 
     @Test
     public void testCreateAppUserNullPassword(){
