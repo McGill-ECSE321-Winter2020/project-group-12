@@ -100,6 +100,8 @@ public class AdvertisementUnitTest {
     private static final String PET_DESCRIPTION_ERROR_MESSAGE = "Pet description cannot be empty! ";
     private static final String PET_SEX_ERROR_MESSAGE = "Pet sex must be specified! ";
     private static final String PET_SPECIES_ERROR_MESSAGE = "Pet Species is invalid! ";
+    private static final String AD_REQUIRE_ID_MESSAGE = "Advertisement must have an ID";
+    private static final String PROFILE_NOT_FOUND_MESSAGE = "User profile not found. App user does not exist!";
 
     //TODO: Find out how to mock a void from the CRUD repository
     //IF YOU ARE NOT MOCKING IT THEN YOU ARE CALLING THE ACTUAL DATABASE AND YOU DO NOT WANT THAT.
@@ -107,7 +109,8 @@ public class AdvertisementUnitTest {
     public void setMockOutput() {
         //Set up Mock data base with App User account and Advertisements
         configureAppUser(APP_USER_1, USER_EMAIL_1, ADVERTISEMENT_1);
-        configureAppUser(APP_USER_2, USER_EMAIL_2, ADVERTISEMENT_2, ADVERTISEMENT_3);
+        configureAppUser(APP_USER_2, USER_EMAIL_2, ADVERTISEMENT_2);
+        APP_USER_2.addAdvertisement(ADVERTISEMENT_3);
 
         // Mock Actions of data base
         lenient().when(appUserDao.findAppUserByEmail(anyString())).thenAnswer(
@@ -640,6 +643,150 @@ public class AdvertisementUnitTest {
         assertEquals(INVALID_AD_ID_MESSAGE, error);
     }
 
+    @Test
+    public void testGetAdvertisementById() {
+        Advertisement advertisement = null;
+        try {
+            advertisement = advertisementService.getAdvertisementByID(ADVERTISEMENT_3_ID);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+
+        assertNotNull(advertisement);
+        assertEquals(USER_EMAIL_2, advertisement.getPostedBy().getEmail());
+        assertEquals(DATE_2, advertisement.getDatePosted());
+        assertEquals(ADVERTISEMENT_3_ID, advertisement.getAdvertisementId());
+        assertEquals(PET_NAME_3, advertisement.getPetName());
+        assertEquals(PET_AGE_3, advertisement.getPetAge());
+        assertEquals(PET_DESCRIPTION_3, advertisement.getPetDescription());
+        assertEquals(PET_SEX_3, advertisement.getPetSex());
+        assertEquals(PET_SPECIES_3, advertisement.getPetSpecies());
+    }
+
+    @Test
+    public void testGetAdvertisementByInvalidId() {
+        Advertisement advertisement = null;
+        String error = null;
+        try {
+            advertisement = advertisementService.getAdvertisementByID(INVALID_ID);
+            System.out.println(advertisement);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        assertNull(advertisement);
+    }
+
+    @Test
+    public void testGetAdvertisementByNullId() {
+        Advertisement advertisement = null;
+        String error = null;
+        try {
+            advertisement = advertisementService.getAdvertisementByID(null);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNull(advertisement);
+        assertEquals(AD_REQUIRE_ID_MESSAGE, error);
+    }
+
+    @Test
+    public void testGetAdvertisementByEmptyId(){
+        Advertisement advertisement = null;
+        String error = null;
+        try {
+            advertisement = advertisementService.getAdvertisementByID(" ");
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNull(advertisement);
+        assertEquals(AD_REQUIRE_ID_MESSAGE, error);
+    }
+
+    @Test
+    public void testGetAllAdvertisementsOfAppUser() {
+        List<Advertisement> advertisements = null;
+        try {
+            advertisements = advertisementService.getAdvertisementsOfAppUser(USER_EMAIL_2);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+
+        assertNotNull(advertisements);
+        assertEquals(USER_EMAIL_2, advertisements.get(0).getPostedBy().getEmail());
+        assertEquals(DATE_1, advertisements.get(0).getDatePosted());
+        assertEquals(ADVERTISEMENT_2_ID, advertisements.get(0).getAdvertisementId());
+        assertEquals(PET_NAME_2, advertisements.get(0).getPetName());
+        assertEquals(PET_AGE_2, advertisements.get(0).getPetAge());
+        assertEquals(PET_DESCRIPTION_2, advertisements.get(0).getPetDescription());
+        assertEquals(PET_SEX_2, advertisements.get(0).getPetSex());
+        assertEquals(PET_SPECIES_2, advertisements.get(0).getPetSpecies());
+
+        assertEquals(USER_EMAIL_2, advertisements.get(1).getPostedBy().getEmail());
+        assertEquals(DATE_2, advertisements.get(1).getDatePosted());
+        assertEquals(ADVERTISEMENT_3_ID, advertisements.get(1).getAdvertisementId());
+        assertEquals(PET_NAME_3, advertisements.get(1).getPetName());
+        assertEquals(PET_AGE_3, advertisements.get(1).getPetAge());
+        assertEquals(PET_DESCRIPTION_3, advertisements.get(1).getPetDescription());
+        assertEquals(PET_SEX_3, advertisements.get(1).getPetSex());
+        assertEquals(PET_SPECIES_3, advertisements.get(1).getPetSpecies());
+    }
+
+    @Test
+    public void testGetAllAdvertisementsOfInvalidAppUser() {
+        List<Advertisement> advertisements = null;
+        String error = null;
+        try{
+            advertisements = advertisementService.getAdvertisementsOfAppUser(NON_EXISTING_APP_USER);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertNull(advertisements);
+        assertEquals(PROFILE_NOT_FOUND_MESSAGE, error);
+    }
+
+    @Test
+    public void testGetAllAdvertisementsOfNullAppUser() {
+        List<Advertisement> advertisements = null;
+        String error = null;
+        try{
+            advertisements = advertisementService.getAdvertisementsOfAppUser(null);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertNull(advertisements);
+        assertEquals(PROFILE_NOT_FOUND_MESSAGE, error);
+    }
+
+    @Test
+    public void testGetAllAdvertisementsOfEmptyAppUser() {
+        List<Advertisement> advertisements = null;
+        String error = null;
+        try{
+            advertisements = advertisementService.getAdvertisementsOfAppUser(" ");
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertNull(advertisements);
+        assertEquals(PROFILE_NOT_FOUND_MESSAGE, error);
+    }
+
+    @Test
+    public void testDeleteAdvertisement() {
+        assertTrue(advertisementService.deleteAdvertisement(ADVERTISEMENT_3_ID));
+    }
+
+    @Test
+    public void testDeleteAdvertisementNullId() {
+        assertFalse(advertisementService.deleteAdvertisement(null));
+    }
+
+    @Test
+    public void testDeleteAdvertisementByEmptyId() {
+        assertFalse(advertisementService.deleteAdvertisement(" "));
+    }
     //Helper methods - Need to take out of here and put them in separate Resource class
     private static Advertisement createAdvertisement(AppUser appUser, Date datePosted, String id, boolean isExpired, String petName,
                                                      Integer petAge, String petDescription, Sex petSex, Species petSpecies) {
@@ -660,10 +807,8 @@ public class AdvertisementUnitTest {
         return advertisement;
     }
 
-    private static void configureAppUser(AppUser appUser, String userEmail, Advertisement... advertisement) {
+    private static void configureAppUser(AppUser appUser, String userEmail, Advertisement advertisement) {
         appUser.setEmail(userEmail);
-        for (Advertisement ad : advertisement) {
-            appUser.addAdvertisement(ad);
-        }
+        appUser.addAdvertisement(advertisement);
     }
 }

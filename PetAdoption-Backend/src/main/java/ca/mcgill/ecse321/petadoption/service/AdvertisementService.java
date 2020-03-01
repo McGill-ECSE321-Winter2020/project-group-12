@@ -82,8 +82,7 @@ public class AdvertisementService {
         if (id == null || id.trim().length() == 0) {
             throw new IllegalArgumentException("Advertisement must have an ID");
         }
-        Advertisement a = advertisementRepository.findAdvertisementByAdvertisementId(id);
-        return a;
+        return advertisementRepository.findAdvertisementByAdvertisementId(id);
     }
 
     /**
@@ -99,11 +98,16 @@ public class AdvertisementService {
     /**
      * Returns all advertisements made by an App-user
      *
-     * @param appUser
+     * @param userEmail
      * @return List of Advertisements made by App-user
      */
     @Transactional
-    public List<Advertisement> getAdvertisementsOfAppUser(AppUser appUser) {
+    public List<Advertisement> getAdvertisementsOfAppUser(String userEmail) {
+        AppUser appUser = appUserRepository.findAppUserByEmail(userEmail);
+        if (appUser == null){
+            throw new IllegalArgumentException("User profile not found. App user does not exist!");
+        }
+
         return advertisementRepository.findAdvertisementsByPostedBy(appUser);
     }
 
