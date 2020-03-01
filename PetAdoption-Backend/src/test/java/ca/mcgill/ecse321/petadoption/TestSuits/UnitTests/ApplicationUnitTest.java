@@ -17,10 +17,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -123,6 +120,14 @@ public class ApplicationUnitTest { //application test service
                     }
                 }
         );
+        lenient().when(applicationDao.findApplicationByAdvertisementAdvertisementId(anyString())).thenAnswer(
+                (InvocationOnMock invocation) -> {
+                    Set<Application> set = new HashSet<Application>();
+                    set.add(TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS));
+                    set.add(TestUtils.createApplication(advertisement, user3, DATE_OF_SUBMISSION2, NOTE2, STATUS2));
+                    return set;
+                }
+        );
 
         lenient().when(applicationDao.findAll()).thenAnswer(
                 (InvocationOnMock invocation) -> {
@@ -164,6 +169,16 @@ public class ApplicationUnitTest { //application test service
                 }
         );
     }
+    private void setMockOutputOnlyForDuplicateTest(){
+        lenient().when(applicationDao.findApplicationByAdvertisementAdvertisementId(anyString())).thenAnswer(
+                (InvocationOnMock invocation) -> {
+                    Set<Application> set = new HashSet<Application>();
+                    set.add(TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS));
+                    set.add(TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION2, NOTE2, STATUS2));
+                    return set;
+                }
+        );
+    }
 
     @Test
     public void createApplicationTest() {
@@ -175,21 +190,6 @@ public class ApplicationUnitTest { //application test service
             fail();
         }
         TestUtils.assertApplication(app, advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS);
-    }
-
-    @Test
-    public void duplicateApplicationsPerAdvertisement() {
-        Application app = null;
-        Application app2 = null;
-        Advertisement ad = null;
-        error = "";
-        try {
-            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
-            app2 = service.createApplication(advertisement.getAdvertisementId(), user3.getEmail(), DATE_OF_SUBMISSION2, NOTE2, STATUS2);
-        } catch (IllegalArgumentException e) {
-            error = e.getMessage();
-        }
-        //  assertEquals("You already applied for this", error);
     }
 
     @Test
@@ -429,5 +429,19 @@ public class ApplicationUnitTest { //application test service
         }
         TestUtils.assertApplication(app, advertisement, user2, DATE_OF_SUBMISSION, NOTE, Status.rejected);
     }
-
+    @Test
+    public void duplicateApplicationsPerAdvertisement() {
+        setMockOutputOnlyForDuplicateTest();
+        Application app = null;
+        Application app2 = null;
+        Advertisement ad = null;
+        error = "";
+        try {
+            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
+            app2 = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION2, NOTE2, STATUS2);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertEquals("You already applied for this", error);
+    }
 }
