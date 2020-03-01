@@ -338,12 +338,249 @@ public class AdvertisementTest {
                 PET_SEX_ERROR_MESSAGE + PET_SPECIES_ERROR_MESSAGE, error);
     }
 
+    @Test
+    public void testUpdateAdvertisement() {
+        Advertisement advertisement = createAppUserThenAdvertisement();
+        String advertisementId = advertisement.getAdvertisementId();
+        try {
+            advertisement = advertisementService.updateAdvertisement(
+                    advertisementRepository.findAdvertisementByAdvertisementId(advertisementId).getAdvertisementId(),
+                    PET_NAME_2, PET_AGE_2, PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+
+        assertNotNull(advertisement);
+        assertEquals(advertisementId, advertisement.getAdvertisementId());
+        assertEquals(PET_NAME_2, advertisement.getPetName());
+        assertEquals(PET_AGE_2, advertisement.getPetAge());
+        assertEquals(PET_DESCRIPTION_2, advertisement.getPetDescription());
+        assertEquals(PET_SEX_2, advertisement.getPetSex());
+        assertEquals(PET_SPECIES_2, advertisement.getPetSpecies());
+    }
+
+    @Test
+    public void testUpdateAdvertisementInvalidId() {
+        Advertisement advertisement = null;
+        String error = null;
+        try {
+            advertisement = advertisementService.updateAdvertisement(INVALID_ID, PET_NAME_2, PET_AGE_2,
+                    PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNull(advertisement);
+        assertEquals(INVALID_AD_ID_MESSAGE, error);
+    }
+
+    @Test
+    public void testUpdateAdvertisementNullId() {
+        Advertisement advertisement = null;
+        String error = null;
+        try {
+            advertisement = advertisementService.updateAdvertisement(null, PET_NAME_2, PET_AGE_2,
+                    PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNull(advertisement);
+        assertEquals(INVALID_AD_ID_MESSAGE, error);
+    }
+
+    @Test
+    public void testUpdateAdvertisementEmptyId() {
+        Advertisement advertisement = null;
+        String error = null;
+        try {
+            advertisement = advertisementService.updateAdvertisement(" ", PET_NAME_2, PET_AGE_2,
+                    PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNull(advertisement);
+        assertEquals(INVALID_AD_ID_MESSAGE, error);
+    }
+
+    @Test
+    public void testUpdateAdvertisementNullPetName() {
+        Advertisement advertisement = createAppUserThenAdvertisement();
+        String error = null;
+        try {
+            advertisement = advertisementService.updateAdvertisement(advertisement.getAdvertisementId(),
+                    null, PET_AGE_3, PET_DESCRIPTION_3, PET_SEX_3, PET_SPECIES_3);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNotNull(advertisement);
+        assertEquals(advertisement, advertisement);
+        assertEquals(PET_NAME_1, advertisement.getPetName());
+        assertEquals(PET_NAME_ERROR_MESSAGE, error);
+    }
+
+    @Test
+    public void testUpdateAdvertisementEmptyPetName() {
+        Advertisement advertisement = createAppUserThenAdvertisement();
+        String error = null;
+        try {
+            advertisement = advertisementService.updateAdvertisement(advertisement.getAdvertisementId(),
+                    " ", PET_AGE_3, PET_DESCRIPTION_3, PET_SEX_3, PET_SPECIES_3);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNotNull(advertisement);
+        assertEquals(advertisement, advertisement);
+        assertEquals(PET_NAME_1, advertisement.getPetName());
+        assertEquals(PET_NAME_ERROR_MESSAGE, error);
+    }
+
+    @Test
+    public void testUpdateAdvertisementNullPetAge() {
+        Advertisement advertisement = createAppUserThenAdvertisement();
+        String error = null;
+        try {
+            advertisement = advertisementService.updateAdvertisement(advertisement.getAdvertisementId(), PET_NAME_3,
+                    null, PET_DESCRIPTION_3, PET_SEX_3, PET_SPECIES_3);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNotNull(advertisement);
+        assertEquals(advertisement, advertisement);
+        assertEquals(PET_AGE_1, advertisement.getPetAge());
+        assertEquals(PET_AGE_ERROR_MESSAGE, error);
+    }
+
+    @Test
+    public void testUpdateAdvertisementNegativePetAge() {
+        Advertisement advertisement = createAppUserThenAdvertisement();
+        String error = null;
+        try {
+            advertisement = advertisementService.updateAdvertisement(advertisement.getAdvertisementId(),
+                    PET_NAME_3, NEGATIVE_AGE, PET_DESCRIPTION_3, PET_SEX_3, PET_SPECIES_3);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNotNull(advertisement);
+        assertEquals(advertisement, advertisement);
+        assertEquals(PET_AGE_1, advertisement.getPetAge());
+        assertEquals(PET_AGE_ERROR_MESSAGE, error);
+    }
+
+    @Test
+    public void testUpdateAdvertisementNullPetDescription() {
+        Advertisement advertisement = createAppUserThenAdvertisement();
+        String error = null;
+        try {
+            advertisement = advertisementService.updateAdvertisement(advertisement.getAdvertisementId(),
+                    PET_NAME_3, PET_AGE_3, null, PET_SEX_3, PET_SPECIES_3);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNotNull(advertisement);
+        assertEquals(advertisement, advertisement);
+        assertEquals(PET_DESCRIPTION_1, advertisement.getPetDescription());
+        assertEquals(PET_DESCRIPTION_ERROR_MESSAGE, error);
+    }
+
+    @Test
+    public void testUpdateAdvertisementEmptyPetDescription() {
+        Advertisement advertisement = createAppUserThenAdvertisement();
+        String error = null;
+        try {
+            advertisement = advertisementService.updateAdvertisement(advertisement.getAdvertisementId(),
+                    PET_NAME_3, PET_AGE_3, " ", PET_SEX_3, PET_SPECIES_3);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNotNull(advertisement);
+        assertEquals(advertisement, advertisement);
+        assertEquals(PET_DESCRIPTION_1, advertisement.getPetDescription());
+        assertEquals(PET_DESCRIPTION_ERROR_MESSAGE, error);
+    }
+
+    @Test
+    public void testUpdateAdvertisementNullSex() {
+        Advertisement advertisement = createAppUserThenAdvertisement();
+        String error = null;
+        try {
+            advertisement = advertisementService.updateAdvertisement(advertisement.getAdvertisementId(),
+                    PET_NAME_3, PET_AGE_3, PET_DESCRIPTION_3, null, PET_SPECIES_3);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNotNull(advertisement);
+        assertEquals(advertisement, advertisement);
+        assertEquals(PET_SEX_1, advertisement.getPetSex());
+        assertEquals(PET_SEX_ERROR_MESSAGE, error);
+    }
+
+    @Test
+    public void testUpdateAdvertisementNullSpecies() {
+        Advertisement advertisement = createAppUserThenAdvertisement();
+        String error = null;
+        try {
+            advertisement = advertisementService.updateAdvertisement(advertisement.getAdvertisementId(), PET_NAME_3
+                    , PET_AGE_3, PET_DESCRIPTION_3, PET_SEX_3, null);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNotNull(advertisement);
+        assertEquals(advertisement, advertisement);
+        assertEquals(PET_SPECIES_1, advertisement.getPetSpecies());
+        assertEquals(PET_SPECIES_ERROR_MESSAGE, error);
+    }
+
+    @Test
+    public void testUpdateAdvertisementExpire() {
+        Advertisement advertisement = createAppUserThenAdvertisement();
+        try {
+            advertisement = advertisementService.updateAdvertisementIsExpired(advertisement.getAdvertisementId(), true);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        assertNotNull(advertisement);
+        assertTrue(advertisement.isIsExpired());
+    }
+
+    @Test
+    public void testUpdateAdvertisementExpireInvalidId() {
+        Advertisement advertisement = null;
+        String error = null;
+        try {
+            advertisement = advertisementService.updateAdvertisementIsExpired(INVALID_ID, true);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNull(advertisement);
+        assertEquals(INVALID_AD_ID_MESSAGE, error);
+    }
+
+    @Test
+    public void testUpdateAdvertisementExpireNullId(){
+        Advertisement advertisement = null;
+        String error = null;
+        try {
+            advertisement = advertisementService.updateAdvertisementIsExpired(null, true);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNull(advertisement);
+        assertEquals(INVALID_AD_ID_MESSAGE, error);
+    }
+
+    @Test
+    public void testUpdateAdvertisementExpireEmptyId() {
+        Advertisement advertisement = null;
+        String error = null;
+        try {
+            advertisement = advertisementService.updateAdvertisementIsExpired(" ", true);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNull(advertisement);
+        assertEquals(INVALID_AD_ID_MESSAGE, error);
+    }
+
     
-
-
-
-
-
 
     private AppUser createAppUser() {
         AppUser appUser = null;
