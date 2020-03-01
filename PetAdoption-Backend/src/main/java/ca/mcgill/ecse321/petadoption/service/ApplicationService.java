@@ -58,12 +58,6 @@ public class ApplicationService {
             }
             if (apps == null || apps.size() == 0) apps = new HashSet<Application>();
             advertisement.setApplications((apps));
-//            for (Application a : apps) {
-//                if (a.getApplicant().getEmail().equals(appUserEmail)) {
-//                    if (bool) throw new IllegalArgumentException("You already applied for this");
-//                   bool = true;
-//                }
-//            }
             app.setApplicant(aUser);
             apps.add(app);
             Application findDuplicate = applicationRepository.findApplicationByAdvertisement_AdvertisementIdAndApplicant_Email(advertisementId, appUserEmail);
