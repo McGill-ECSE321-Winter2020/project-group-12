@@ -45,14 +45,14 @@ public class TestUtils {
         new_user.setEmail(email);
         new_user.setName(name);
 
-        Advertisement ad = new Advertisement();
-        ad.setAdvertisementId();
-        ;
-        new_user.addAdvertisement(ad);
-
-        Application app = new Application();
-        app.setApplicationId();
-        new_user.addApplication(app);
+//        Advertisement ad = new Advertisement();
+//        ad.setAdvertisementId();
+//        ;
+//        new_user.addAdvertisement(ad);
+//
+//        Application app = new Application();
+//        app.setApplicationId();
+//        new_user.addApplication(app);
 
         // TODO: ZAK: use createDonation AFTER CONSTRUCTING a user
 //        Donation don = new Donation();
