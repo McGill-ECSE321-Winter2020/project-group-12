@@ -4,38 +4,26 @@ import ca.mcgill.ecse321.petadoption.model.Sex;
 import java.util.List;
 
 public class AppUserDto {
-    private List<DonationDto> donations;
     private String name;
     private String email;
+    private String password;
     private String biography;
     private String homeDescription;
     private Integer age;
     private boolean isAdmin;
-    private List<AdvertisementDto> advertisements;
-    private List<ApplicationDto> applications;
-
     private Sex sex;
 
-    public AppUserDto(){
-
-    }
-    public AppUserDto(String name, String email, String biography, String homeDescription, int age, boolean isAdmin,
-                      Sex sex, List<DonationDto> donations, List<AdvertisementDto> advertisements, List<ApplicationDto> applications)
+    public AppUserDto(String name, String email,String password, String biography, String homeDescription, int age, boolean isAdmin,
+                      Sex sex)
     {
         this.name = name;
         this.email = email;
+        this.password = password;
         this.biography = biography;
         this.homeDescription = homeDescription;
         this.age =age;
         this.isAdmin = isAdmin;
         this.sex = sex;
-        this.donations = donations;
-        this.advertisements = advertisements;
-        this.applications = applications;
-    }
-
-    public List<DonationDto> getDonations() {
-        return this.donations;
     }
 
     public void setName(String value) {
@@ -46,8 +34,8 @@ public class AppUserDto {
         return this.name;
     }
 
-    public void setEmail(String value) {
-        this.email = value;
+    public String getPassword(){
+        return this.password;
     }
 
     public String getEmail() {
@@ -76,14 +64,6 @@ public class AppUserDto {
 
     public boolean isIsAdmin() {
         return this.isAdmin;
-    }
-
-    public List<AdvertisementDto> getAdvertisements() {
-        return this.advertisements;
-    }
-
-    public List<ApplicationDto> getApplications() {
-        return this.applications;
     }
 
 }
