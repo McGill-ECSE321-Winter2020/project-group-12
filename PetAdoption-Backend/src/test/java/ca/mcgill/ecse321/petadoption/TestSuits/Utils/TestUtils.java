@@ -90,7 +90,7 @@ public class TestUtils {
         assertEquals(advertisement.getPetAge(), application.getAdvertisement().getPetAge());
         assertEquals(advertisement.getPetSex(), application.getAdvertisement().getPetSex());
         assertEquals(advertisement.getDatePosted(), application.getAdvertisement().getDatePosted());
-        assertEquals(advertisement.getPostedBy(), application.getAdvertisement().getPostedBy());
+        assertEquals(advertisement.getPostedBy().getEmail(), application.getAdvertisement().getPostedBy().getEmail());
     }
 
     public static Advertisement createAdvertisement(Date datePosted, boolean isExpired, AppUser postedBy, String petName, Integer age, String description) {
