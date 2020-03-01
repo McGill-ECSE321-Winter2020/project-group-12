@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
-import static org.hibernate.internal.util.collections.ArrayHelper.toList;
 
 @Service
 public class DonationService {
@@ -31,74 +31,124 @@ public class DonationService {
      *
      * @param amount(Integer)
      * @param dateOfPayment(Date)
-     * @param transactionNumber(String)
      * @return Donation object
      */
     @Transactional
-    public Donation createDonation(AppUser user2, Integer amount, Date dateOfPayment, String transactionNumber) {
-        Donation donation = new Donation();
+    public Donation createDonation(String userEmail, Integer amount, Date dateOfPayment) {
+        Donation donation = null;
         String error = "";
+        if(userEmail == null || userEmail.trim().length() == 0) {
+            throw new IllegalArgumentException("A valid email is needed to make a donation");
+        }
 
-        if (user2 == null) {
-            error = "A Donation must have a AppUser ";
+        AppUser user = appUserRepository.findAppUserByEmail(userEmail);
+
+        if (user == null) {
+            throw new IllegalArgumentException("Donation cannot be created without a donor!");
         }
-        if (amount <= 0) {
-            error = "Go take care of yourself! ";
+
+        if(amount == null) {
+            error = error + "Cannot make a donation with unspecified amount";
+        } else if (amount <= 0) {
+            error = error + "Cannot make a donation of $0 or less";
         }
+
+        // need to double check how this will be filled in automatically
         if (dateOfPayment == null) {
-            error = error + "dateOfPayment cannot be empty ";
-        }
-        if (transactionNumber == null || transactionNumber.trim().length() == 0) {
-            error = error + "transactionNumber is invalid ";
+            error = error + "Donation made cannot be missing a date of payment";
         }
 
         if (error.length() != 0) {
             throw new IllegalArgumentException(error);
         }
 
+        donation = new Donation();
         donation.setAmount(amount);
         donation.setDateOfPayment(dateOfPayment);
-        donation.setTransactionID(transactionNumber);
-        donation.setDonor(user2);
+        donation.setTransactionID();
+        donation.setDonor(user);
 
-        donationRepository.save(donation);
-        return donation;
+        return donationRepository.save(donation);
     }
     /**
      * Returns the Donation with specified transactionNumber from the database.
      *
-     * @param transactionNumber
+     * @param transactionID
      * @return Donation object
      */
     @Transactional
-    public Donation getDonationByTransactionID(String transactionNumber) {
-        if (transactionNumber == null || transactionNumber.trim().length() == 0) {
-            throw new IllegalArgumentException("Donation must have a transactionNumber!");
+    public Donation getDonationByTransactionID(String transactionID) {
+        if (transactionID == null || transactionID.trim().length() == 0) {
+            throw new IllegalArgumentException("Donation must have a valid transactionID!");
         }
-        Donation a = donationRepository.findDonationByTransactionID(transactionNumber);
+        Donation a = donationRepository.findDonationByTransactionID(transactionID);
         return a;
     }
 
     /**
+     * Returns the donations made by the specific user.
+     * @param userEmail
+     * @return List of Donations made by user
+     */
+    @Transactional
+    public List<Donation> getDonationsByUser(String userEmail) { // TODO: make sure its correct to pass in the app user like this!, i think we shld pass user email and then do findUserByEmail?
+        if (userEmail == null || userEmail.trim().length() == 0) {
+            throw new IllegalArgumentException("The email entered is not valid.");
+        }
+
+        List<Donation> donations = donationRepository.findDonationByDonorEmail(userEmail);
+
+        return donations;
+    }
+
+    @Transactional
+    public List<Donation> getDonationsByDateOfPayment(Date dateOfPayment) {
+        if(dateOfPayment == null) {
+            throw new IllegalArgumentException("Date of payment cannot be empty");
+        }
+        List<Donation> donations = donationRepository.findDonationByDateOfPayment(dateOfPayment);
+        return donations;
+    }
+
+    @Transactional
+    public List<Donation> getDonationsByDateAndDonor(Date dateOfPayment, String userEmail) {
+        String error = "";
+        if(userEmail == null || userEmail.trim().length() == 0) {
+            error = "A user email must be provided! ";
+        }
+
+        if(dateOfPayment == null) {
+            error += "Date of payment cannot be empty!";
+        }
+
+        if (error.length() != 0) {
+            throw new IllegalArgumentException(error);
+        }
+
+        return donationRepository.findDonationByDateOfPaymentAndDonorEmail(dateOfPayment, userEmail);
+    }
+
+    /**
+     *
      * Returns all Donations in the database.
      *
      * @return List of Donation objects
      */
     @Transactional
     public List<Donation> getAllDonations() {
-        return toList(donationRepository.findAll());
+        return new ArrayList<Donation>((Collection<? extends Donation>) donationRepository.findAll());
     }
 
     /////////////////////////////Donation Delete Method////////////////////////////////////////
 
-    /**
-     * Deletes the Donation with specified transactionNumber from the database.
-     *
-     * @param transactionNumber
-     */
-    @Transactional
-    public void deleteDonation(String transactionNumber) {
-        donationRepository.deleteDonationByTransactionID(transactionNumber);
-    }
+//    /**
+//     * Deletes the Donation with specified transactionID from the database.
+//     *
+//     * @param transactionID
+//     */
+//    @Transactional
+//    public void deleteDonation(String transactionID) {
+//        donationRepository.deleteDonationByTransactionID(transactionID);
+//    }
 
 }
