@@ -370,6 +370,64 @@ public class AppUserUnitTest {
                 USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2);
     }
 
+    @Test
+    public void testLoginValid(){
+        assertTrue(service.checkLoginParam(USER_EMAIL_2, USER_PASSWORD_2));
+    }
+
+    @Test
+    public void testLoginInexistent(){
+        assertFalse(service.checkLoginParam(USER_EMAIL_1, USER_PASSWORD_1));
+    }
+    @Test
+    public void testLoginWrongPassword(){
+        assertFalse(service.checkLoginParam(USER_EMAIL_2, USER_PASSWORD_1));
+    }
+    @Test
+    public void testLoginNullEmail(){
+        String error = "";
+        try{
+            service.checkLoginParam(null, USER_PASSWORD_1);
+        }catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals("name cannot be empty! ", error);
+    }
+    @Test
+    public void testLoginEmptyEmail(){
+        String error = "";
+        try{
+            service.checkLoginParam("", USER_PASSWORD_1);
+        }catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals("name cannot be empty! ", error);
+    }
+    @Test
+    public void testLoginNullPassword(){
+        String error = "";
+        try{
+            service.checkLoginParam(USER_EMAIL_1, null);
+        }catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals("password cannot be empty ", error);
+    }
+    @Test
+    public void testLoginEmptyPassword(){
+        String error = "";
+        try{
+            service.checkLoginParam(USER_EMAIL_1, "");
+        }catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals("password cannot be empty ", error);
+    }
+
+
+
+
+
 //    @Test
 //    public void testDeleteUsers(){
 //        service.deleteAppUser(USER_EMAIL_2);

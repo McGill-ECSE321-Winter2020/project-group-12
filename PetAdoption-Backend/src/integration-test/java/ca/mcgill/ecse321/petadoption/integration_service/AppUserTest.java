@@ -404,5 +404,106 @@ public class AppUserTest {
         assertEquals("The user with email "+ USER_EMAIL_2 +" does not exist." ,error);
     }
 
+    @Test
+    public void testLoginValid(){
+        AppUser user = null;
+        try{
+            user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+                    USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 );
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        assertTrue(service.checkLoginParam(USER_EMAIL_2, USER_PASSWORD_2));
+    }
 
+    @Test
+    public void testLoginInexistent(){
+        AppUser user = null;
+        try{
+            user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+                    USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 );
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        assertFalse(service.checkLoginParam(USER_EMAIL_1, USER_PASSWORD_1));
+    }
+    @Test
+    public void testLoginWrongPassword(){
+        AppUser user = null;
+        try{
+            user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+                    USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 );
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        assertFalse(service.checkLoginParam(USER_EMAIL_2, USER_PASSWORD_1));
+    }
+    @Test
+    public void testLoginNullEmail(){
+        AppUser user = null;
+        try{
+            user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+                    USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 );
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        String error = "";
+        try{
+            service.checkLoginParam(null, USER_PASSWORD_1);
+        }catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals("name cannot be empty! ", error);
+    }
+    @Test
+    public void testLoginEmptyEmail(){
+        AppUser user = null;
+        try{
+            user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+                    USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 );
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        String error = "";
+        try{
+            service.checkLoginParam("", USER_PASSWORD_1);
+        }catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals("name cannot be empty! ", error);
+    }
+    @Test
+    public void testLoginNullPassword(){
+        AppUser user = null;
+        try{
+            user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+                    USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 );
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        String error = "";
+        try{
+            service.checkLoginParam(USER_EMAIL_1, null);
+        }catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals("password cannot be empty ", error);
+    }
+    @Test
+    public void testLoginEmptyPassword(){
+        AppUser user = null;
+        try{
+            user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+                    USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 );
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        String error = "";
+        try{
+            service.checkLoginParam(USER_EMAIL_1, "");
+        }catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals("password cannot be empty ", error);
+    }
 }
