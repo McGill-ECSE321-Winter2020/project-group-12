@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.petadoption.controller;
 
 import ca.mcgill.ecse321.petadoption.dto.AdvertisementDto;
 import ca.mcgill.ecse321.petadoption.model.Advertisement;
-import ca.mcgill.ecse321.petadoption.model.AppUser;
 import ca.mcgill.ecse321.petadoption.service.AdvertisementService;
 import ca.mcgill.ecse321.petadoption.service.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,14 +40,14 @@ public class AdvertisementController {
 
     @PutMapping(value = {"/advertisement/updateExpiry", "/advertisement/updateExpiry/"})
     public AdvertisementDto updateAdvertisementExpiration(@RequestParam("adId") String advertisementID,
-                                                          @RequestParam("expired") boolean expired){
+                                                          @RequestParam("expired") boolean expired) {
         Advertisement advertisement = advertisementService.updateAdvertisementIsExpired(advertisementID, expired);
         return convertToDto(advertisement);
     }
 
     @DeleteMapping(value = {"/advertisement/delete", "/advertisement/delete/"})
-    public boolean deleteAdvertisement(@RequestParam("adId") String advertisementID) {
-        return advertisementService.deleteAdvertisement(advertisementID);
+    public void deleteAdvertisement(@RequestParam("adId") String advertisementID) {
+        advertisementService.deleteAdvertisement(advertisementID);
     }
 
     @GetMapping(value = {"/advertisements", "/advertisements/"})
@@ -63,9 +62,7 @@ public class AdvertisementController {
     @GetMapping(value = {"/{userID}/advertisements", "/{userID}/advertisements/"})
     public List<AdvertisementDto> getAdvertisementsByAppUser(@PathVariable("userID") String userEmail) {
         try {
-            AppUser appUser = appUserService.getAppUserByEmail(userEmail);
-            return createAdvertisementDtosForAppUser(appUser);
-            // Converting HashSet of Advertisements to ArrayList of Advertisements
+            return createAdvertisementDtosForAppUser(userEmail);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
@@ -93,10 +90,10 @@ public class AdvertisementController {
                 ad.getPetSex(), ad.getPetSpecies(), ad.getApplications(), ad.getPetImages());
     }
 
-    private List<AdvertisementDto> createAdvertisementDtosForAppUser(AppUser appUser) {
-        List<Advertisement> advertisementsForAppUser = advertisementService.getAdvertisementsOfAppUser(appUser);
+    private List<AdvertisementDto> createAdvertisementDtosForAppUser(String userEmail) {
+        List<Advertisement> advertisementsForAppUser = advertisementService.getAdvertisementsOfAppUser(userEmail);
         List<AdvertisementDto> advertisementDtos = new ArrayList<>();
-        for (Advertisement advertisement : advertisementsForAppUser){
+        for (Advertisement advertisement : advertisementsForAppUser) {
             advertisementDtos.add(convertToDto(advertisement));
         }
         return advertisementDtos;

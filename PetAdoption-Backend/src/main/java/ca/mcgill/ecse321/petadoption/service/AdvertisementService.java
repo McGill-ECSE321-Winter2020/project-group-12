@@ -82,8 +82,7 @@ public class AdvertisementService {
         if (id == null || id.trim().length() == 0) {
             throw new IllegalArgumentException("Advertisement must have an ID");
         }
-        Advertisement a = advertisementRepository.findAdvertisementByAdvertisementId(id);
-        return a;
+        return advertisementRepository.findAdvertisementByAdvertisementId(id);
     }
 
     /**
@@ -99,12 +98,17 @@ public class AdvertisementService {
     /**
      * Returns all advertisements made by an App-user
      *
-     * @param appUser
+     * @param userEmail
      * @return List of Advertisements made by App-user
      */
     @Transactional
-    public List<Advertisement> getAdvertisementsOfAppUser(AppUser appUser) {
-        return new ArrayList<>(appUser.getAdvertisements());
+    public List<Advertisement> getAdvertisementsOfAppUser(String userEmail) {
+        AppUser appUser = appUserRepository.findAppUserByEmail(userEmail);
+        if (appUser == null) {
+            throw new IllegalArgumentException("User profile not found. App user does not exist!");
+        }
+
+        return advertisementRepository.findAdvertisementsByPostedBy(appUser);
     }
 
     /**
@@ -113,26 +117,21 @@ public class AdvertisementService {
      * @param id
      */
     @Transactional
-    public boolean deleteAdvertisement(String id) {
+    public void deleteAdvertisement(String id) {
         Advertisement adToDelete = advertisementRepository.findAdvertisementByAdvertisementId(id);
-        if (adToDelete != null) {
-            //Delete all multiple associations with an application
-            while (adToDelete.getApplications().size() != 0) {
-                Set<Application> applications = adToDelete.getApplications();
-                Application app = applications.iterator().next();
-                applicationService.deleteApplication(app.getApplicationId());
-            }
-
-            while (adToDelete.getPetImages().size() != 0) {
-                Set<Image> petImages = adToDelete.getPetImages();
-                Image image = petImages.iterator().next();
-                imageService.deleteImage(image.getImageId());
-            }
-
-            advertisementRepository.delete(adToDelete);
-            return true;
+        if (adToDelete == null) {
+            throw new IllegalArgumentException("Invalid advertisement requested. Please check advertisement ID.");
         }
-        return false;
+        //Delete all multiple associations with an application
+        for (Application application : adToDelete.getApplications()) {
+            applicationRepository.deleteApplicationByApplicationId(application.getApplicationId());
+        }
+
+        for (Image image : adToDelete.getPetImages()) {
+            imageRepository.deleteImageByImageId(image.getImageId());
+        }
+
+        advertisementRepository.deleteAdvertisementByAdvertisementId(id);
     }
 
     /**
@@ -154,6 +153,7 @@ public class AdvertisementService {
 
     /**
      * Updates advertisement details for a pet in the database.
+     *
      * @param adId
      * @param petName
      * @param petAge
@@ -185,7 +185,7 @@ public class AdvertisementService {
         if (petName == null || petName.trim().length() == 0) {
             error = error + "Pet name cannot be empty! ";
         }
-        if (petAge <= 0) {
+        if (petAge == null || petAge <= 0) {
             error = error + "Pet age cannot be less than or equal to 0! ";
         }
         if (petDescription == null || petDescription.trim().length() == 0) {
