@@ -185,7 +185,7 @@ public class AdvertisementService {
         if (petName == null || petName.trim().length() == 0) {
             error = error + "Pet name cannot be empty! ";
         }
-        if (petAge <= 0) {
+        if (petAge == null || petAge <= 0) {
             error = error + "Pet age cannot be less than or equal to 0! ";
         }
         if (petDescription == null || petDescription.trim().length() == 0) {
