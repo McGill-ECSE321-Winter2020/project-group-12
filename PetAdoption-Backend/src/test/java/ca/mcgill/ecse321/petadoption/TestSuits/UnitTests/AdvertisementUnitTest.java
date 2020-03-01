@@ -7,7 +7,6 @@ import ca.mcgill.ecse321.petadoption.model.AppUser;
 import ca.mcgill.ecse321.petadoption.model.Sex;
 import ca.mcgill.ecse321.petadoption.model.Species;
 import ca.mcgill.ecse321.petadoption.service.AdvertisementService;
-import ca.mcgill.ecse321.petadoption.service.AppUserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,8 +39,6 @@ public class AdvertisementUnitTest {
 
     @InjectMocks
     private AdvertisementService advertisementService;
-    @InjectMocks
-    private AppUserService appUserService;
 
     // Constants to create test appUser and advertisement objects
     private static final String USER_EMAIL_1 = "user1@mcgill.ca";
@@ -103,8 +100,6 @@ public class AdvertisementUnitTest {
     private static final String AD_REQUIRE_ID_MESSAGE = "Advertisement must have an ID";
     private static final String PROFILE_NOT_FOUND_MESSAGE = "User profile not found. App user does not exist!";
 
-    //TODO: Find out how to mock a void from the CRUD repository
-    //IF YOU ARE NOT MOCKING IT THEN YOU ARE CALLING THE ACTUAL DATABASE AND YOU DO NOT WANT THAT.
     @BeforeEach
     public void setMockOutput() {
         //Set up Mock data base with App User account and Advertisements
@@ -160,10 +155,6 @@ public class AdvertisementUnitTest {
         Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> invocation.getArgument(0);
 
         lenient().when(advertisementDao.save(any(Advertisement.class))).thenAnswer(returnParameterAsAnswer);
-    }
-
-    private void setMockOutputAdvertisementsNull() {
-        when(advertisementDao.findAll()).thenAnswer((InvocationOnMock invocation) -> null);
     }
 
     private void setMockOutputAdvertisementsEmpty() {
@@ -752,18 +743,37 @@ public class AdvertisementUnitTest {
 
     @Test
     public void testDeleteAdvertisement() {
-        assertTrue(advertisementService.deleteAdvertisement(ADVERTISEMENT_3_ID));
+        String error = null;
+        try {
+            advertisementService.deleteAdvertisement(ADVERTISEMENT_3_ID);
+        } catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertNull(error);
     }
 
     @Test
     public void testDeleteAdvertisementNullId() {
-        assertFalse(advertisementService.deleteAdvertisement(null));
+        String error = null;
+        try {
+            advertisementService.deleteAdvertisement(null);
+        } catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals(INVALID_AD_ID_MESSAGE, error);
     }
 
     @Test
     public void testDeleteAdvertisementByEmptyId() {
-        assertFalse(advertisementService.deleteAdvertisement(" "));
+        String error = null;
+        try {
+            advertisementService.deleteAdvertisement(" ");
+        } catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals(INVALID_AD_ID_MESSAGE, error);
     }
+
     //Helper methods - Need to take out of here and put them in separate Resource class
     private static Advertisement createAdvertisement(AppUser appUser, Date datePosted, String id, boolean isExpired, String petName,
                                                      Integer petAge, String petDescription, Sex petSex, Species petSpecies) {

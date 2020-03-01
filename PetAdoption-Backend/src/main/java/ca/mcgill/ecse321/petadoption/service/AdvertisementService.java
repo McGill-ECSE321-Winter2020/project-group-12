@@ -104,7 +104,7 @@ public class AdvertisementService {
     @Transactional
     public List<Advertisement> getAdvertisementsOfAppUser(String userEmail) {
         AppUser appUser = appUserRepository.findAppUserByEmail(userEmail);
-        if (appUser == null){
+        if (appUser == null) {
             throw new IllegalArgumentException("User profile not found. App user does not exist!");
         }
 
@@ -117,26 +117,21 @@ public class AdvertisementService {
      * @param id
      */
     @Transactional
-    public boolean deleteAdvertisement(String id) {
+    public void deleteAdvertisement(String id) {
         Advertisement adToDelete = advertisementRepository.findAdvertisementByAdvertisementId(id);
-        if (adToDelete != null) {
-            //Delete all multiple associations with an application
-            while (adToDelete.getApplications().size() != 0) {
-                Set<Application> applications = adToDelete.getApplications();
-                Application app = applications.iterator().next();
-                applicationService.deleteApplication(app.getApplicationId());
-            }
-
-            while (adToDelete.getPetImages().size() != 0) {
-                Set<Image> petImages = adToDelete.getPetImages();
-                Image image = petImages.iterator().next();
-                imageService.deleteImage(image.getImageId());
-            }
-
-            advertisementRepository.deleteAdvertisementByAdvertisementId(id);
-            return true;
+        if (adToDelete == null) {
+            throw new IllegalArgumentException("Invalid advertisement requested. Please check advertisement ID.");
         }
-        return false;
+        //Delete all multiple associations with an application
+        for (Application application : adToDelete.getApplications()) {
+            applicationRepository.deleteApplicationByApplicationId(application.getApplicationId());
+        }
+
+        for (Image image : adToDelete.getPetImages()) {
+            imageRepository.deleteImageByImageId(image.getImageId());
+        }
+
+        advertisementRepository.deleteAdvertisementByAdvertisementId(id);
     }
 
     /**
@@ -158,6 +153,7 @@ public class AdvertisementService {
 
     /**
      * Updates advertisement details for a pet in the database.
+     *
      * @param adId
      * @param petName
      * @param petAge
