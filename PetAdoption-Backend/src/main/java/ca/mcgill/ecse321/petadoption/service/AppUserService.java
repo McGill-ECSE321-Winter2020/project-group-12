@@ -153,6 +153,30 @@ public class AppUserService {
          return appUserRepository.save(user);
      }
 
+    /**
+     * Checks if the email,password pair matches a user.
+     * @param email
+     * @param password
+     * @return
+     */
+     public boolean checkLoginParam(String email, String password){
+         String error = "";
+         if(email == null || email.trim().length() == 0){
+             error = "name cannot be empty! ";
+         }
+         if (password == null || password.trim().length() == 0) {
+             error = error + "password cannot be empty ";
+         }
+         if (error.length() != 0) {
+             throw new IllegalArgumentException(error);
+         }
+         AppUser user = appUserRepository.findAppUserByEmail(email);
+         if(user!= null && user.getPassword().equals(password)){
+             return true;
+         }
+         return false;
+     }
+
     private void userParamCheck(String name, String email, String password, String biography,
                                 String homeDescription, Integer age, Sex sex){
         String error = "";
