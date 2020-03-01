@@ -49,6 +49,12 @@ public class ApplicationService {
        if (advertisement != null) {
             advertisement.addApplication(app);
             apps = advertisement.getApplications();
+           AppUser owner = advertisement.getPostedBy();
+           String ownerEmail = owner.getEmail();
+           if (appUserEmail != null && appUserEmail.trim().length() != 0 && appUserEmail.equals(ownerEmail)){
+                error = error + "You cannot adopt your own pet!";
+           }
+
 //            if (apps != null) {
 //                for (Application a : apps) {
 //                    if (a.getApplicant().getEmail().equals(appUserEmail)){
@@ -77,6 +83,7 @@ public class ApplicationService {
 //        if (advertisement.getPostedBy().getEmail().equals(appUserEmail)){
 //            error = error + "You Cannot be the applicant of an advertisement posted by you";
 //        }
+
 
         if (advertisementId == null || appUserEmail == null || appUserEmail == "" || appUserEmail.trim().length() == 0) {
             error = error + "An Application must have an Advertisement and a AppUser ";
