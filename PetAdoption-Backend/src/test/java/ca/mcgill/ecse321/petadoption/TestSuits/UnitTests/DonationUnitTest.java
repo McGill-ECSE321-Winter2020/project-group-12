@@ -375,7 +375,4 @@ public class DonationUnitTest {
         assertEquals("A user email must be provided! ", error);
     }
 
-    // gotta test getting stuff tht dsnt exist by all the attributes i support
-    // test creating donations w/ stuff i support tht dsnt exist either ???
-
 }
