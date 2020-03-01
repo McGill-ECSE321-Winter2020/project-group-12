@@ -9,10 +9,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 import ca.mcgill.ecse321.petadoption.TestSuits.Utils.TestUtils;
-import ca.mcgill.ecse321.petadoption.dao.*;
 
-import ca.mcgill.ecse321.petadoption.service.AdvertisementService;
-import ca.mcgill.ecse321.petadoption.service.AppUserService;
 import ca.mcgill.ecse321.petadoption.service.ImageService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -22,37 +19,21 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ca.mcgill.ecse321.petadoption.model.Advertisement;
-import ca.mcgill.ecse321.petadoption.TestSuits.Utils.TestUtils;
 import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
 import ca.mcgill.ecse321.petadoption.dao.ImageRepository;
-import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
 import ca.mcgill.ecse321.petadoption.model.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import org.junit.jupiter.api.BeforeEach;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.fail;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 
 @ExtendWith(MockitoExtension.class)
 public class ImageUnitTest {
@@ -160,7 +141,7 @@ public class ImageUnitTest {
         Image image = null;
 
         try{
-            image = imageservice.createImage(ADVERTISEMENT_ID_1, IMAGE_NAME_1, IMAGE_LINK_1, IMAGE_ID_1);
+            image = imageservice.createImage(ADVERTISEMENT_ID_1, IMAGE_NAME_1, IMAGE_LINK_1);
         }catch (IllegalArgumentException e){
             fail();
         }
@@ -176,7 +157,7 @@ public class ImageUnitTest {
         Image image = null;
         String error ="";
         try{
-            image = imageservice.createImage(ADVERTISEMENT_ID_1, null, IMAGE_LINK_1, IMAGE_ID_1);
+            image = imageservice.createImage(ADVERTISEMENT_ID_1, null, IMAGE_LINK_1);
         }catch (IllegalArgumentException e){
             error = e.getMessage();
         }
@@ -189,7 +170,7 @@ public class ImageUnitTest {
         Image image = null;
         String error ="";
         try{
-            image = imageservice.createImage(ADVERTISEMENT_ID_1, IMAGE_NAME_1, null, IMAGE_ID_1);
+            image = imageservice.createImage(ADVERTISEMENT_ID_1, IMAGE_NAME_1, null);
         }catch (IllegalArgumentException e){
             error = e.getMessage();
         }
@@ -198,24 +179,11 @@ public class ImageUnitTest {
     }
 
     @Test
-    public void testCreateImageEmptyImageID(){
-        Image image = null;
-        String error ="";
-        try{
-            image = imageservice.createImage(ADVERTISEMENT_ID_1, IMAGE_NAME_1, IMAGE_LINK_1, null);
-        }catch (IllegalArgumentException e){
-            error = e.getMessage();
-        }
-        assertNull(image);
-        assertEquals("id is invalid ", error);
-    }
-
-    @Test
     public void testCreateImageEmptyAdvertisementID(){
         Image image = null;
         String error ="";
         try{
-            image = imageservice.createImage(null, IMAGE_NAME_1, IMAGE_LINK_1, IMAGE_ID_1);
+            image = imageservice.createImage(null, IMAGE_NAME_1, IMAGE_LINK_1);
         }catch (IllegalArgumentException e){
             error = e.getMessage();
         }
