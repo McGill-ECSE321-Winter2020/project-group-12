@@ -6,6 +6,7 @@ import ca.mcgill.ecse321.petadoption.service.AppUserService;
 import ca.mcgill.ecse321.petadoption.service.PetAdoptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +18,14 @@ public class AppUserController {
     private AppUserService service;
 
     @PostMapping(value ={"/register","/register/" })
-    public AppUserDto createAppUser(@RequestBody AppUserDto appUser){
-        AppUser user = service.createAppUser(appUser.getName(), appUser.getEmail(), appUser.getPassword(), appUser.getBiography(), appUser.getHomeDescription(),
-                appUser.getAge(), appUser.isIsAdmin(), appUser.getSex());
+    public AppUserDto createAppUser(@RequestBody AppUserDto appUser)throws RestClientException {
+        AppUser user = null;
+        try{
+            user = service.createAppUser(appUser.getName(), appUser.getEmail(), appUser.getPassword(), appUser.getBiography(), appUser.getHomeDescription(),
+                    appUser.getAge(), appUser.isIsAdmin(), appUser.getSex());
+        }catch (IllegalArgumentException e){
+            throw new RestClientException(e.getMessage());
+        }
         return convertToDto(user);
     }
 
@@ -45,8 +51,9 @@ public class AppUserController {
         return convertToDto(user);
     }
 
-    @PostMapping(value = {"/delete/user/{email}", "/delete/user/{email}/"})
+    @DeleteMapping(value = {"/delete/user/{email}", "/delete/user/{email}/"})
     public void deleteAppUser(@PathVariable("email") String email) {
+
         service.deleteAppUser(email);
     }
 

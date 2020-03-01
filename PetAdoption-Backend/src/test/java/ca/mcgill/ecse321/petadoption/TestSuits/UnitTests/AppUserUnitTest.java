@@ -350,7 +350,7 @@ public class AppUserUnitTest {
     }
 
     @Test
-    public void testUpdateNullAppUser(){
+    public void testUpdateNonExistentAppUser(){
         AppUser user = null;
         String error = "";
         try{
