@@ -105,7 +105,6 @@ public class AppUserService {
     @Transactional
     public void deleteAppUser(String email) {
         AppUser user1 = appUserRepository.findAppUserByEmail(email);
-
         for (Advertisement ad : user1.getAdvertisements()){
             advertisementRepository.deleteAdvertisementByAdvertisementId(ad.getAdvertisementId());
         }
@@ -117,7 +116,6 @@ public class AppUserService {
         for(Application app : user1.getApplications()){
             applicationRepository.deleteApplicationByApplicationId(app.getApplicationId());
         }
-
         appUserRepository.deleteAppUserByEmail(email);
     }
 
