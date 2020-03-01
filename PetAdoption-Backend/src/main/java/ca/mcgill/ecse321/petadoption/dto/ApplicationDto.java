@@ -8,18 +8,18 @@ import java.sql.Date;
 public class ApplicationDto {
     private Date dateOfSubmission;
     private String note;
-    private Advertisement advertisement;
-    private AppUser applicant;
+    private String advertisementId;
+    private String applicantEmail;
     private String applicationId;
 
     public ApplicationDto(){
     }
 
-    public ApplicationDto(Date date, String note, Advertisement ad, AppUser applicant, String id){
+    public ApplicationDto(Date date, String note, String  advertisementId, String applicantEmail, String id){
         this.dateOfSubmission = date;
         this.note = note;
-        this.advertisement = ad;
-        this.applicant = applicant;
+        this.advertisementId = advertisementId;
+        this.applicantEmail = applicantEmail;
         this.applicationId = id;
     }
 
@@ -39,20 +39,20 @@ public class ApplicationDto {
         return note;
     }
 
-    public void setAdvertisement(Advertisement advertisement) {
-        this.advertisement = advertisement;
+    public void setAdvertisement(String advertisementId) {
+        this.advertisementId = advertisementId;
     }
 
-    public Advertisement getAdvertisement(){
-        return this.advertisement;
+    public String getAdvertisementId(){
+        return this.advertisementId;
     }
 
-    public void setApplicant(AppUser applicant) {
-        this.applicant = applicant;
+    public void setApplicant(String applicantEmail) {
+        this.applicantEmail = applicantEmail;
     }
 
-    public AppUser getApplicant(){
-        return this.applicant;
+    public String getApplicantEmail(){
+        return this.applicantEmail;
     }
 
     public void setApplicationId(String id){

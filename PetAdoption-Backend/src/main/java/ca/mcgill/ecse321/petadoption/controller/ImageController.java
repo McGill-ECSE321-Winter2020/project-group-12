@@ -25,16 +25,13 @@ public class ImageController {
     // Changed method to public so that method can be called by other controller classes that need it
     // Method made static so method can be used without the need of an instance of the ImageDTO Class - Check
     public static ImageDto convertToDto(Image image) {
-        if (image == null) {
-            throw new IllegalArgumentException("There is no such Image!");
-        }
         return new ImageDto(image.getName(), image.getLink(), image.getImageId(), image.getAdvertisement().getAdvertisementId());
     }
 
     //TODO: Test POST mapping for Image after implementing POST method for Advertisement
     @PostMapping(value = {"/image/create", "/image/create/"})
     public ImageDto createImage(@RequestBody ImageDto imageDto) throws IllegalArgumentException {
-        Image image = imageService.createImage(imageDto.getAdvertisementId(), imageDto.getLink(), imageDto.getImageId(), imageDto.getImageId());
+        Image image = imageService.createImage(imageDto.getAdvertisementId(), imageDto.getName(), imageDto.getLink());
         return convertToDto(image);
     }
 
@@ -44,13 +41,9 @@ public class ImageController {
         return returnStatement;
     }
 
-    @GetMapping(value = {"/images", "/images/"})
-    public List<ImageDto> getAllImages() {
-        List<ImageDto> imageDtoList = new ArrayList<>();
-        for (Image image : imageService.getAllImages()) {
-            imageDtoList.add(convertToDto(image));
-        }
-        return imageDtoList;
+    @GetMapping(value = {"/image/{imageId}", "/image/{imageId}/"})
+    public ImageDto getImageById(@PathVariable("imageId") String imageId) {
+        return convertToDto(imageService.getImageByID(imageId));
     }
 
     @GetMapping(value = {"/{advertisementID}/images", "/{advertisementID}/images/"})

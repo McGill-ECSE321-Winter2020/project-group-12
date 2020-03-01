@@ -29,7 +29,7 @@ public class DonationController {
         return new DonationDto(donation.getDonor().getEmail(), donation.getDateOfPayment(), donation.getAmount(), donation.getTransactionID());
     }
 
-    @PostMapping(value ={"{userId}/donations","{userId}/donations/" })
+    @PostMapping(value ={"/{userId}/donations","/{userId}/donations/" })
     public DonationDto createDonation(@RequestBody DonationDto don, @PathVariable("userId") String userEmail) throws IllegalArgumentException {
         Donation donation = donationService.createDonation(userEmail, don.getAmount(), don.getDateOfPayment());
         return convertToDto(donation);

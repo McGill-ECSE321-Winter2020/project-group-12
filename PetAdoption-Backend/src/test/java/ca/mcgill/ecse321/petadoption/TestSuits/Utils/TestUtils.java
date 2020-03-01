@@ -1,12 +1,10 @@
 package ca.mcgill.ecse321.petadoption.TestSuits.Utils;
 
 import ca.mcgill.ecse321.petadoption.dto.AppUserDto;
+import ca.mcgill.ecse321.petadoption.dto.DonationDto;
 import ca.mcgill.ecse321.petadoption.model.*;
 
 import java.sql.Date;
-import java.util.Set;
-import java.util.List;
-
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -29,6 +27,12 @@ public class TestUtils {
         assertEquals(dateOfPayment, donation.getDateOfPayment());
     }
 
+    public static void assertDonation(DonationDto donation, String userEmail, Integer amount, Date dateOfPayment) {
+        assertNotNull(donation);
+        assertEquals(userEmail, donation.getDonorEmail());
+        assertEquals(amount, donation.getAmount());
+        assertEquals(dateOfPayment, donation.getDateOfPayment());
+    }
     public static AppUser createAppUser(String name, String email, String password,
                                         String biography, String homeDescription, Integer age, boolean isAdmin, Sex sex) {
         AppUser new_user = new AppUser();
@@ -41,14 +45,14 @@ public class TestUtils {
         new_user.setEmail(email);
         new_user.setName(name);
 
-        Advertisement ad = new Advertisement();
-        ad.setAdvertisementId();
-        ;
-        new_user.addAdvertisement(ad);
-
-        Application app = new Application();
-        app.setApplicationId();
-        new_user.addApplication(app);
+//        Advertisement ad = new Advertisement();
+//        ad.setAdvertisementId();
+//        ;
+//        new_user.addAdvertisement(ad);
+//
+//        Application app = new Application();
+//        app.setApplicationId();
+//        new_user.addApplication(app);
 
         // TODO: ZAK: use createDonation AFTER CONSTRUCTING a user
 //        Donation don = new Donation();
@@ -90,7 +94,7 @@ public class TestUtils {
         assertEquals(advertisement.getPetAge(), application.getAdvertisement().getPetAge());
         assertEquals(advertisement.getPetSex(), application.getAdvertisement().getPetSex());
         assertEquals(advertisement.getDatePosted(), application.getAdvertisement().getDatePosted());
-        assertEquals(advertisement.getPostedBy(), application.getAdvertisement().getPostedBy());
+        assertEquals(advertisement.getPostedBy().getEmail(), application.getAdvertisement().getPostedBy().getEmail());
     }
 
     public static Advertisement createAdvertisement(Date datePosted, boolean isExpired, AppUser postedBy, String petName, Integer age, String description) {

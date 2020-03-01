@@ -81,8 +81,11 @@ public class DonationService {
         if (transactionID == null || transactionID.trim().length() == 0) {
             throw new IllegalArgumentException("Donation must have a valid transactionID!");
         }
-        Donation a = donationRepository.findDonationByTransactionID(transactionID);
-        return a;
+        Donation donation = donationRepository.findDonationByTransactionID(transactionID);
+        if(donation == null) {
+            throw new IllegalArgumentException("A Donation with such an ID does not exist");
+        }
+        return donation;
     }
 
     /**
@@ -97,7 +100,9 @@ public class DonationService {
         }
 
         List<Donation> donations = donationRepository.findDonationByDonorEmail(userEmail);
-
+        if(donations.size() == 0) {
+            throw new IllegalArgumentException("A donation with such an email does not exist.");
+        }
         return donations;
     }
 
@@ -107,6 +112,9 @@ public class DonationService {
             throw new IllegalArgumentException("Date of payment cannot be empty");
         }
         List<Donation> donations = donationRepository.findDonationByDateOfPayment(dateOfPayment);
+        if(donations.size() == 0) {
+            throw new IllegalArgumentException("No donations were made on this date");
+        }
         return donations;
     }
 
@@ -125,7 +133,11 @@ public class DonationService {
             throw new IllegalArgumentException(error);
         }
 
-        return donationRepository.findDonationByDateOfPaymentAndDonorEmail(dateOfPayment, userEmail);
+        List<Donation> donations = donationRepository.findDonationByDateOfPaymentAndDonorEmail(dateOfPayment, userEmail);
+        if(donations.size() == 0) {
+            throw new IllegalArgumentException("No donations were found on this date by this donor.");
+        }
+        return donations;
     }
 
     /**

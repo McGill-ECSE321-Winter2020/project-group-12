@@ -8,8 +8,6 @@ public class DonationDto {
     private Date dateOfPayment;
     private String transactionID;
 
-    // constructor: come back to this to see how many constructors u need and what u shld pass into them (???)
-
     public DonationDto(String userEmail, Date dateOfPayment, Integer amount, String transactionID) {
         this.donorEmail = userEmail;
         this.dateOfPayment = dateOfPayment;

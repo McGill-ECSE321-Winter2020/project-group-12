@@ -3,7 +3,7 @@ package ca.mcgill.ecse321.petadoption.integration_controller;
 
 import ca.mcgill.ecse321.petadoption.PetAdoptionApplication;
 import ca.mcgill.ecse321.petadoption.TestSuits.Utils.TestUtils;
-import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
+import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.dto.AppUserDto;
 import ca.mcgill.ecse321.petadoption.model.AppUser;
 import ca.mcgill.ecse321.petadoption.model.Sex;
@@ -38,9 +38,6 @@ public class AppUserControllerTest {
 
     private HttpHeaders headers = new HttpHeaders();
 
-    @Autowired
-    private AppUserRepository appUserRepository;
-
     private static final String USER_NAME_1 = "user 1";
     private static final String USER_EMAIL_1 = "user1@mcgill.ca";
     private static final String USER_PASSWORD_1 = "password 1";
@@ -59,9 +56,26 @@ public class AppUserControllerTest {
     private static final Sex USER_SEX_2 = Sex.F;
     private static final boolean USER_ADMIN_2 = false;
 
+    @Autowired
+    private AdvertisementRepository advertisementRepository;
+    @Autowired
+    private ApplicationRepository applicationRepository;
+    @Autowired
+    private AppUserRepository appUserRepository;
+    @Autowired
+    private DonationRepository donationRepository;
+    @Autowired
+    private ImageRepository imageRepository;
+
+
     @BeforeEach
-    public void cleanDataBase() {
+    public void cleanAndSetup(){
+        applicationRepository.deleteAll();
+        imageRepository.deleteAll();
+        advertisementRepository.deleteAll();
+        donationRepository.deleteAll();
         appUserRepository.deleteAll();
+
     }
 
     private String formatLink(String endpoint){

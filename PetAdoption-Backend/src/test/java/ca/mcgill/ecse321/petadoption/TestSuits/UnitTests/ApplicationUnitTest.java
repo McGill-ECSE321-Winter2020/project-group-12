@@ -110,7 +110,6 @@ public class ApplicationUnitTest { //application test service
                 (InvocationOnMock invocation) -> {
                     if (((Application) invocation.getArgument(0)).getDateOfSubmission().equals(DATE_OF_SUBMISSION)) {
                         return TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS);
-
                     } else if (((Application) invocation.getArgument(0)).getDateOfSubmission().equals(DATE_OF_SUBMISSION2)) {
                         return TestUtils.createApplication(advertisement, user3, DATE_OF_SUBMISSION2, NOTE2, STATUS2);
                     } else if (((Application) invocation.getArgument(0)).getDateOfSubmission().equals(datePosted)) {
@@ -120,12 +119,10 @@ public class ApplicationUnitTest { //application test service
                     }
                 }
         );
-        lenient().when(applicationDao.findApplicationByAdvertisementAdvertisementId(anyString())).thenAnswer(
+
+        lenient().when(applicationDao.findApplicationByAdvertisement_AdvertisementIdAndApplicant_Email(anyString(), anyString())).thenAnswer(
                 (InvocationOnMock invocation) -> {
-                    Set<Application> set = new HashSet<Application>();
-                    set.add(TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS));
-                    set.add(TestUtils.createApplication(advertisement, user3, DATE_OF_SUBMISSION2, NOTE2, STATUS2));
-                    return set;
+                    return null;
                 }
         );
 
@@ -170,12 +167,9 @@ public class ApplicationUnitTest { //application test service
         );
     }
     private void setMockOutputOnlyForDuplicateTest(){
-        lenient().when(applicationDao.findApplicationByAdvertisementAdvertisementId(anyString())).thenAnswer(
+        lenient().when(applicationDao.findApplicationByAdvertisement_AdvertisementIdAndApplicant_Email(anyString(), anyString())).thenAnswer(
                 (InvocationOnMock invocation) -> {
-                    Set<Application> set = new HashSet<Application>();
-                    set.add(TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS));
-                    set.add(TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION2, NOTE2, STATUS2));
-                    return set;
+                    return TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS);
                 }
         );
     }
@@ -443,5 +437,19 @@ public class ApplicationUnitTest { //application test service
             error = e.getMessage();
         }
         assertEquals("You already applied for this", error);
+    }
+
+    @Test
+    public void ApplicationDateBeforeAdvertisement(){
+        Application app = new Application();
+        error = "";
+        try{
+            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), Date.valueOf("2000-01-01"), NOTE, STATUS);
+        }
+        catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals("Advertisement Date Must Be Prior or Equal To Application Date", error);
+
     }
 }
