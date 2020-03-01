@@ -18,6 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.Date;
 import java.util.HashSet;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -580,8 +581,173 @@ public class AdvertisementTest {
         assertEquals(INVALID_AD_ID_MESSAGE, error);
     }
 
-    
+    @Test
+    public void testGetAdvertisementById() {
+        Advertisement advertisement = createAppUserThenAdvertisement();
+        String advertisementId = advertisement.getAdvertisementId();
+        Advertisement adGet = null;
+        try {
+            adGet = advertisementService.getAdvertisementByID(advertisementId);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        assertNotNull(advertisement);
+        assertAdvertisementEquality(advertisement, adGet);
+    }
 
+    @Test
+    public void testGetAdvertisementByInvalidId() {
+        Advertisement advertisement = null;
+        String error = null;
+        try {
+            advertisement = advertisementService.getAdvertisementByID(INVALID_ID);
+            System.out.println(advertisement);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        assertNull(advertisement);
+    }
+
+    @Test
+    public void testGetAdvertisementByNullId() {
+        Advertisement advertisement = null;
+        String error = null;
+        try {
+            advertisement = advertisementService.getAdvertisementByID(null);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNull(advertisement);
+        assertEquals(AD_REQUIRE_ID_MESSAGE, error);
+    }
+
+    @Test
+    public void testGetAdvertisementByEmptyId(){
+        Advertisement advertisement = null;
+        String error = null;
+        try {
+            advertisement = advertisementService.getAdvertisementByID(" ");
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertNull(advertisement);
+        assertEquals(AD_REQUIRE_ID_MESSAGE, error);
+    }
+
+    @Test
+    public void testGetAllAdvertisementsOfAppUser() {
+        List<Advertisement> advertisements = null;
+        Advertisement advertisement = createAppUserThenAdvertisement();
+        Advertisement advertisement2 = null;
+        try {
+            advertisement2 = advertisementService.createAdvertisement(advertisement.getPostedBy().getEmail(), DATE_2, PET_NAME_2, PET_AGE_2,
+                    PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+
+        AppUser appUser = advertisement.getPostedBy();
+        appUser.addAdvertisement(advertisement2);
+        String advertisementId = advertisement.getAdvertisementId();
+        String advertisement2Id = advertisement2.getAdvertisementId();
+
+        try {
+            advertisements = advertisementService.getAdvertisementsOfAppUser(appUser.getEmail());
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+
+        assertNotNull(advertisements);
+        if (advertisements.get(0).getAdvertisementId().equals(advertisementId)) {
+            assertAdvertisementEquality(advertisement, advertisements.get(0));
+        } else if (advertisements.get(0).getAdvertisementId().equals(advertisement2Id)) {
+            assertAdvertisementEquality(advertisement2, advertisements.get(0));
+        } else if (advertisements.get(1).getAdvertisementId().equals(advertisementId)) {
+            assertAdvertisementEquality(advertisement, advertisements.get(1));
+        } else {
+            assertAdvertisementEquality(advertisement2, advertisements.get(1));
+        }
+    }
+
+    @Test
+    public void testGetAllAdvertisementsOfInvalidAppUser() {
+        List<Advertisement> advertisements = null;
+        String error = null;
+        try{
+            advertisements = advertisementService.getAdvertisementsOfAppUser(NON_EXISTING_APP_USER);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertNull(advertisements);
+        assertEquals(PROFILE_NOT_FOUND_MESSAGE, error);
+    }
+
+    @Test
+    public void testGetAllAdvertisementsOfNullAppUser() {
+        List<Advertisement> advertisements = null;
+        String error = null;
+        try{
+            advertisements = advertisementService.getAdvertisementsOfAppUser(null);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertNull(advertisements);
+        assertEquals(PROFILE_NOT_FOUND_MESSAGE, error);
+    }
+
+    @Test
+    public void testGetAllAdvertisementsOfEmptyAppUser() {
+        List<Advertisement> advertisements = null;
+        String error = null;
+        try{
+            advertisements = advertisementService.getAdvertisementsOfAppUser(" ");
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+
+        assertNull(advertisements);
+        assertEquals(PROFILE_NOT_FOUND_MESSAGE, error);
+    }
+
+    @Test
+    public void testDeleteAdvertisement() {
+        Advertisement advertisement = createAppUserThenAdvertisement();
+        String advertisementId = advertisement.getAdvertisementId();
+        String error = null;
+        try {
+            advertisementService.deleteAdvertisement(advertisementId);
+        } catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertNull(error);
+        assertNull(advertisementService.getAdvertisementByID(advertisementId));
+    }
+
+    @Test
+    public void testDeleteAdvertisementNullId() {
+        String error = null;
+        try {
+            advertisementService.deleteAdvertisement(null);
+        } catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals(INVALID_AD_ID_MESSAGE, error);
+    }
+
+    @Test
+    public void testDeleteAdvertisementByEmptyId() {
+        String error = null;
+        try {
+            advertisementService.deleteAdvertisement(" ");
+        } catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertEquals(INVALID_AD_ID_MESSAGE, error);
+    }
+
+    //Helper methods
     private AppUser createAppUser() {
         AppUser appUser = null;
         try {
@@ -624,5 +790,16 @@ public class AdvertisementTest {
         advertisement.setApplications(new HashSet<>());
 
         return advertisement;
+    }
+
+    private static void assertAdvertisementEquality(Advertisement expected, Advertisement actual) {
+        assertEquals(expected.getPostedBy().getEmail(), actual.getPostedBy().getEmail());
+        assertEquals(expected.getDatePosted(), actual.getDatePosted());
+        assertEquals(expected.getAdvertisementId(), actual.getAdvertisementId());
+        assertEquals(expected.getPetName(), actual.getPetName());
+        assertEquals(expected.getPetAge(), actual.getPetAge());
+        assertEquals(expected.getPetDescription(),actual.getPetDescription());
+        assertEquals(expected.getPetSex(), actual.getPetSex());
+        assertEquals(expected.getPetSpecies(), actual.getPetSpecies());
     }
 }
