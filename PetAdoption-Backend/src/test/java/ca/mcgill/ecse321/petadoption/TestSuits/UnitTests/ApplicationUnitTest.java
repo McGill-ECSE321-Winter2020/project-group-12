@@ -110,7 +110,6 @@ public class ApplicationUnitTest { //application test service
                 (InvocationOnMock invocation) -> {
                     if (((Application) invocation.getArgument(0)).getDateOfSubmission().equals(DATE_OF_SUBMISSION)) {
                         return TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS);
-
                     } else if (((Application) invocation.getArgument(0)).getDateOfSubmission().equals(DATE_OF_SUBMISSION2)) {
                         return TestUtils.createApplication(advertisement, user3, DATE_OF_SUBMISSION2, NOTE2, STATUS2);
                     } else if (((Application) invocation.getArgument(0)).getDateOfSubmission().equals(datePosted)) {
@@ -120,12 +119,27 @@ public class ApplicationUnitTest { //application test service
                     }
                 }
         );
-        lenient().when(applicationDao.findApplicationByAdvertisementAdvertisementId(anyString())).thenAnswer(
+//        lenient().when(advertisementDao.save(any(Advertisement.class))).thenAnswer(
+//                (InvocationOnMock invocation) -> {
+//                    if (((Advertisement) invocation.getArgument(0)).getDatePosted().equals(datePosted)) {
+//                        return TestUtils.createAdvertisement(datePosted, isExpired, postedBy, petName, petAge, petDescription);
+//                    } else {
+//                        return null;
+//                    }
+//                }
+//        );
+//        lenient().when(applicationDao.findApplicationByAdvertisementAdvertisementId(anyString())).thenAnswer(
+//                (InvocationOnMock invocation) -> {
+//                    Set<Application> set = new HashSet<Application>();
+//                    set.add(TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS));
+//                    set.add(TestUtils.createApplication(advertisement, user3, DATE_OF_SUBMISSION2, NOTE2, STATUS2));
+//                    return set;
+//                }
+//        );
+
+        lenient().when(applicationDao.findApplicationByAdvertisement_AdvertisementIdAndApplicant_Email(anyString(), anyString())).thenAnswer(
                 (InvocationOnMock invocation) -> {
-                    Set<Application> set = new HashSet<Application>();
-                    set.add(TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS));
-                    set.add(TestUtils.createApplication(advertisement, user3, DATE_OF_SUBMISSION2, NOTE2, STATUS2));
-                    return set;
+                    return null;
                 }
         );
 
@@ -170,14 +184,19 @@ public class ApplicationUnitTest { //application test service
         );
     }
     private void setMockOutputOnlyForDuplicateTest(){
-        lenient().when(applicationDao.findApplicationByAdvertisementAdvertisementId(anyString())).thenAnswer(
+        lenient().when(applicationDao.findApplicationByAdvertisement_AdvertisementIdAndApplicant_Email(anyString(), anyString())).thenAnswer(
                 (InvocationOnMock invocation) -> {
-                    Set<Application> set = new HashSet<Application>();
-                    set.add(TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS));
-                    set.add(TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION2, NOTE2, STATUS2));
-                    return set;
+                    return TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS);
                 }
         );
+//        lenient().when(applicationDao.findApplicationByAdvertisementAdvertisementId(anyString())).thenAnswer(
+//                (InvocationOnMock invocation) -> {
+//                    Set<Application> set = new HashSet<Application>();
+//                    set.add(TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS));
+//                    set.add(TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION2, NOTE2, STATUS2));
+//                    return set;
+//                }
+//        );
     }
 
     @Test

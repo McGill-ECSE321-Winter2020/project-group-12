@@ -39,33 +39,35 @@ public class ApplicationService {
     @Transactional
     public Application createApplication(String advertisementId, String appUserEmail, Date dateOfSubmission, String note, Status status) {
         boolean bool = false;
+        Set<Application> apps = new HashSet<Application>();
         Application app = new Application();
         Advertisement advertisement = advertisementRepository.findAdvertisementByAdvertisementId(advertisementId);
         AppUser aUser = appUserRepository.findAppUserByEmail(appUserEmail);
         String error = "";
-        Set<Application> apps = new HashSet<Application>();
         if (advertisementId == null || appUserEmail == null || appUserEmail == "" || appUserEmail.trim().length() == 0) {
             error = error + "An Application must have an Advertisement and a AppUser ";
         } else if (advertisement.isIsExpired()) {
             error = error + "The Advertisement has expired";
-        }
-       else if (advertisement != null) {
+        } else if (advertisement != null) {
             apps = applicationRepository.findApplicationByAdvertisementAdvertisementId(advertisement.getAdvertisementId());
             AppUser owner = advertisement.getPostedBy();
             String ownerEmail = owner.getEmail();
+            if (appUserEmail != null && appUserEmail.trim().length() != 0) app.setApplicant(aUser);
             if (appUserEmail != null && appUserEmail.trim().length() != 0 && appUserEmail.equals(ownerEmail)) {
                 error = error + "You cannot adopt your own pet!";
             }
-            if (apps != null && apps.size() != 0) {
-                for (Application a : apps) {
-                    if (a.getApplicant().getEmail().equals(appUserEmail)) {
-                        if (bool) throw new IllegalArgumentException("You already applied for this");
-                        bool = true;
-                    }
-                }
-                apps.add(app);
-            } else apps.add(app);
-
+            if (apps == null || apps.size() == 0) apps = new HashSet<Application>();
+            advertisement.setApplications((apps));
+//            for (Application a : apps) {
+//                if (a.getApplicant().getEmail().equals(appUserEmail)) {
+//                    if (bool) throw new IllegalArgumentException("You already applied for this");
+//                   bool = true;
+//                }
+//            }
+            app.setApplicant(aUser);
+            apps.add(app);
+            Application findDuplicate = applicationRepository.findApplicationByAdvertisement_AdvertisementIdAndApplicant_Email(advertisementId, appUserEmail);
+            if (findDuplicate != null) throw new IllegalArgumentException("You already applied for this");
             if (dateOfSubmission == null) {
                 error = "dateOfSubmission can not be empty! ";
             } else if ((dateOfSubmission.compareTo(advertisement.getDatePosted())) < 0) {
@@ -79,13 +81,15 @@ public class ApplicationService {
         if (error.length() != 0) {
             throw new IllegalArgumentException(error);
         }
-
+        app.setApplicant(aUser);
         app.setApplicationId();
         app.setApplicant(aUser);
         app.setAdvertisement(advertisement);
         app.setDateOfSubmission(dateOfSubmission);
         app.setNote(note);
         app.setStatus(status);
+        apps.add(app);
+        advertisement.setApplications((apps));
 
         applicationRepository.save(app);
         return app;

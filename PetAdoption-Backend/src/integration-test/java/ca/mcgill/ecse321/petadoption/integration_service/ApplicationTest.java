@@ -69,13 +69,6 @@ public class ApplicationTest {
     private static final Sex USER_SEX_3 = Sex.M;
     private static final boolean USER_ADMIN_3 = false;
 
-//    private static AppUser user1 = AppUserService.createAppUser(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
-//            USER_HOME_1, USER_AGE_1, USER_ADMIN_1, USER_SEX_1);
-//    private static AppUser user2 = AppUserService.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
-//            USER_HOME_2, USER_AGE_2, USER_ADMIN_2, USER_SEX_2);
-//    private static AppUser user3 = AppUserService.createAppUser(USER_NAME_3, USER_EMAIL_3, USER_PASSWORD_3, USER_BIO_3,
-//            USER_HOME_3, USER_AGE_3, USER_ADMIN_3, USER_SEX_3);
-
     private static final Date datePosted = Date.valueOf("2020-02-13");
     private static boolean isExpired = false;
     private Set<Application> applications;
@@ -83,8 +76,6 @@ public class ApplicationTest {
     private static final Integer petAge = 2;
     private static final String petDescription = "blablabla";
     private Set<Image> petImages;
-
-    //private static final Advertisement advertisement = advertisementService.createAdvertisement(user1.getEmail(), datePosted,  petName, petAge, petDescription, Sex.F, Species.cat);
 
     private static final String NOTE = "loves cats";
     private static final Date DATE_OF_SUBMISSION = Date.valueOf("2020-02-19");
@@ -107,7 +98,7 @@ public class ApplicationTest {
         advertisementRepository.deleteAll();
         appUserRepository.deleteAll();
     }
-    
+
     @BeforeEach
     public void setup() {
         applicationRepository.deleteAll();
@@ -376,20 +367,20 @@ public class ApplicationTest {
         TestUtils.assertApplication(app, advertisement, user2, DATE_OF_SUBMISSION, NOTE, Status.rejected);
     }
 
-//    @Test
-//    public void duplicateApplicationsPerAdvertisement() {
-//        Application app = null;
-//        Application app2 = null;
-//        Advertisement ad = null;
-//        error = "";
-//        try {
-//            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
-//            app2 = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION2, NOTE2, STATUS2);
-//        } catch (IllegalArgumentException e) {
-//            error = e.getMessage();
-//        }
-//        assertEquals("You already applied for this", error);
-//    }
+    @Test
+    public void duplicateApplicationsPerAdvertisement() {
+        Application app = null;
+        Application app2 = null;
+        Advertisement ad = null;
+        error = "";
+        try {
+            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
+            app2 = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION2, NOTE2, STATUS2);
+        } catch (IllegalArgumentException e) {
+            error = e.getMessage();
+        }
+        assertEquals("You already applied for this", error);
+    }
 
     @Test
     public void ApplicationDateBeforeAdvertisement() {

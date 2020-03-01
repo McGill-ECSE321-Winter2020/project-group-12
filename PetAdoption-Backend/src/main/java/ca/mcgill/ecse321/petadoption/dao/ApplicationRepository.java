@@ -14,4 +14,6 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
   Set<Application> findApplicationByAdvertisementAdvertisementId(String advertisementID);
 
     void deleteApplicationByApplicationId(String id);
+
+    Application findApplicationByAdvertisement_AdvertisementIdAndApplicant_Email(String id, String email);
 }
