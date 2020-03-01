@@ -1,12 +1,10 @@
 package ca.mcgill.ecse321.petadoption.TestSuits.Utils;
 
 import ca.mcgill.ecse321.petadoption.dto.AppUserDto;
+import ca.mcgill.ecse321.petadoption.dto.DonationDto;
 import ca.mcgill.ecse321.petadoption.model.*;
 
 import java.sql.Date;
-import java.util.Set;
-import java.util.List;
-
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -29,6 +27,12 @@ public class TestUtils {
         assertEquals(dateOfPayment, donation.getDateOfPayment());
     }
 
+    public static void assertDonation(DonationDto donation, String userEmail, Integer amount, Date dateOfPayment) {
+        assertNotNull(donation);
+        assertEquals(userEmail, donation.getDonorEmail());
+        assertEquals(amount, donation.getAmount());
+        assertEquals(dateOfPayment, donation.getDateOfPayment());
+    }
     public static AppUser createAppUser(String name, String email, String password,
                                         String biography, String homeDescription, Integer age, boolean isAdmin, Sex sex) {
         AppUser new_user = new AppUser();
