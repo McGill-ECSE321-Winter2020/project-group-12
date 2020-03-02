@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.petadoption.TestSuits.Utils;
 
 import ca.mcgill.ecse321.petadoption.dto.AppUserDto;
+import ca.mcgill.ecse321.petadoption.dto.ApplicationDto;
 import ca.mcgill.ecse321.petadoption.dto.DonationDto;
 import ca.mcgill.ecse321.petadoption.model.*;
 
@@ -95,6 +96,13 @@ public class TestUtils {
         assertEquals(advertisement.getPetSex(), application.getAdvertisement().getPetSex());
         assertEquals(advertisement.getDatePosted(), application.getAdvertisement().getDatePosted());
         assertEquals(advertisement.getPostedBy().getEmail(), application.getAdvertisement().getPostedBy().getEmail());
+    }
+    public static void assertApplication(ApplicationDto application, String advertisementId, String appUserEmail, Date dateOfSubmission, String note, Status status) {
+        assertNotNull(application);
+        assertEquals(note, application.getNote());
+        assertEquals(status, application.getStatus());
+        assertEquals(appUserEmail, application.getApplicantEmail());
+        assertEquals(advertisementId, application.getAdvertisementId());
     }
 
     public static Advertisement createAdvertisement(Date datePosted, boolean isExpired, AppUser postedBy, String petName, Integer age, String description) {

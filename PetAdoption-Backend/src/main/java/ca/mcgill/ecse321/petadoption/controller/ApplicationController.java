@@ -40,8 +40,8 @@ public class ApplicationController {
     }
 
     @PostMapping(value = {"/applications/create/", "/applications/create"})
-    public ApplicationDto createApplication(@RequestBody ApplicationDto ap, @RequestParam String userEmail, @RequestParam String advertisementId) throws IllegalArgumentException {
-        Application appl = service.createApplication(advertisementId, userEmail, ap.getDateOfSubmission(), ap.getNote(), Status.pending);
+    public ApplicationDto createApplication(@RequestBody ApplicationDto ap) throws IllegalArgumentException {
+        Application appl = service.createApplication(ap.getAdvertisementId(), ap.getApplicantEmail(), ap.getDateOfSubmission(), ap.getNote(), Status.pending);
         return convertToDto(appl);
     }
 
@@ -62,7 +62,7 @@ public class ApplicationController {
     }
 
     private ApplicationDto convertToDto(Application app) {
-        return new ApplicationDto(app.getDateOfSubmission(), app.getNote(), app.getAdvertisement().getAdvertisementId(), app.getApplicant().getEmail(), app.getApplicationId());
+        return new ApplicationDto(app.getDateOfSubmission(), app.getNote(), app.getAdvertisement().getAdvertisementId(), app.getApplicant().getEmail(), app.getApplicationId(), app.getStatus());
     }
 
 //    private AdvertisementDto convertAdToDto(Advertisement ad) {
