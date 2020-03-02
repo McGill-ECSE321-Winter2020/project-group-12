@@ -354,13 +354,13 @@ public class ApplicationTest {
         Application app = null;
         try {
             app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
-            app = service.updateApplicationStatus(app, Status.accepted);
+            app = service.updateApplicationStatus(app.getApplicationId(), Status.accepted);
         } catch (IllegalArgumentException e) {
             fail();
         }
         TestUtils.assertApplication(app, advertisement, user2, DATE_OF_SUBMISSION, NOTE, Status.accepted);
         try {
-            app = service.updateApplicationStatus(app, Status.rejected);
+            app = service.updateApplicationStatus(app.getApplicationId(), Status.rejected);
         } catch (IllegalArgumentException e) {
             fail();
         }

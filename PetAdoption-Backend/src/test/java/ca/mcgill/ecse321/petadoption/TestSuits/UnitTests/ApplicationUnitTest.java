@@ -408,23 +408,6 @@ public class ApplicationUnitTest { //application test service
     }
 
     @Test
-    public void testUpdateApplicationStatus() {
-        Application app = null;
-        try {
-            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
-            app = service.updateApplicationStatus(app, Status.accepted);
-        } catch (IllegalArgumentException e) {
-            fail();
-        }
-        TestUtils.assertApplication(app, advertisement, user2, DATE_OF_SUBMISSION, NOTE, Status.accepted);
-        try {
-            app = service.updateApplicationStatus(app, Status.rejected);
-        } catch (IllegalArgumentException e) {
-            fail();
-        }
-        TestUtils.assertApplication(app, advertisement, user2, DATE_OF_SUBMISSION, NOTE, Status.rejected);
-    }
-    @Test
     public void duplicateApplicationsPerAdvertisement() {
         setMockOutputOnlyForDuplicateTest();
         Application app = null;

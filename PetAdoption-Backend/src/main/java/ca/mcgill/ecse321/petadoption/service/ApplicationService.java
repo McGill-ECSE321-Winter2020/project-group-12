@@ -39,7 +39,6 @@ public class ApplicationService {
     @Transactional
     public Application createApplication(String advertisementId, String appUserEmail, Date dateOfSubmission, String note, Status status) {
         boolean bool = false;
-        Set<Application> apps = new HashSet<Application>();
         Application app = new Application();
         Advertisement advertisement = advertisementRepository.findAdvertisementByAdvertisementId(advertisementId);
         AppUser aUser = appUserRepository.findAppUserByEmail(appUserEmail);
@@ -50,25 +49,21 @@ public class ApplicationService {
         } else if (advertisement.isIsExpired()) {
             error = error + "The Advertisement has expired";
         } else if (advertisement != null) {
-            apps = applicationRepository.findApplicationByAdvertisementAdvertisementId(advertisement.getAdvertisementId());
             AppUser owner = advertisement.getPostedBy();
             String ownerEmail = owner.getEmail();
-            if (appUserEmail != null && appUserEmail.trim().length() != 0) app.setApplicant(aUser);
-            if (appUserEmail != null && appUserEmail.trim().length() != 0 && appUserEmail.equals(ownerEmail)) {
+            app.setApplicant(aUser);
+            if (appUserEmail.equals(ownerEmail)) {
                 error = error + "You cannot adopt your own pet!";
             }
-            if (apps == null || apps.size() == 0) apps = new HashSet<Application>();
-            advertisement.setApplications((apps));
-            app.setApplicant(aUser);
-            apps.add(app);
             Application findDuplicate = applicationRepository.findApplicationByAdvertisement_AdvertisementIdAndApplicant_Email(advertisementId, appUserEmail);
-            if (findDuplicate != null) throw new IllegalArgumentException("You already applied for this");
+            if (findDuplicate != null){
+                throw new IllegalArgumentException("You already applied for this");
+            }
             if (dateOfSubmission == null) {
                 error = "dateOfSubmission can not be empty! ";
             } else if ((dateOfSubmission.compareTo(advertisement.getDatePosted())) < 0) {
                 error = error + "Advertisement Date Must Be Prior or Equal To Application Date";
             }
-
             if (note == null || note.trim().length() == 0) {
                 error = error + "note cannot be empty ";
             }
@@ -82,8 +77,8 @@ public class ApplicationService {
         app.setDateOfSubmission(dateOfSubmission);
         app.setNote(note);
         app.setStatus(status);
-        apps.add(app);
-        advertisement.setApplications((apps));
+        app.setApplicant(aUser);
+        advertisement.addApplication(app);
         return applicationRepository.save(app);
     }
 
@@ -98,8 +93,11 @@ public class ApplicationService {
         if (id == null || id.trim().length() == 0) {
             throw new IllegalArgumentException("Application must have an ID");
         }
-        Application a = applicationRepository.findApplicationByApplicationId(id);
-        return a;
+        Application application = applicationRepository.findApplicationByApplicationId(id);
+        if(application == null){
+            throw new IllegalArgumentException("This application does not exist.");
+        }
+        return application;
     }
 
     /**
@@ -112,6 +110,15 @@ public class ApplicationService {
         return new ArrayList<>((Collection<? extends Application>) applicationRepository.findAll());
     }
 
+    /**
+     * Returns all the Applications corresponding
+     * @param id: The id of the advertisement.
+     * @return A list of application for that advertisement
+     */
+    @Transactional
+    public List<Application> getAllApplicationsForAdvertisement(String id){
+        return new ArrayList<>((Collection<? extends Application>) applicationRepository.findApplicationByAdvertisement_AdvertisementId(id));
+    }
     /////////////////////////////Application Delete Method////////////////////////////////////////
 
     /**
@@ -134,10 +141,10 @@ public class ApplicationService {
      * @return Application
      */
     @Transactional
-    public Application updateApplicationStatus(Application app, Status status) {
+    public Application updateApplicationStatus(String applicationId, Status status) {
+        Application app = getApplicationByID(applicationId);
         app.setStatus(status);
-        applicationRepository.save(app);
-        return app;
+        return applicationRepository.save(app);
     }
 
 

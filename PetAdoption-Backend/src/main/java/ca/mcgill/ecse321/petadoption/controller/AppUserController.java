@@ -3,7 +3,6 @@ package ca.mcgill.ecse321.petadoption.controller;
 import ca.mcgill.ecse321.petadoption.dto.AppUserDto;
 import ca.mcgill.ecse321.petadoption.model.AppUser;
 import ca.mcgill.ecse321.petadoption.service.AppUserService;
-import ca.mcgill.ecse321.petadoption.service.PetAdoptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;

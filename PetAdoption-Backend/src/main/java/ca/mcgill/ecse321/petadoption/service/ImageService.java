@@ -9,8 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static org.hibernate.internal.util.collections.ArrayHelper.toList;
-
 @Service
 public class ImageService {
 
@@ -105,21 +103,17 @@ public class ImageService {
      */
     @Transactional
     public boolean deleteImage(String id) {
-
         boolean b = false ;
         if (id == null || id.trim().length() == 0) {
             throw new IllegalArgumentException("You must provide an ID in order to delete!");
         }
-
         Image image = imageRepository.findImageByImageId(id);
         if(image == null){
             throw new IllegalArgumentException("The id you provided doesn't exist");
         }else{
             imageRepository.deleteImageByImageId(id);
-            b = true ;
+            b = true;
         }
-
         return b;
     }
-
 }

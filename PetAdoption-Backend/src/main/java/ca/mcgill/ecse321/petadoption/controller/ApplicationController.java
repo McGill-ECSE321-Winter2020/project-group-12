@@ -29,10 +29,10 @@ public class ApplicationController {
     @Autowired
     private ApplicationService service;
 
-    @GetMapping(value = {"/applications", "/applications/"})
-    public List<ApplicationDto> getAllApplications() {
+    @GetMapping(value = {"/applications/{advertisementId}", "/applications/{advertisementId}/"})
+    public List<ApplicationDto> getAllApplications(@PathVariable("advertisementId") String advertisementId) {
         List<ApplicationDto> applicationDtoList = new ArrayList<>();
-        List<Application> applicationList = service.getAllApplications();
+        List<Application> applicationList = service.getAllApplicationsForAdvertisement(advertisementId);
         for (Application app : applicationList) {
             applicationDtoList.add(convertToDto(app));
         }
@@ -45,37 +45,23 @@ public class ApplicationController {
         return convertToDto(appl);
     }
 
-    @DeleteMapping(value = {"/application/delete", "/application/delete/"})
-    public void deleteApplication(@RequestParam("applicationId") String applicationID) {
+    @DeleteMapping(value = {"/application/delete/{applicationId}", "/application/delete/{applicationId}/"})
+    public void deleteApplication(@PathVariable("applicationId") String applicationID) {
         service.deleteApplication(applicationID);
     }
 
     @GetMapping(value = {"/application/{applicationID}", "/application/{applicationID}/"})
-    public ApplicationDto getAdvertisementById(@RequestBody ApplicationDto apdto) throws IllegalArgumentException {
-        Application app;
-        try {
-            app = service.getApplicationByID(apdto.getApplicationId());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        }
+    public ApplicationDto getApplicationById(@PathVariable String applicationID) {
+        Application app = service.getApplicationByID(applicationID);
         return convertToDto(app);
+    }
+
+    @PutMapping(value = {"/application/update", "/application/update/"})
+    public ApplicationDto updateApplication(@RequestBody ApplicationDto application) {
+        return convertToDto(service.updateApplicationStatus(application.getApplicationId(), application.getStatus()));
     }
 
     private ApplicationDto convertToDto(Application app) {
         return new ApplicationDto(app.getDateOfSubmission(), app.getNote(), app.getAdvertisement().getAdvertisementId(), app.getApplicant().getEmail(), app.getApplicationId(), app.getStatus());
     }
-
-//    private AdvertisementDto convertAdToDto(Advertisement ad) {
-//        AdvertisementDto advertisementDto = new AdvertisementDto(ad.getPostedBy(), ad.getDatePosted(),
-//                ad.getAdvertisementId(), ad.isIsExpired(), ad.getPetName(), ad.getPetAge(), ad.getPetDescription(),
-//                ad.getPetSex(), ad.getPetSpecies(), ad.getApplications(), ad.getPetImages());
-//        return advertisementDto;
-//    }
-
-    //not sure about this one
-    @PutMapping(value = {"/application/update", "/application/update/"})
-    public ResponseEntity<Object> updateApplication(@RequestParam("applicationId") String applicationID) {
-        return null;
-    }
-
 }

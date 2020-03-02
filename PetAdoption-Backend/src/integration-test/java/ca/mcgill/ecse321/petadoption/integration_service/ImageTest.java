@@ -255,6 +255,74 @@ public class ImageTest {
         assertEquals(list.get(1).getAdvertisement().getAdvertisementId(), ADVERTISEMENT_ID_1);
         assertEquals(list.get(1).getLink(), IMAGE_LINK_2);
         assertEquals(list.get(1).getName(), IMAGE_NAME_2);
-
     }
+
+    @Test
+    public void testDeleteImage(){
+        Image image = null;
+        try{
+            image = imageservice.createImage(ADVERTISEMENT_ID_1, IMAGE_NAME_1, IMAGE_LINK_1);
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        String id = image.getImageId();
+        imageservice.deleteImage(id);
+        image =null;
+        String error = "";
+        try{
+            image = imageservice.getImageByID(id);
+        } catch(Exception e){
+            error = e.getMessage();
+        }
+        assertEquals("There is no such Image!", error);
+    }
+
+    @Test
+    public void testDeleteImageEmptyId(){
+        Image image = null;
+        try{
+            image = imageservice.createImage(ADVERTISEMENT_ID_1, IMAGE_NAME_1, IMAGE_LINK_1);
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+
+        String error = "";
+        try{
+            imageservice.deleteImage("");
+        } catch(Exception e){
+            error = e.getMessage();
+        }
+        assertEquals("You must provide an ID in order to delete!", error);
+    }
+
+    @Test
+    public void testDeleteImageNullId(){
+        Image image = null;
+        try{
+            image = imageservice.createImage(ADVERTISEMENT_ID_1, IMAGE_NAME_1, IMAGE_LINK_1);
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+
+        String error = "";
+        try{
+            imageservice.deleteImage(null);
+        } catch(Exception e){
+            error = e.getMessage();
+        }
+        assertEquals("You must provide an ID in order to delete!", error);
+    }
+    @Test
+    public void testDeleteImageNonExistent(){
+        String error = "";
+        try{
+            imageservice.deleteImage("some id");
+        } catch(Exception e){
+            error = e.getMessage();
+        }
+        assertEquals("The id you provided doesn't exist", error);
+    }
+
+
+
 }

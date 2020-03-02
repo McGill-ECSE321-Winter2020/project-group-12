@@ -389,6 +389,7 @@ public class AppUserTest {
         try{
             user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
                     USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2 );
+
         }catch (IllegalArgumentException e){
             fail();
         }
@@ -506,4 +507,6 @@ public class AppUserTest {
         }
         assertEquals("password cannot be empty ", error);
     }
+
+
 }
