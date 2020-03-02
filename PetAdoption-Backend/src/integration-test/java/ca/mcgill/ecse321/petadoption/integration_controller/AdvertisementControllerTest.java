@@ -5,8 +5,6 @@ import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
 import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
 import ca.mcgill.ecse321.petadoption.dto.AdvertisementDto;
 import ca.mcgill.ecse321.petadoption.dto.AppUserDto;
-import ca.mcgill.ecse321.petadoption.model.Advertisement;
-import ca.mcgill.ecse321.petadoption.model.AppUser;
 import ca.mcgill.ecse321.petadoption.model.Sex;
 import ca.mcgill.ecse321.petadoption.model.Species;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +54,7 @@ public class AdvertisementControllerTest {
     private static final Integer USER_AGE_1 = 34;
     private static final Sex USER_SEX_1 = Sex.M;
     private static final boolean USER_ADMIN_1 = true;
-    
+
     private static final String NON_EXISTING_APP_USER = "user3@mcgill.ca";
 
     private static final String PET_NAME_1 = "Rusty";
@@ -92,16 +90,9 @@ public class AdvertisementControllerTest {
 
     @Test
     public void testCreateAdvertisement() {
-        AppUserDto appUserDto = createAppUserDto();
-        AdvertisementDto adDto = new AdvertisementDto(appUserDto.getEmail(), DATE_1, null, false,
-                PET_NAME_1, PET_AGE_1, PET_DESCRIPTION_1, PET_SEX_1, PET_SPECIES_1);
-        HttpEntity<AdvertisementDto> entity = new HttpEntity<>(adDto, headers);
+        AdvertisementDto returned_advertisement = createAdvertisementAndReturn();
 
-        AdvertisementDto returned_advertisement = restTemplate.postForObject(formatLink("/"+
-                appUserDto.getEmail()+"/advertisement/create/?date="+DATE_1), entity, AdvertisementDto.class);
-
-        assertNotNull(returned_advertisement);
-        assertEquals(appUserDto.getEmail(),returned_advertisement.getUserEmail());
+        assertEquals(USER_EMAIL_1,returned_advertisement.getUserEmail());
         assertFalse(returned_advertisement.isExpired());
         assertEquals(PET_NAME_1,returned_advertisement.getPetName());
         assertEquals(PET_AGE_1,returned_advertisement.getPetAge());
@@ -110,30 +101,35 @@ public class AdvertisementControllerTest {
         assertEquals(PET_SPECIES_1, returned_advertisement.getPetSpecies());
     }
 
+    private AdvertisementDto createAdvertisementAndReturn() {
+        AppUserDto appUserDto = createAppUserDto();
+        AdvertisementDto adDto = new AdvertisementDto(appUserDto.getEmail(), DATE_1, null, false,
+                PET_NAME_1, PET_AGE_1, PET_DESCRIPTION_1, PET_SEX_1, PET_SPECIES_1);
+        HttpEntity<AdvertisementDto> entity = new HttpEntity<>(adDto, headers);
+
+        AdvertisementDto returned_advertisement = restTemplate.postForObject(formatLink("/"+
+                appUserDto.getEmail()+"/advertisement/create/?date="+DATE_1), entity, AdvertisementDto.class);
+        assertNotNull(returned_advertisement);
+
+        return returned_advertisement;
+    }
+
     @Test
     public void testUpdateAdvertisement() {
-        AppUserDto appUserDto = createAppUserDto();
-        AdvertisementDto adDto1 = new AdvertisementDto(appUserDto.getEmail(), DATE_1, null, false,
-                PET_NAME_1, PET_AGE_1, PET_DESCRIPTION_1, PET_SEX_1, PET_SPECIES_1);
-
-        //Make the advertisement to update
-        HttpEntity<AdvertisementDto> entity;
-        AdvertisementDto returned_advertisement = restTemplate.postForObject(formatLink("/"+
-                appUserDto.getEmail()+"/advertisement/create/?date="+DATE_1), adDto1, AdvertisementDto.class);
-
+        AdvertisementDto returned_advertisement = createAdvertisementAndReturn();
         //Updating advertisement
         String advertisementId = returned_advertisement.getAdvertisementId();
         returned_advertisement = null;
-        AdvertisementDto adDto2 = new AdvertisementDto(appUserDto.getEmail(), DATE_1, null, false,
+        AdvertisementDto adDto2 = new AdvertisementDto(USER_EMAIL_1, DATE_1, null, false,
                 PET_NAME_2, PET_AGE_2, PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
-        entity = new HttpEntity<>(adDto2, headers);
+        HttpEntity<AdvertisementDto> entity = new HttpEntity<>(adDto2, headers);
         restTemplate.put(formatLink("/advertisement/update/?adId="+advertisementId), entity);
 
         returned_advertisement = restTemplate.getForObject(formatLink("/advertisement/"+advertisementId),
                 AdvertisementDto.class);
 
         assertNotNull(returned_advertisement);
-        assertEquals(appUserDto.getEmail(),returned_advertisement.getUserEmail());
+        assertEquals(USER_EMAIL_1,returned_advertisement.getUserEmail());
         assertEquals(advertisementId, returned_advertisement.getAdvertisementId());
         assertFalse(returned_advertisement.isExpired());
         assertEquals(PET_NAME_2,returned_advertisement.getPetName());
@@ -145,19 +141,13 @@ public class AdvertisementControllerTest {
 
     @Test
     public void testUpdateAdvertisementExpiry() {
-        AppUserDto appUserDto = createAppUserDto();
-        AdvertisementDto adDto1 = new AdvertisementDto(appUserDto.getEmail(), DATE_1, null, false,
-                PET_NAME_1, PET_AGE_1, PET_DESCRIPTION_1, PET_SEX_1, PET_SPECIES_1);
-
-        //Make the advertisement to update
-        HttpEntity<AdvertisementDto> entity = new HttpEntity<>(adDto1, headers);
-        AdvertisementDto returned_advertisement = restTemplate.postForObject(formatLink("/"+
-                appUserDto.getEmail()+"/advertisement/create/?date="+DATE_1), adDto1, AdvertisementDto.class);
-
+        AdvertisementDto returned_advertisement = createAdvertisementAndReturn();
         assertFalse(returned_advertisement.isExpired());
         //Updating advertisement
+        AdvertisementDto adDto2 = new AdvertisementDto(USER_EMAIL_1, DATE_1, null, false,
+                PET_NAME_2, PET_AGE_2, PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
+        HttpEntity<AdvertisementDto> entity = new HttpEntity<>(adDto2, headers);
         String advertisementId = returned_advertisement.getAdvertisementId();
-        returned_advertisement = null;
         restTemplate.put(formatLink("/advertisement/updateExpiry/?adId="+advertisementId+"&expired="+true), entity);
 
         returned_advertisement = restTemplate.getForObject(formatLink("/advertisement/"+advertisementId),
@@ -169,22 +159,14 @@ public class AdvertisementControllerTest {
 
     @Test
     public void testGetAllAdvertisements() {
-        AppUserDto appUserDto = createAppUserDto();
-        AdvertisementDto adDto1 = new AdvertisementDto(appUserDto.getEmail(), DATE_1, null, false,
-                PET_NAME_1, PET_AGE_1, PET_DESCRIPTION_1, PET_SEX_1, PET_SPECIES_1);
-
-        //Make the advertisement to update
-        HttpEntity<AdvertisementDto> entity = new HttpEntity<>(adDto1, headers);
-        AdvertisementDto returned_advertisement = restTemplate.postForObject(formatLink("/"+
-                appUserDto.getEmail()+"/advertisement/create/?date="+DATE_1), entity, AdvertisementDto.class);
-
-        AdvertisementDto adDto2 = new AdvertisementDto(appUserDto.getEmail(), DATE_1, null, false,
+        AdvertisementDto returned_advertisement = createAdvertisementAndReturn();
+        AdvertisementDto adDto2 = new AdvertisementDto(USER_EMAIL_1, DATE_1, null, false,
                 PET_NAME_2, PET_AGE_2, PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
 
         //Make the advertisement to update
-        HttpEntity<AdvertisementDto> entity2 = new HttpEntity<>(adDto1, headers);
+        HttpEntity<AdvertisementDto> entity2 = new HttpEntity<>(adDto2, headers);
         AdvertisementDto returned_advertisement2 = restTemplate.postForObject(formatLink("/"+
-                appUserDto.getEmail()+"/advertisement/create/?date="+DATE_2), entity2, AdvertisementDto.class);
+                USER_EMAIL_1+"/advertisement/create/?date="+DATE_2), entity2, AdvertisementDto.class);
 
         ResponseEntity<AdvertisementDto[]> responseEntity = restTemplate.getForEntity(
                 formatLink("/advertisements"), AdvertisementDto[].class);
@@ -193,31 +175,25 @@ public class AdvertisementControllerTest {
 
         assertNotNull(responseEntity);
         assertEquals(2, Objects.requireNonNull(advertisementDtos).length);
-        if (advertisementDtos[0].getAdvertisementId().equals(adDto1.getAdvertisementId())) {
-            assertAdvertisementEquality(adDto1, advertisementDtos[0]);
+        if (advertisementDtos[0].getAdvertisementId().equals(returned_advertisement.getAdvertisementId())) {
+            assertAdvertisementEquality(returned_advertisement, advertisementDtos[0]);
         } else if (advertisementDtos[0].getAdvertisementId().equals(adDto2.getAdvertisementId())) {
-            assertAdvertisementEquality(adDto2, advertisementDtos[0]);
-        } else if (advertisementDtos[1].getAdvertisementId().equals(adDto1.getAdvertisementId())) {
-            assertAdvertisementEquality(adDto1, advertisementDtos[1]);
+            assertAdvertisementEquality(returned_advertisement2, advertisementDtos[0]);
+        } else if (advertisementDtos[1].getAdvertisementId().equals(returned_advertisement.getAdvertisementId())) {
+            assertAdvertisementEquality(returned_advertisement, advertisementDtos[1]);
         } else if (advertisementDtos[1].getAdvertisementId().equals(adDto2.getAdvertisementId())) {
-            assertAdvertisementEquality(adDto2, advertisementDtos[1]);
+            assertAdvertisementEquality(returned_advertisement2, advertisementDtos[1]);
         }
     }
 
     @Test
     public void testGetAdvertisementsByAppUser() {
-        AppUserDto appUserDto = createAppUserDto();
-        AdvertisementDto adDto1 = new AdvertisementDto(appUserDto.getEmail(), DATE_1, null, false,
-                PET_NAME_1, PET_AGE_1, PET_DESCRIPTION_1, PET_SEX_1, PET_SPECIES_1);
-
-        HttpEntity<AdvertisementDto> entity = new HttpEntity<>(adDto1, headers);
-        AdvertisementDto returned_advertisement = restTemplate.postForObject(formatLink("/"+
-                appUserDto.getEmail()+"/advertisement/create/?date="+DATE_1), entity, AdvertisementDto.class);
+        AdvertisementDto returned_advertisement = createAdvertisementAndReturn();
 
         String advertisementId = returned_advertisement.getAdvertisementId();
 
         ResponseEntity<AdvertisementDto[]> responseEntity = restTemplate.getForEntity(
-                formatLink("/"+appUserDto.getEmail()+"/advertisements/"),
+                formatLink("/"+USER_EMAIL_1+"/advertisements/"),
                 AdvertisementDto[].class);
         AdvertisementDto[] advertisementDtos = responseEntity.getBody();
 
@@ -228,14 +204,7 @@ public class AdvertisementControllerTest {
 
     @Test
     public void testGetAdvertisementsByInvalidAppUser() {
-        AppUserDto appUserDto = createAppUserDto();
-        AdvertisementDto adDto1 = new AdvertisementDto(appUserDto.getEmail(), DATE_1, null, false,
-                PET_NAME_1, PET_AGE_1, PET_DESCRIPTION_1, PET_SEX_1, PET_SPECIES_1);
-
-        HttpEntity<AdvertisementDto> entity = new HttpEntity<>(adDto1, headers);
-        AdvertisementDto returned_advertisement = restTemplate.postForObject(formatLink("/"+
-                appUserDto.getEmail()+"/advertisement/create/?date="+DATE_1), entity, AdvertisementDto.class);
-
+        createAdvertisementAndReturn();
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(
                 formatLink("/"+NON_EXISTING_APP_USER+"/advertisements/"),
                 String.class);
@@ -246,22 +215,14 @@ public class AdvertisementControllerTest {
 
     @Test
     public void testGetAdvertisementById() {
-        AppUserDto appUserDto = createAppUserDto();
-        AdvertisementDto adDto1 = new AdvertisementDto(appUserDto.getEmail(), DATE_1, null, false,
-                PET_NAME_1, PET_AGE_1, PET_DESCRIPTION_1, PET_SEX_1, PET_SPECIES_1);
-
-        HttpEntity<AdvertisementDto> entity = new HttpEntity<>(adDto1, headers);
-        AdvertisementDto returned_advertisement = restTemplate.postForObject(formatLink("/"+
-                appUserDto.getEmail()+"/advertisement/create/?date="+DATE_1), entity, AdvertisementDto.class);
-        assertNotNull(returned_advertisement);
-
+        AdvertisementDto returned_advertisement = createAdvertisementAndReturn();
         String advertisementId = returned_advertisement.getAdvertisementId();
         returned_advertisement = restTemplate.getForObject(
                 formatLink("/advertisement/"+advertisementId), AdvertisementDto.class);
 
         assertNotNull(returned_advertisement);
         assertEquals(advertisementId, returned_advertisement.getAdvertisementId());
-        assertEquals(appUserDto.getEmail(),returned_advertisement.getUserEmail());
+        assertEquals(USER_EMAIL_1,returned_advertisement.getUserEmail());
         assertFalse(returned_advertisement.isExpired());
         assertEquals(PET_NAME_1,returned_advertisement.getPetName());
         assertEquals(PET_AGE_1,returned_advertisement.getPetAge());
@@ -272,13 +233,7 @@ public class AdvertisementControllerTest {
 
     @Test
     public void testGetAdvertisementByInvalidId() {
-        AppUserDto appUserDto = createAppUserDto();
-        AdvertisementDto adDto1 = new AdvertisementDto(appUserDto.getEmail(), DATE_1, null, false,
-                PET_NAME_1, PET_AGE_1, PET_DESCRIPTION_1, PET_SEX_1, PET_SPECIES_1);
-
-        HttpEntity<AdvertisementDto> entity = new HttpEntity<>(adDto1, headers);
-        AdvertisementDto returned_advertisement = restTemplate.postForObject(formatLink("/"+
-                appUserDto.getEmail()+"/advertisement/create/?date="+DATE_1), entity, AdvertisementDto.class);
+        createAdvertisementAndReturn();
 
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(
                 formatLink("/advertisement/"+INVALID_ID), String.class);
@@ -299,14 +254,12 @@ public class AdvertisementControllerTest {
         assertNotNull(returned_advertisement);
 
         String advertisementId = returned_advertisement.getAdvertisementId();
-
         restTemplate.delete(formatLink("/advertisement/delete?adId="+advertisementId), entity);
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(
                 formatLink("/advertisement/"+advertisementId), String.class);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
         assertTrue(Objects.requireNonNull(responseEntity.getBody()).contains(NO_SUCH_AD_MESSAGE));
-
     }
 
     private AppUserDto createAppUserDto() {
