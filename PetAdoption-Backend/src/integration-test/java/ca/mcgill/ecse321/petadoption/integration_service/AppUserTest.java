@@ -2,10 +2,7 @@ package ca.mcgill.ecse321.petadoption.integration_service;
 
 import ca.mcgill.ecse321.petadoption.TestSuits.Utils.TestUtils;
 
-import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
-import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
-import ca.mcgill.ecse321.petadoption.dao.ApplicationRepository;
-import ca.mcgill.ecse321.petadoption.dao.DonationRepository;
+import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.model.*;
 import ca.mcgill.ecse321.petadoption.service.AppUserService;
 
@@ -47,17 +44,25 @@ public class AppUserTest {
 
     @Autowired
     private AppUserService service;
+
     @Autowired
-    AppUserRepository appUserRepository;
+    private ImageRepository imageRepository;
+
     @Autowired
-    ApplicationRepository applicationRepository;
+    private AdvertisementRepository advertisementRepository;
+
     @Autowired
-    AdvertisementRepository advertisementRepository;
+    private AppUserRepository appUserRepository;
+
     @Autowired
-    DonationRepository donationRepository;
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private DonationRepository donationRepository;
 
     @BeforeEach
     public void cleanDB(){
+        imageRepository.deleteAll();
         applicationRepository.deleteAll();
         advertisementRepository.deleteAll();
         donationRepository.deleteAll();

@@ -50,27 +50,27 @@ public class DonationTest {
     private AppUserService appUserService;
 
     @Autowired
+    private ImageRepository imageRepository;
+
+    @Autowired
+    private AdvertisementRepository advertisementRepository;
+
+    @Autowired
     private AppUserRepository appUserRepository;
 
     @Autowired
-    DonationRepository donationRepository;
+    private ApplicationRepository applicationRepository;
 
     @Autowired
-    AdvertisementRepository advertisementRepository;
-
-    @Autowired
-    ImageRepository imageRepository;
-
-    @Autowired
-    ApplicationRepository applicationRepository;
+    private DonationRepository donationRepository;
 
     @BeforeEach
     public void cleanDB() {
-        donationRepository.deleteAll();
-        appUserRepository.deleteAll();
-        advertisementRepository.deleteAll();
         imageRepository.deleteAll();
         applicationRepository.deleteAll();
+        advertisementRepository.deleteAll();
+        donationRepository.deleteAll();
+        appUserRepository.deleteAll();
     }
 
     @Test

@@ -1,9 +1,7 @@
 package ca.mcgill.ecse321.petadoption.integration_service;
 
 import ca.mcgill.ecse321.petadoption.TestSuits.Utils.TestUtils;
-import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
-import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
-import ca.mcgill.ecse321.petadoption.dao.ApplicationRepository;
+import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.model.*;
 import ca.mcgill.ecse321.petadoption.service.AdvertisementService;
 import ca.mcgill.ecse321.petadoption.service.AppUserService;
@@ -34,12 +32,21 @@ public class ApplicationTest {
     private AppUserService userService;
     @Autowired
     private AdvertisementService advertisementService;
+
     @Autowired
-    ApplicationRepository applicationRepository;
+    private ImageRepository imageRepository;
+
     @Autowired
-    AdvertisementRepository advertisementRepository;
+    private AdvertisementRepository advertisementRepository;
+
     @Autowired
-    AppUserRepository appUserRepository;
+    private AppUserRepository appUserRepository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private DonationRepository donationRepository;
 
     //3 users created: User 1 posts the advertisement while user 2 and 3 apply
     private static final String USER_NAME_1 = "user 1";
@@ -94,8 +101,10 @@ public class ApplicationTest {
 
     @AfterEach
     public  void cleanDB(){
+        imageRepository.deleteAll();
         applicationRepository.deleteAll();
         advertisementRepository.deleteAll();
+        donationRepository.deleteAll();
         appUserRepository.deleteAll();
     }
 
