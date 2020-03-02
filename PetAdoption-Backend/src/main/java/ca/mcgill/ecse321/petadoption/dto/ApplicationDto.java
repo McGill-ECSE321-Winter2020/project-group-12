@@ -3,24 +3,28 @@ package ca.mcgill.ecse321.petadoption.dto;
 import ca.mcgill.ecse321.petadoption.model.Application;
 import ca.mcgill.ecse321.petadoption.model.Advertisement;
 import ca.mcgill.ecse321.petadoption.model.AppUser;
+import ca.mcgill.ecse321.petadoption.model.Status;
+
 import java.sql.Date;
 
 public class ApplicationDto {
     private Date dateOfSubmission;
     private String note;
-    private Advertisement advertisement;
-    private AppUser applicant;
+    private String advertisementId;
+    private String applicantEmail;
     private String applicationId;
+    private Status status;
 
     public ApplicationDto(){
     }
 
-    public ApplicationDto(Date date, String note, Advertisement ad, AppUser applicant, String id){
+    public ApplicationDto(Date date, String note, String  advertisementId, String applicantEmail, String id, Status status){
         this.dateOfSubmission = date;
         this.note = note;
-        this.advertisement = ad;
-        this.applicant = applicant;
+        this.advertisementId = advertisementId;
+        this.applicantEmail = applicantEmail;
         this.applicationId = id;
+        this.status = status;
     }
 
     public void setDateOfSubmission(Date dat){
@@ -39,20 +43,20 @@ public class ApplicationDto {
         return note;
     }
 
-    public void setAdvertisement(Advertisement advertisement) {
-        this.advertisement = advertisement;
+    public void setAdvertisementId(String advertisementId) {
+        this.advertisementId = advertisementId;
     }
 
-    public Advertisement getAdvertisement(){
-        return this.advertisement;
+    public String getAdvertisementId(){
+        return this.advertisementId;
     }
 
-    public void setApplicant(AppUser applicant) {
-        this.applicant = applicant;
+    public void setApplicantEmail(String applicantEmail) {
+        this.applicantEmail = applicantEmail;
     }
 
-    public AppUser getApplicant(){
-        return this.applicant;
+    public String getApplicantEmail(){
+        return this.applicantEmail;
     }
 
     public void setApplicationId(String id){
@@ -61,6 +65,14 @@ public class ApplicationDto {
 
     public String getApplicationId(){
         return this.applicationId;
+    }
+
+    public void setStatus(Status status){
+        this.status = status;
+    }
+
+    public Status getStatus(){
+        return this.status;
     }
 
 }

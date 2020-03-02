@@ -39,9 +39,9 @@ public class ApplicationController {
         return applicationDtoList;
     }
 
-    @PostMapping(value = {"/applications/", "/applications/"})
-    public ApplicationDto createApplication(@RequestBody ApplicationDto ap, @RequestParam String userEmail, @RequestParam String advertisementId) throws IllegalArgumentException {
-        Application appl = service.createApplication(advertisementId, userEmail, ap.getDateOfSubmission(), ap.getNote(), Status.pending);
+    @PostMapping(value = {"/applications/create/", "/applications/create"})
+    public ApplicationDto createApplication(@RequestBody ApplicationDto ap) throws IllegalArgumentException {
+        Application appl = service.createApplication(ap.getAdvertisementId(), ap.getApplicantEmail(), ap.getDateOfSubmission(), ap.getNote(), Status.pending);
         return convertToDto(appl);
     }
 
@@ -62,7 +62,7 @@ public class ApplicationController {
     }
 
     private ApplicationDto convertToDto(Application app) {
-        return new ApplicationDto(app.getDateOfSubmission(), app.getNote(), app.getAdvertisement(), app.getApplicant(), app.getApplicationId());
+        return new ApplicationDto(app.getDateOfSubmission(), app.getNote(), app.getAdvertisement().getAdvertisementId(), app.getApplicant().getEmail(), app.getApplicationId(), app.getStatus());
     }
 
 //    private AdvertisementDto convertAdToDto(Advertisement ad) {
@@ -71,6 +71,7 @@ public class ApplicationController {
 //                ad.getPetSex(), ad.getPetSpecies(), ad.getApplications(), ad.getPetImages());
 //        return advertisementDto;
 //    }
+
     //not sure about this one
     @PutMapping(value = {"/application/update", "/application/update/"})
     public ResponseEntity<Object> updateApplication(@RequestParam("applicationId") String applicationID) {

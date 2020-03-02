@@ -3,7 +3,7 @@ package ca.mcgill.ecse321.petadoption.integration_controller;
 
 import ca.mcgill.ecse321.petadoption.PetAdoptionApplication;
 import ca.mcgill.ecse321.petadoption.TestSuits.Utils.TestUtils;
-import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
+import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.dto.AppUserDto;
 import ca.mcgill.ecse321.petadoption.model.Sex;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,9 +36,6 @@ public class AppUserControllerTest {
 
     private HttpHeaders headers = new HttpHeaders();
 
-    @Autowired
-    private AppUserRepository appUserRepository;
-
     private static final String USER_NAME_1 = "user 1";
     private static final String USER_EMAIL_1 = "user1@mcgill.ca";
     private static final String USER_PASSWORD_1 = "password 1";
@@ -57,9 +54,26 @@ public class AppUserControllerTest {
     private static final Sex USER_SEX_2 = Sex.F;
     private static final boolean USER_ADMIN_2 = false;
 
+    @Autowired
+    private AdvertisementRepository advertisementRepository;
+    @Autowired
+    private ApplicationRepository applicationRepository;
+    @Autowired
+    private AppUserRepository appUserRepository;
+    @Autowired
+    private DonationRepository donationRepository;
+    @Autowired
+    private ImageRepository imageRepository;
+
+
     @BeforeEach
-    public void cleanDataBase() {
+    public void cleanAndSetup(){
+        applicationRepository.deleteAll();
+        imageRepository.deleteAll();
+        advertisementRepository.deleteAll();
+        donationRepository.deleteAll();
         appUserRepository.deleteAll();
+
     }
 
     private String formatLink(String endpoint){
@@ -376,6 +390,108 @@ public class AppUserControllerTest {
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertTrue(response.getBody().contains("The user with email "+ USER_EMAIL_1 +" does not exist."));
+    }
+
+    @Test
+    public void testLoginValid(){
+        AppUserDto user = new AppUserDto(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
+                USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
+        HttpEntity<AppUserDto> entity = new HttpEntity<AppUserDto>(user, headers);
+
+        AppUserDto returned_user = restTemplate.postForObject(formatLink("/register"),
+                entity, AppUserDto.class);
+
+        Boolean response =restTemplate.getForObject(
+                formatLink("/login/"+USER_EMAIL_1 +"/"+USER_PASSWORD_1),
+                Boolean.class);
+        assertTrue(response);
+    }
+
+    @Test
+    public void testLoginInexistent(){
+        AppUserDto user = new AppUserDto(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
+                USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
+        HttpEntity<AppUserDto> entity = new HttpEntity<AppUserDto>(user, headers);
+
+        AppUserDto returned_user = restTemplate.postForObject(formatLink("/register"),
+                entity, AppUserDto.class);
+        Boolean response =restTemplate.getForObject(
+                formatLink("/login/"+USER_EMAIL_2 +"/"+USER_PASSWORD_2),
+                Boolean.class);
+        assertFalse(response);
+    }
+    @Test
+    public void testLoginWrongPassword(){
+        AppUserDto user = new AppUserDto(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
+                USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
+        HttpEntity<AppUserDto> entity = new HttpEntity<AppUserDto>(user, headers);
+
+        AppUserDto returned_user = restTemplate.postForObject(formatLink("/register"),
+                entity, AppUserDto.class);
+        Boolean response =restTemplate.getForObject(
+                formatLink("/login/"+USER_EMAIL_1 +"/"+USER_PASSWORD_2),
+                Boolean.class);
+        assertFalse(response);
+    }
+
+    @Test
+    public void testLoginNullEmail(){
+        AppUserDto user = new AppUserDto(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
+                USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
+        HttpEntity<AppUserDto> entity = new HttpEntity<AppUserDto>(user, headers);
+
+        AppUserDto returned_user = restTemplate.postForObject(formatLink("/register"),
+                entity, AppUserDto.class);
+
+        Boolean response =restTemplate.getForObject(
+                formatLink("/login/"+null +"/"+USER_PASSWORD_2),
+                Boolean.class);
+        assertFalse(response);
+    }
+
+    @Test
+    public void testLoginEmptyEmail(){
+        AppUserDto user = new AppUserDto(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
+                USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
+        HttpEntity<AppUserDto> entity = new HttpEntity<AppUserDto>(user, headers);
+
+        AppUserDto returned_user = restTemplate.postForObject(formatLink("/register"),
+                entity, AppUserDto.class);
+        String error = "";
+        ResponseEntity<String> response =restTemplate.getForEntity(
+                formatLink("/login/"+"" +"/"+USER_PASSWORD_2),
+                String.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+    @Test
+    public void testLoginNullPassword(){
+        AppUserDto user = new AppUserDto(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
+                USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
+        HttpEntity<AppUserDto> entity = new HttpEntity<AppUserDto>(user, headers);
+
+        AppUserDto returned_user = restTemplate.postForObject(formatLink("/register"),
+                entity, AppUserDto.class);
+        String error = "";
+        Boolean response =restTemplate.getForObject(
+                formatLink("/login/"+USER_NAME_1 +"/"+null),
+                Boolean.class);
+        assertFalse(response);
+    }
+    @Test
+    public void testLoginEmptyPassword(){
+        AppUserDto user = new AppUserDto(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
+                USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
+        HttpEntity<AppUserDto> entity = new HttpEntity<AppUserDto>(user, headers);
+
+        AppUserDto returned_user = restTemplate.postForObject(formatLink("/register"),
+                entity, AppUserDto.class);
+        String error = "";
+        ResponseEntity<String> response =restTemplate.getForEntity(
+                formatLink("/login/"+USER_EMAIL_2 +"/"+""),
+                String.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
 }
