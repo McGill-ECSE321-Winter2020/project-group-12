@@ -33,6 +33,7 @@ import java.util.Objects;
 @ActiveProfiles("test")
 public class AdvertisementControllerTest {
 
+
     @LocalServerPort
     private int port;
 
@@ -55,8 +56,7 @@ public class AdvertisementControllerTest {
     private static final Integer USER_AGE_1 = 34;
     private static final Sex USER_SEX_1 = Sex.M;
     private static final boolean USER_ADMIN_1 = true;
-
-    private static final String USER_EMAIL_2 = "user2@mcgill.ca";
+    
     private static final String NON_EXISTING_APP_USER = "user3@mcgill.ca";
 
     private static final String PET_NAME_1 = "Rusty";
@@ -71,29 +71,13 @@ public class AdvertisementControllerTest {
     private static final Sex PET_SEX_2 = Sex.F;
     private static final Species PET_SPECIES_2 = Species.cat;
 
-    private static final String PET_NAME_3 = "Chirpy";
-    private static final Integer PET_AGE_3 = 20;
-    private static final String PET_DESCRIPTION_3 = "Not Chirpy at all";
-    private static final Sex PET_SEX_3 = Sex.F;
-    private static final Species PET_SPECIES_3 = Species.bird;
-
-    private static final Integer NEGATIVE_AGE = -7;
-
     private static final Date DATE_1 = Date.valueOf("2020-07-02");
     private static final Date DATE_2 = Date.valueOf("2020-06-07");
 
     private static final String INVALID_ID = "a47sxj9";
 
-    private static final String INVALID_AD_ID_MESSAGE = "Invalid advertisement requested. Please check advertisement ID.";
-    private static final String APP_USER_ERROR_MESSAGE = "User not found. Cannot make advertisement without user profile!";
-    private static final String DATE_ERROR_MESSAGE = "Date posted cannot be an empty field!";
-    private static final String PET_NAME_ERROR_MESSAGE = "Pet name cannot be empty! ";
-    private static final String PET_AGE_ERROR_MESSAGE = "Pet age cannot be less than or equal to 0! ";
-    private static final String PET_DESCRIPTION_ERROR_MESSAGE = "Pet description cannot be empty! ";
-    private static final String PET_SEX_ERROR_MESSAGE = "Pet sex must be specified! ";
-    private static final String PET_SPECIES_ERROR_MESSAGE = "Pet Species is invalid! ";
-    private static final String AD_REQUIRE_ID_MESSAGE = "Advertisement must have an ID";
     private static final String PROFILE_NOT_FOUND_MESSAGE = "User profile not found. App user does not exist!";
+    private static final String NO_SUCH_AD_MESSAGE = "There is no such Advertisement!";
 
 
     @BeforeEach
@@ -243,6 +227,24 @@ public class AdvertisementControllerTest {
     }
 
     @Test
+    public void testGetAdvertisementsByInvalidAppUser() {
+        AppUserDto appUserDto = createAppUserDto();
+        AdvertisementDto adDto1 = new AdvertisementDto(appUserDto.getEmail(), DATE_1, null, false,
+                PET_NAME_1, PET_AGE_1, PET_DESCRIPTION_1, PET_SEX_1, PET_SPECIES_1);
+
+        HttpEntity<AdvertisementDto> entity = new HttpEntity<>(adDto1, headers);
+        AdvertisementDto returned_advertisement = restTemplate.postForObject(formatLink("/"+
+                appUserDto.getEmail()+"/advertisement/create/?date="+DATE_1), entity, AdvertisementDto.class);
+
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(
+                formatLink("/"+NON_EXISTING_APP_USER+"/advertisements/"),
+                String.class);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertTrue(Objects.requireNonNull(responseEntity.getBody()).contains(PROFILE_NOT_FOUND_MESSAGE));
+    }
+
+    @Test
     public void testGetAdvertisementById() {
         AppUserDto appUserDto = createAppUserDto();
         AdvertisementDto adDto1 = new AdvertisementDto(appUserDto.getEmail(), DATE_1, null, false,
@@ -269,6 +271,23 @@ public class AdvertisementControllerTest {
     }
 
     @Test
+    public void testGetAdvertisementByInvalidId() {
+        AppUserDto appUserDto = createAppUserDto();
+        AdvertisementDto adDto1 = new AdvertisementDto(appUserDto.getEmail(), DATE_1, null, false,
+                PET_NAME_1, PET_AGE_1, PET_DESCRIPTION_1, PET_SEX_1, PET_SPECIES_1);
+
+        HttpEntity<AdvertisementDto> entity = new HttpEntity<>(adDto1, headers);
+        AdvertisementDto returned_advertisement = restTemplate.postForObject(formatLink("/"+
+                appUserDto.getEmail()+"/advertisement/create/?date="+DATE_1), entity, AdvertisementDto.class);
+
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(
+                formatLink("/advertisement/"+INVALID_ID), String.class);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertTrue(Objects.requireNonNull(responseEntity.getBody()).contains(NO_SUCH_AD_MESSAGE));
+    }
+
+    @Test
     public void testDeleteAdvertisement() {
         AppUserDto appUserDto = createAppUserDto();
         AdvertisementDto adDto1 = new AdvertisementDto(appUserDto.getEmail(), DATE_1, null, false,
@@ -286,7 +305,7 @@ public class AdvertisementControllerTest {
                 formatLink("/advertisement/"+advertisementId), String.class);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
-        assertTrue(Objects.requireNonNull(responseEntity.getBody()).contains("There is no such Advertisement!"));
+        assertTrue(Objects.requireNonNull(responseEntity.getBody()).contains(NO_SUCH_AD_MESSAGE));
 
     }
 
