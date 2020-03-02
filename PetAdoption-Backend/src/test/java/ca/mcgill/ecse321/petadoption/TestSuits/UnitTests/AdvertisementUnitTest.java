@@ -573,6 +573,7 @@ public class AdvertisementUnitTest {
         assertEquals(PET_SPECIES_ERROR_MESSAGE, error);
     }
 
+    //makes sure that we can set the advertisement to expired
     @Test
     public void testUpdateAdvertisementExpire() {
         Advertisement advertisement = ADVERTISEMENT_1;

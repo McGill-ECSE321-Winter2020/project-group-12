@@ -11,7 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestUtils {
-
+    /**
+     * Creates donation
+     * @param donor
+     * @param amount
+     * @param dateOfPayment
+     * @return
+     */
     public static Donation createDonation(AppUser donor, Integer amount, Date dateOfPayment) {
         Donation newDonation = new Donation();
         newDonation.setDonor(donor);
@@ -21,12 +27,27 @@ public class TestUtils {
         return newDonation;
     }
 
+    /**
+     * Verifies a donation is equal to the attributes of another
+     * @param donation
+     * @param userEmail
+     * @param amount
+     * @param dateOfPayment
+     */
     public static void assertDonation(Donation donation, String userEmail, Integer amount, Date dateOfPayment) {
         assertNotNull(donation);
         //assertEquals(userEmail, donation.getDonor().getEmail());
         assertEquals(amount, donation.getAmount());
         assertEquals(dateOfPayment, donation.getDateOfPayment());
     }
+
+    /**
+     * Overloads previous method for dto
+     * @param donation
+     * @param userEmail
+     * @param amount
+     * @param dateOfPayment
+     */
 
     public static void assertDonation(DonationDto donation, String userEmail, Integer amount, Date dateOfPayment) {
         assertNotNull(donation);
@@ -36,6 +57,19 @@ public class TestUtils {
         // https://stackoverflow.com/questions/11296606/java-jdbc-dates-consistently-two-days-off
         //assertEquals(dateOfPayment, donation.getDateOfPayment());
     }
+
+    /**
+     * Creates app user for testing
+     * @param name
+     * @param email
+     * @param password
+     * @param biography
+     * @param homeDescription
+     * @param age
+     * @param isAdmin
+     * @param sex
+     * @return
+     */
     public static AppUser createAppUser(String name, String email, String password,
                                         String biography, String homeDescription, Integer age, boolean isAdmin, Sex sex) {
         AppUser new_user = new AppUser();
@@ -47,23 +81,21 @@ public class TestUtils {
         new_user.setAge(age);
         new_user.setEmail(email);
         new_user.setName(name);
-
-//        Advertisement ad = new Advertisement();
-//        ad.setAdvertisementId();
-//        ;
-//        new_user.addAdvertisement(ad);
-//
-//        Application app = new Application();
-//        app.setApplicationId();
-//        new_user.addApplication(app);
-
-        // TODO: ZAK: use createDonation AFTER CONSTRUCTING a user
-//        Donation don = new Donation();
-//        don.setTransactionID();
-//        new_user.addDonation(don);
           return new_user;
     }
 
+    /**
+     * Verifies that an app user has same attributes as another one (passed separately as params)
+     * @param user
+     * @param name
+     * @param email
+     * @param password
+     * @param biography
+     * @param homeDescription
+     * @param age
+     * @param isAdmin
+     * @param sex
+     */
     public static void assertAppUser(AppUser user, String name, String email, String password,
                                      String biography, String homeDescription, Integer age, boolean isAdmin, Sex sex) {
         assertNotNull(user);
@@ -77,6 +109,15 @@ public class TestUtils {
         assertEquals(isAdmin, user.isIsAdmin());
     }
 
+    /**
+     * Creates advertisement for testing purposes
+     * @param advertisement
+     * @param appUser
+     * @param dateOfSubmission
+     * @param note
+     * @param status
+     * @return
+     */
     public static Application createApplication(Advertisement advertisement, AppUser appUser, Date dateOfSubmission, String note, Status status) {
         Application app = new Application();
         app.setApplicationId();
@@ -88,6 +129,15 @@ public class TestUtils {
         return app;
     }
 
+    /**
+     * verifies certain attributes for an application
+     * @param application
+     * @param advertisement
+     * @param appUser
+     * @param dateOfSubmission
+     * @param note
+     * @param status
+     */
     public static void assertApplication(Application application, Advertisement advertisement, AppUser appUser, Date dateOfSubmission, String note, Status status) {
         assertNotNull(application);
         assertEquals(dateOfSubmission, application.getDateOfSubmission());
@@ -99,6 +149,16 @@ public class TestUtils {
         assertEquals(advertisement.getDatePosted(), application.getAdvertisement().getDatePosted());
         assertEquals(advertisement.getPostedBy().getEmail(), application.getAdvertisement().getPostedBy().getEmail());
     }
+
+    /**
+     * overloads previous method for dto's
+     * @param application
+     * @param advertisementId
+     * @param appUserEmail
+     * @param dateOfSubmission
+     * @param note
+     * @param status
+     */
     public static void assertApplication(ApplicationDto application, String advertisementId, String appUserEmail, Date dateOfSubmission, String note, Status status) {
         assertNotNull(application);
         assertEquals(note, application.getNote());
@@ -107,6 +167,16 @@ public class TestUtils {
         assertEquals(advertisementId, application.getAdvertisementId());
     }
 
+    /**
+     * Creates advertisement for testing purposes
+     * @param datePosted
+     * @param isExpired
+     * @param postedBy
+     * @param petName
+     * @param age
+     * @param description
+     * @return
+     */
     public static Advertisement createAdvertisement(Date datePosted, boolean isExpired, AppUser postedBy, String petName, Integer age, String description) {
         Advertisement ad = new Advertisement();
         ad.setAdvertisementId();
@@ -118,6 +188,18 @@ public class TestUtils {
         return ad;
     }
 
+    /**
+     * checks if advertisement has certain attributes
+     * @param user
+     * @param name
+     * @param email
+     * @param password
+     * @param biography
+     * @param homeDescription
+     * @param age
+     * @param isAdmin
+     * @param sex
+     */
     public static void assertAppUser(AppUserDto user, String name, String email, String password,
                                      String biography, String homeDescription, Integer age, boolean isAdmin, Sex sex ){
         assertNotNull(user);
@@ -131,6 +213,15 @@ public class TestUtils {
         assertEquals(isAdmin, user.isIsAdmin());
     }
 
+    /**
+     * generates image for testing purposes
+     * @param ad
+     * @param name
+     * @param link
+     * @param id
+     * @return
+     */
+
     public static Image createImage(Advertisement ad, String name, String link, String id) {
 
         Image newImage = new Image();
@@ -142,6 +233,19 @@ public class TestUtils {
         return newImage;
     }
 
+    /**
+     * overloads previous create advertisement method, each method is used for different testing purposes
+     * @param user
+     * @param datePosted
+     * @param id
+     * @param isExpired
+     * @param name
+     * @param age
+     * @param description
+     * @param sex
+     * @param specie
+     * @return
+     */
     public static Advertisement createAdvertisement( AppUser user, Date datePosted, String id, boolean isExpired, String name,
                                                      Integer age, String description, Sex sex, Species specie) {
         Advertisement ad = new Advertisement();

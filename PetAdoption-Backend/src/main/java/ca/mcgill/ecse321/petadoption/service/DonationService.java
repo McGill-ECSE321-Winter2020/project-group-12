@@ -151,16 +151,4 @@ public class DonationService {
         return new ArrayList<Donation>((Collection<? extends Donation>) donationRepository.findAll());
     }
 
-    /////////////////////////////Donation Delete Method////////////////////////////////////////
-
-//    /**
-//     * Deletes the Donation with specified transactionID from the database.
-//     *
-//     * @param transactionID
-//     */
-//    @Transactional
-//    public void deleteDonation(String transactionID) {
-//        donationRepository.deleteDonationByTransactionID(transactionID);
-//    }
-
 }

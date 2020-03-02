@@ -21,8 +21,6 @@ public class AppUserService {
     AdvertisementRepository advertisementRepository;
     @Autowired(required = true)
     DonationRepository donationRepository;
-    @Autowired(required = true)
-    ImageRepository imageRepository;
 
     @Autowired
     DonationService donationService;

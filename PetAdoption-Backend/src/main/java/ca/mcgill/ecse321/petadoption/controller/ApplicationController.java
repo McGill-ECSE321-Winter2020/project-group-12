@@ -1,25 +1,18 @@
 package ca.mcgill.ecse321.petadoption.controller;
 
 
-import ca.mcgill.ecse321.petadoption.dto.AppUserDto;
 import ca.mcgill.ecse321.petadoption.model.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ca.mcgill.ecse321.petadoption.service.ApplicationService;
-import ca.mcgill.ecse321.petadoption.model.AppUser;
-import ca.mcgill.ecse321.petadoption.model.Advertisement;
 import ca.mcgill.ecse321.petadoption.model.Application;
 import ca.mcgill.ecse321.petadoption.dto.ApplicationDto;
-import ca.mcgill.ecse321.petadoption.dto.AdvertisementDto;
-
-import java.sql.Date;
 
 
 @CrossOrigin(origins = "*")

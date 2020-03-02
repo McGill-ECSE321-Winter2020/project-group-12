@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.petadoption.TestSuits.UnitTests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
@@ -24,7 +23,6 @@ import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
 import ca.mcgill.ecse321.petadoption.dao.ImageRepository;
 import ca.mcgill.ecse321.petadoption.model.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -32,8 +30,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 public class ImageUnitTest {
@@ -79,7 +75,9 @@ public class ImageUnitTest {
     @Mock
     private AdvertisementRepository advertisementRepository;
 
-
+    /**
+     * create the needed mock objects before each test
+     */
     @BeforeEach
     public void mockSetUp() {
         lenient().when(imageRepository.save(any(Image.class))).thenAnswer(

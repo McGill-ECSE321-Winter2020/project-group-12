@@ -1,6 +1,8 @@
 # Welcome to the ECSE 321 Project of Group 12! [![Build Status](https://travis-ci.com/McGill-ECSE321-Winter2020/project-group-12.svg?token=4AcveMz5FumXG2yhkiT1&branch=master)](https://travis-ci.com/McGill-ECSE321-Winter2020/project-group-12)
 
-Our application can be found at: https://petadoption-backend.herokuapp.com/?fbclid=IwAR3aamVaN_QwZ1kp8Z7hRMu0Fh2s1jpMPxh-OWWQGjPiNeJptUfQqbNPwh0
+Our application can be found at: https://petadoption-backend.herokuapp.com/?fbclid=IwAR3aamVaN_QwZ1kp8Z7hRMu0Fh2s1jpMPxh-OWWQGjPiNeJptUfQqbNPwh0.  
+
+Click here to view our [REST API documentation](https://documenter.getpostman.com/view/10558315/SzKZtcBF)
 ### Group Members 
 | Name                 | ID         | Major |Year|
 |:--------------------:|:----------:|:-----:|:-----:|

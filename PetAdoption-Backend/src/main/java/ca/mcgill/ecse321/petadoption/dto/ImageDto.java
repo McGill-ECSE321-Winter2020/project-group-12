@@ -1,11 +1,5 @@
 package ca.mcgill.ecse321.petadoption.dto;
 
-import ca.mcgill.ecse321.petadoption.model.Advertisement;
-
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import java.util.UUID;
-
 public class ImageDto {
 
     private String name;
