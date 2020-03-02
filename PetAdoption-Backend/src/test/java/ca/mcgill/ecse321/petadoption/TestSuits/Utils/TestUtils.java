@@ -36,7 +36,7 @@ public class TestUtils {
      */
     public static void assertDonation(Donation donation, String userEmail, Integer amount, Date dateOfPayment) {
         assertNotNull(donation);
-        //assertEquals(userEmail, donation.getDonor().getEmail());
+        assertEquals(userEmail, donation.getDonor().getEmail());
         assertEquals(amount, donation.getAmount());
         assertEquals(dateOfPayment, donation.getDateOfPayment());
     }
