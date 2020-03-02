@@ -392,6 +392,25 @@ public class ApplicationTest {
             error = e.getMessage();
         }
         assertEquals("Advertisement Date Must Be Prior or Equal To Application Date", error);
-
     }
+
+    @Test
+    public void getAllApplicationsTest() {
+        Application app = null;
+        error = "";
+        try {
+            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE+"user2", STATUS);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        try {
+            app = service.createApplication(advertisement.getAdvertisementId(), user3.getEmail(), DATE_OF_SUBMISSION, NOTE +"user3", STATUS);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        List<Application> lst = service.getAllApplicationsForAdvertisement(advertisement.getAdvertisementId());
+        TestUtils.assertApplication(lst.get(0), advertisement, user2, DATE_OF_SUBMISSION, NOTE + "user2", STATUS);
+        TestUtils.assertApplication(lst.get(1), advertisement, user3, DATE_OF_SUBMISSION, NOTE + "user3", STATUS);
+    }
+
 }
