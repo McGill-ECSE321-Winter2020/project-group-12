@@ -104,16 +104,14 @@ public class AppUserService {
     @Transactional
     public void deleteAppUser(String email) {
         AppUser user1 = appUserRepository.findAppUserByEmail(email);
+        for(Application app : user1.getApplications()){
+            applicationRepository.deleteApplicationByApplicationId(app.getApplicationId());
+        }
         for (Advertisement ad : user1.getAdvertisements()){
             advertisementRepository.deleteAdvertisementByAdvertisementId(ad.getAdvertisementId());
         }
-
         for(Donation donation: user1.getDonations()){
             donationRepository.deleteDonationByTransactionID(donation.getTransactionID());
-        }
-
-        for(Application app : user1.getApplications()){
-            applicationRepository.deleteApplicationByApplicationId(app.getApplicationId());
         }
         appUserRepository.deleteAppUserByEmail(email);
     }
