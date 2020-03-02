@@ -36,5 +36,5 @@ Click to find out more about [Deliverable 1](https://github.com/McGill-ECSE321-W
 | Abhimukth Chaudhuri | 30| Advertisement class business methods, RESTful API, testing
 | Abdullatif Hassan   | 25| Application class business methods, RESTful API, testing, Deliverable 2 Report 
 
-Click to find out more about [Deliverable 2](https://github.com/McGill-ECSE321-Winter2020/project-group-12/wiki/Deliverable-2) and the [Testing Documentation](https://github.com/McGill-ECSE321-Winter2020/project-group-12/wiki/Testing-Documentation)!
+Click to find out more about [Deliverable 2](https://github.com/McGill-ECSE321-Winter2020/project-group-12/wiki/Deliverable-2-(Software-QA-Plan,-Test-Coverage-Results)) and the [Testing Documentation](https://github.com/McGill-ECSE321-Winter2020/project-group-12/wiki/Testing-Documentation)!
 
