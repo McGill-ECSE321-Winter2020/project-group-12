@@ -29,19 +29,19 @@ public class DonationController {
         return new DonationDto(donation.getDonor().getEmail(), donation.getDateOfPayment(), donation.getAmount(), donation.getTransactionID());
     }
 
-    @PostMapping(value ={"{userId}/donations","{userId}/donations/" })
+    @PostMapping(value ={"/{userId}/donations","/{userId}/donations/"})
     public DonationDto createDonation(@RequestBody DonationDto don, @PathVariable("userId") String userEmail) throws IllegalArgumentException {
         Donation donation = donationService.createDonation(userEmail, don.getAmount(), don.getDateOfPayment());
         return convertToDto(donation);
     }
 
-    @GetMapping(value = {"/donations/{transactionID}", "/donations/{transactionID}/"})
+    @GetMapping(value = {"/donations/ids/{transactionID}", "/donations/ids/{transactionID}/"})
     public DonationDto getDonationByTransactionId(@PathVariable("transactionID") String transactionID) {
         Donation donation = donationService.getDonationByTransactionID(transactionID);
         return convertToDto(donation);
     }
 
-    @GetMapping(value = {"/donations/{dateOfPayment}", "/donations/{dateOfPayment}/"})
+    @GetMapping(value = {"/donations/dates/{date}", "/donations/dates/{date}/"})
     public List<DonationDto> getDonationsByDateOfPayment(@PathVariable("dateOfPayment") Date dateOfPayment) {
         List<Donation> donations = donationService.getDonationsByDateOfPayment(dateOfPayment);
         List<DonationDto> dtos = new ArrayList<>();
@@ -51,7 +51,7 @@ public class DonationController {
         return dtos;
     }
 
-    @GetMapping(value = {"/{userID}/donations", "/{userID}/donations/"})
+    @GetMapping(value = {"/donations/users/{userID}", "/donations/users/{userID}/"})
     public List<DonationDto> getDonationsByDonor(@PathVariable("userID") String userEmail) {
             List<DonationDto> userDonationDtos = new ArrayList<>();
             for(Donation don: donationService.getDonationsByUser(userEmail)) {
@@ -60,8 +60,8 @@ public class DonationController {
             return userDonationDtos;
     }
 
-    @GetMapping(value = {"/{userID}/donations/{date}", "/{userID}/donations/{date}/"})
-    public List<DonationDto> getDonationsByDateAndDonor(@RequestParam("userID") String userEmail, @RequestParam("date") String date) {
+    @GetMapping(value = {"/{userID}/donations/{date}", "/{userID}/donations/{date}/"}) //was /{date} cuz date was path variable
+    public List<DonationDto> getDonationsByDateAndDonor(@PathVariable("userID") String userEmail, @PathVariable("date") String date) {
             List<Donation> donations = donationService.getDonationsByDateAndDonor(Date.valueOf(date), userEmail);
         List<DonationDto> donationDtos = new ArrayList<>();
         for(Donation don: donations) {
