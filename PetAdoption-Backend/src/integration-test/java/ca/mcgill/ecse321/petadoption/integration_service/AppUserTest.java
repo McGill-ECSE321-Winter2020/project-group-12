@@ -2,10 +2,14 @@ package ca.mcgill.ecse321.petadoption.integration_service;
 
 import ca.mcgill.ecse321.petadoption.TestSuits.Utils.TestUtils;
 
+import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
 import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
+import ca.mcgill.ecse321.petadoption.dao.ApplicationRepository;
+import ca.mcgill.ecse321.petadoption.dao.DonationRepository;
 import ca.mcgill.ecse321.petadoption.model.*;
 import ca.mcgill.ecse321.petadoption.service.AppUserService;
 
+import ca.mcgill.ecse321.petadoption.service.DonationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,9 +50,18 @@ public class AppUserTest {
     private AppUserService service;
     @Autowired
     AppUserRepository appUserRepository;
+    @Autowired
+    ApplicationRepository applicationRepository;
+    @Autowired
+    AdvertisementRepository advertisementRepository;
+    @Autowired
+    DonationRepository donationRepository;
 
     @BeforeEach
     public void cleanDB(){
+        applicationRepository.deleteAll();
+        advertisementRepository.deleteAll();
+        donationRepository.deleteAll();
         appUserRepository.deleteAll();
     }
 
@@ -384,7 +397,7 @@ public class AppUserTest {
     }
 
     @Test
-    public void testDeleteUsers(){
+    public void testDeleteUser(){
         AppUser user = null;
         try{
             user = service.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
@@ -392,6 +405,7 @@ public class AppUserTest {
         }catch (IllegalArgumentException e){
             fail();
         }
+        user = addLinksToUser(user);
         service.deleteAppUser(USER_EMAIL_2);
         String error = "";
         user = null;
@@ -403,7 +417,28 @@ public class AppUserTest {
         assertNull(user);
         assertEquals("The user with email "+ USER_EMAIL_2 +" does not exist." ,error);
     }
+    // Add some associations to the user so that the full delete method code is used.
+    public AppUser addLinksToUser(AppUser user){
+        Advertisement ad = new Advertisement();
+        ad.setAdvertisementId();;
+        ad.setPostedBy(user);
+        user.addAdvertisement(ad);
+        advertisementRepository.save(ad);
 
+        Application app = new Application();
+        app.setApplicationId();
+        app.setAdvertisement(ad);
+        app.setApplicant(user);
+        user.addApplication(app);
+        applicationRepository.save(app);
+
+        Donation don = new Donation();
+        don.setTransactionID();
+        don.setDonor(user);
+        user.addDonation(don);
+        donationRepository.save(don);
+        return user;
+    }
     @Test
     public void testLoginValid(){
         AppUser user = null;
@@ -506,4 +541,6 @@ public class AppUserTest {
         }
         assertEquals("password cannot be empty ", error);
     }
+
+
 }

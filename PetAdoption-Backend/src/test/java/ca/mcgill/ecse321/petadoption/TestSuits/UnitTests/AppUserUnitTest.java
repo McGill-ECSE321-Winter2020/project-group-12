@@ -424,13 +424,4 @@ public class AppUserUnitTest {
         assertEquals("password cannot be empty ", error);
     }
 
-
-
-
-
-//    @Test
-//    public void testDeleteUsers(){
-//        service.deleteAppUser(USER_EMAIL_2);
-//    }
-
 }

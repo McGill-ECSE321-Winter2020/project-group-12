@@ -281,6 +281,22 @@ public class ImageControllerTest {
         assertEquals(lst[1].getName(), IMAGE_NAME_2);
     }
 
+    @Test
+    public void testDeleteImage(){
+        ImageDto image = new ImageDto(IMAGE_NAME_1, IMAGE_LINK_1, "", ADVERTISEMENT_ID_1);
 
+        HttpEntity<ImageDto> entity = new HttpEntity<ImageDto>(image, headers);
+
+        ImageDto returned_image = restTemplate.postForObject(formatLink("/image/create/"),
+                entity, ImageDto.class);
+        restTemplate.delete(formatLink("/image/delete/"+returned_image.getImageId()));
+        ResponseEntity<String> response =restTemplate.getForEntity(
+                formatLink("/image/"+USER_EMAIL_1),
+                String.class);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertTrue(response.getBody().contains("There is no such Image!"));
+
+    }
 
 }
