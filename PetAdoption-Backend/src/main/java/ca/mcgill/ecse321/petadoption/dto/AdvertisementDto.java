@@ -15,12 +15,9 @@ public class AdvertisementDto {
     private Sex petSex;
     private Species petSpecies;
     private String userEmail;
-    private Set<Application> applications;
-    private Set<Image> petImages;
 
     public AdvertisementDto(String userEmail, Date datePosted, String advertisementId, boolean isExpired,
-                            String petName, Integer petAge, String petDescription, Sex petSex, Species petSpecies,
-                            Set<Application> applications, Set<Image> petImages) {
+                            String petName, Integer petAge, String petDescription, Sex petSex, Species petSpecies) {
         this.datePosted = datePosted;
         this.advertisementId = advertisementId;
         this.isExpired = isExpired; //#SYNERGY
@@ -30,8 +27,6 @@ public class AdvertisementDto {
         this.petSex = petSex;
         this.petSpecies = petSpecies;
         this.userEmail = userEmail;
-        this.applications = applications;
-        this.petImages = petImages;
     }
 
     public Sex getPetSex() {
@@ -54,10 +49,6 @@ public class AdvertisementDto {
         return isExpired;
     }
 
-    public Set<Application> getApplications() {
-        return applications;
-    }
-
     public String getUserEmail() {
         return userEmail;
     }
@@ -72,10 +63,6 @@ public class AdvertisementDto {
 
     public String getPetDescription() {
         return petDescription;
-    }
-
-    public Set<Image> getPetImages() {
-        return petImages;
     }
 
     public void setExpired(boolean expired) {
@@ -100,13 +87,5 @@ public class AdvertisementDto {
 
     public void setPetSpecies(Species petSpecies) {
         this.petSpecies = petSpecies;
-    }
-
-    public void setApplications(Set<Application> applications) {
-        this.applications = applications;
-    }
-
-    public void setPetImages(Set<Image> petImages) {
-        this.petImages = petImages;
     }
 }

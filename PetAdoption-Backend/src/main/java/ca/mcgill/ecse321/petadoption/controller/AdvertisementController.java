@@ -21,7 +21,7 @@ public class AdvertisementController {
     private AppUserService appUserService;
 
     //TODO: Test POST mapping for advertisement after implementing POST method for AppUser
-    @PostMapping(value = {"{userId}/advertisement/create", "{userId}/advertisement/create/"})
+    @PostMapping(value = {"/{userId}/advertisement/create", "/{userId}/advertisement/create/"})
     public AdvertisementDto createAdvertisement(@RequestBody AdvertisementDto ad, @RequestParam Date date,
                                                 @PathVariable("userId") String userEmail) throws IllegalArgumentException {
         Advertisement advertisement = advertisementService.createAdvertisement(userEmail, date, ad.getPetName(),
@@ -87,7 +87,7 @@ public class AdvertisementController {
         }
         return new AdvertisementDto(ad.getPostedBy().getEmail(), ad.getDatePosted(),
                 ad.getAdvertisementId(), ad.isIsExpired(), ad.getPetName(), ad.getPetAge(), ad.getPetDescription(),
-                ad.getPetSex(), ad.getPetSpecies(), ad.getApplications(), ad.getPetImages());
+                ad.getPetSex(), ad.getPetSpecies());
     }
 
     private List<AdvertisementDto> createAdvertisementDtosForAppUser(String userEmail) {
