@@ -5,9 +5,7 @@ import ca.mcgill.ecse321.petadoption.PetAdoptionApplication;
 import ca.mcgill.ecse321.petadoption.TestSuits.Utils.TestUtils;
 import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.dto.AppUserDto;
-import ca.mcgill.ecse321.petadoption.model.AppUser;
 import ca.mcgill.ecse321.petadoption.model.Sex;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,15 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.web.client.RestClientException;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = PetAdoptionApplication.class,
@@ -83,7 +81,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    public void createAppUser(){
+    public void testCreateAppUser(){
         AppUserDto user = new AppUserDto(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
                 USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1 );
         HttpEntity<AppUserDto> entity = new HttpEntity<AppUserDto>(user, headers);
@@ -284,7 +282,6 @@ public class AppUserControllerTest {
                 String.class);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertTrue(response.getBody().contains("The user with email "+ USER_EMAIL_1 +" does not exist."));
-
     }
 
     @Test
