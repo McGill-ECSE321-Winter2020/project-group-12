@@ -228,16 +228,16 @@ public class DonationControllerTest {
     @Test
     public void testGetDonationByNonExistingUserEmail() {
         ResponseEntity<String> response =restTemplate.getForEntity(
-                formatLink("/"+NON_EXISTING_USER_EMAIL+"/donations"),
+                formatLink("/donations/users/"+NON_EXISTING_USER_EMAIL),
                 String.class);
-        assertEquals(HttpStatus.METHOD_NOT_ALLOWED, response.getStatusCode());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertTrue(response.getBody().contains("A donation with such an email does not exist."));
     }
 
     @Test
     public void testGetDonationByNullUserEmail() {
         ResponseEntity<String> response =restTemplate.getForEntity(
-                formatLink("/"+null+"/donations"),
+                formatLink("/donations/users/"+null),
                 String.class);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertTrue(response.getBody().contains("A donation with such an email does not exist."));
