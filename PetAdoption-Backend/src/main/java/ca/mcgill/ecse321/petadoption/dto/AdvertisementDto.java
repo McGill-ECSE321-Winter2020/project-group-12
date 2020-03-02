@@ -3,7 +3,7 @@ package ca.mcgill.ecse321.petadoption.dto;
 import ca.mcgill.ecse321.petadoption.model.*;
 
 import java.sql.Date;
-import java.util.Set;
+
 
 public class AdvertisementDto {
     private Date datePosted;

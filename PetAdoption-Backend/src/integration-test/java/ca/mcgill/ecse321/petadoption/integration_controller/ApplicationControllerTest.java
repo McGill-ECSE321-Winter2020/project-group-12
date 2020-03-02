@@ -3,8 +3,6 @@ package ca.mcgill.ecse321.petadoption.integration_controller;
 import ca.mcgill.ecse321.petadoption.PetAdoptionApplication;
 import ca.mcgill.ecse321.petadoption.TestSuits.Utils.TestUtils;
 import ca.mcgill.ecse321.petadoption.dao.*;
-import ca.mcgill.ecse321.petadoption.dto.AdvertisementDto;
-import ca.mcgill.ecse321.petadoption.dto.AppUserDto;
 import ca.mcgill.ecse321.petadoption.dto.ApplicationDto;
 import ca.mcgill.ecse321.petadoption.model.*;
 import ca.mcgill.ecse321.petadoption.service.AdvertisementService;
@@ -21,7 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.Date;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 

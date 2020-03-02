@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.util.*;
 
-import static org.hibernate.internal.util.collections.ArrayHelper.toList;
-
 @Service
 public class ApplicationService {
 
@@ -23,10 +21,6 @@ public class ApplicationService {
     ApplicationRepository applicationRepository;
     @Autowired(required = true)
     AdvertisementRepository advertisementRepository;
-    @Autowired(required = true)
-    DonationRepository donationRepository;
-    @Autowired(required = true)
-    ImageRepository imageRepository;
 
     /**
      * Creates and adds a new Application object to the database.
@@ -38,12 +32,12 @@ public class ApplicationService {
      */
     @Transactional
     public Application createApplication(String advertisementId, String appUserEmail, Date dateOfSubmission, String note, Status status) {
-        boolean bool = false;
         Application app = new Application();
         Advertisement advertisement = advertisementRepository.findAdvertisementByAdvertisementId(advertisementId);
         AppUser aUser = appUserRepository.findAppUserByEmail(appUserEmail);
         String error = "";
-        System.out.println("ad : "+ advertisementId + "   user  " + appUserEmail);
+
+        //perform input checks
         if (advertisementId == null || appUserEmail == null || advertisementId.trim().length() == 0 || appUserEmail.trim().length() == 0) {
             error = error + "An Application must have an Advertisement and a AppUser ";
         } else if (advertisement.isIsExpired()) {
@@ -52,25 +46,33 @@ public class ApplicationService {
             AppUser owner = advertisement.getPostedBy();
             String ownerEmail = owner.getEmail();
             app.setApplicant(aUser);
+
             if (appUserEmail.equals(ownerEmail)) {
                 error = error + "You cannot adopt your own pet!";
             }
+
+            //see if for the same advertisement there is another application submitted by the same user
             Application findDuplicate = applicationRepository.findApplicationByAdvertisement_AdvertisementIdAndApplicant_Email(advertisementId, appUserEmail);
-            if (findDuplicate != null){
+
+            if (findDuplicate != null) {
                 throw new IllegalArgumentException("You already applied for this");
             }
+
             if (dateOfSubmission == null) {
                 error = "dateOfSubmission can not be empty! ";
             } else if ((dateOfSubmission.compareTo(advertisement.getDatePosted())) < 0) {
                 error = error + "Advertisement Date Must Be Prior or Equal To Application Date";
             }
+
             if (note == null || note.trim().length() == 0) {
                 error = error + "note cannot be empty ";
             }
         }
+
         if (error.length() != 0) {
             throw new IllegalArgumentException(error);
         }
+        //assign attributes
         app.setApplicationId();
         app.setApplicant(aUser);
         app.setAdvertisement(advertisement);
@@ -94,7 +96,7 @@ public class ApplicationService {
             throw new IllegalArgumentException("Application must have an ID");
         }
         Application application = applicationRepository.findApplicationByApplicationId(id);
-        if(application == null){
+        if (application == null) {
             throw new IllegalArgumentException("This application does not exist.");
         }
         return application;
@@ -112,11 +114,12 @@ public class ApplicationService {
 
     /**
      * Returns all the Applications corresponding
+     *
      * @param id: The id of the advertisement.
      * @return A list of application for that advertisement
      */
     @Transactional
-    public List<Application> getAllApplicationsForAdvertisement(String id){
+    public List<Application> getAllApplicationsForAdvertisement(String id) {
         return new ArrayList<>((Collection<? extends Application>) applicationRepository.findApplicationByAdvertisement_AdvertisementId(id));
     }
     /////////////////////////////Application Delete Method////////////////////////////////////////

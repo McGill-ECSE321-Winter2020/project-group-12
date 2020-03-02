@@ -11,22 +11,15 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 
 import java.sql.Date;
-import java.sql.Time;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 
 import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
 import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
@@ -35,7 +28,7 @@ import ca.mcgill.ecse321.petadoption.dao.ApplicationRepository;
 import ca.mcgill.ecse321.petadoption.service.ApplicationService;
 
 @ExtendWith(MockitoExtension.class)
-public class ApplicationUnitTest { //application test service
+public class ApplicationUnitTest {
     @Mock
     private ApplicationRepository applicationDao;
 
@@ -83,6 +76,7 @@ public class ApplicationUnitTest { //application test service
     private static final AppUser user3 = TestUtils.createAppUser(USER_NAME_3, USER_EMAIL_3, USER_PASSWORD_3, USER_BIO_3,
             USER_HOME_3, USER_AGE_3, USER_ADMIN_3, USER_SEX_3);
 
+    //create advertisement to be posted by user 1
     private static final Date datePosted = Date.valueOf("2020-02-13");
     private static boolean isExpired = false;
     private Set<Application> applications;
@@ -104,6 +98,7 @@ public class ApplicationUnitTest { //application test service
 
     private String error;
 
+    //create the needed mock objects before each test method by default
     @BeforeEach
     public void setMockOutput() {
         lenient().when(applicationDao.save(any(Application.class))).thenAnswer(
@@ -166,6 +161,7 @@ public class ApplicationUnitTest { //application test service
                 }
         );
     }
+    //only for duplicate test, we will mock a preexisting application for the same advertisement with the same applicant email
     private void setMockOutputOnlyForDuplicateTest(){
         lenient().when(applicationDao.findApplicationByAdvertisement_AdvertisementIdAndApplicant_Email(anyString(), anyString())).thenAnswer(
                 (InvocationOnMock invocation) -> {
@@ -407,6 +403,7 @@ public class ApplicationUnitTest { //application test service
         }
     }
 
+    //the same user cannot have 2 applications for the same advertisement
     @Test
     public void duplicateApplicationsPerAdvertisement() {
         setMockOutputOnlyForDuplicateTest();
@@ -423,6 +420,7 @@ public class ApplicationUnitTest { //application test service
         assertEquals("You already applied for this", error);
     }
 
+    //we cannot have an application submitted before the actual advertisement
     @Test
     public void ApplicationDateBeforeAdvertisement(){
         Application app = new Application();

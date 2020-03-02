@@ -1,8 +1,5 @@
 package ca.mcgill.ecse321.petadoption.dto;
 
-import ca.mcgill.ecse321.petadoption.model.Application;
-import ca.mcgill.ecse321.petadoption.model.Advertisement;
-import ca.mcgill.ecse321.petadoption.model.AppUser;
 import ca.mcgill.ecse321.petadoption.model.Status;
 
 import java.sql.Date;
