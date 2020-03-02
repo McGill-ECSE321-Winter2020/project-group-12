@@ -19,8 +19,6 @@ public class AdvertisementService {
     @Autowired(required = true)
     AdvertisementRepository advertisementRepository;
     @Autowired(required = true)
-    DonationRepository donationRepository;
-    @Autowired(required = true)
     ImageRepository imageRepository;
 
     @Autowired

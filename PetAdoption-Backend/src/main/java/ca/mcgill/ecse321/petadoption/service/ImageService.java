@@ -13,13 +13,7 @@ import java.util.*;
 public class ImageService {
 
     @Autowired(required = true)
-    AppUserRepository appUserRepository;
-    @Autowired(required = true)
-    ApplicationRepository applicationRepository;
-    @Autowired(required = true)
     AdvertisementRepository advertisementRepository;
-    @Autowired(required = true)
-    DonationRepository donationRepository;
     @Autowired(required = true)
     ImageRepository imageRepository;
 
@@ -35,7 +29,7 @@ public class ImageService {
     public Image createImage(String advertisement_id, String name, String link) {
         Image image = new Image();
         String error = "";
-
+        //validate input
         if (advertisement_id == null || advertisement_id.length() == 0) {
             error = error + "A Image must have an Advertisement";
         }
@@ -49,7 +43,7 @@ public class ImageService {
         if (error.length() != 0) {
             throw new IllegalArgumentException(error);
         }
-
+        //assign attributes
         image.setImageId();
         image.setName(name);
         image.setLink(link);

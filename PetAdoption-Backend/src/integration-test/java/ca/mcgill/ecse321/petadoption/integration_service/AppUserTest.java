@@ -9,7 +9,6 @@ import ca.mcgill.ecse321.petadoption.dao.DonationRepository;
 import ca.mcgill.ecse321.petadoption.model.*;
 import ca.mcgill.ecse321.petadoption.service.AppUserService;
 
-import ca.mcgill.ecse321.petadoption.service.DonationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

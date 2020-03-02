@@ -20,8 +20,6 @@ public class DonationController {
     @Autowired
     private AppUserService appUserService;
 
-    // double check static nature of this method
-
     public static DonationDto convertToDto(Donation donation) {
         if(donation == null) {
             throw new IllegalArgumentException("There is no such Donation!");
@@ -60,21 +58,6 @@ public class DonationController {
             }
             return userDonationDtos;
     }
-
-    @GetMapping(value = {"/{userID}/donations/{date}", "/{userID}/donations/{date}/"}) //was /{date} cuz date was path variable
-    public List<DonationDto> getDonationsByDateAndDonor(@PathVariable("userID") String userEmail, @PathVariable("date") String date) {
-            List<Donation> donations = donationService.getDonationsByDateAndDonor(Date.valueOf(date), userEmail);
-        List<DonationDto> donationDtos = new ArrayList<>();
-        for(Donation don: donations) {
-            donationDtos.add(convertToDto(don));
-        }
-        return donationDtos;
-    }
-
-//    @DeleteMapping(value = {"/donations/delete", "/donations/delete/"})
-//    public void deleteDonation(@RequestParam("transactionID") String transactionID) {
-//        donationService.deleteDonationByTransactionID(transactionID);
-//    }
 
     @GetMapping(value = {"/donations", "/donations/" })
     public List<DonationDto> getAllDonations() {

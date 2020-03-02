@@ -1,7 +1,6 @@
 package ca.mcgill.ecse321.petadoption.dto;
 
 import ca.mcgill.ecse321.petadoption.model.Sex;
-import java.util.List;
 
 public class AppUserDto {
     private String name;
