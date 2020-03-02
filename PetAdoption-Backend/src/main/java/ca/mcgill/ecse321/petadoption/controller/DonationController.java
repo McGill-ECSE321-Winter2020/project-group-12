@@ -40,16 +40,6 @@ public class DonationController {
         return convertToDto(donation);
     }
 
-    @GetMapping(value = {"/donations/dates/{date}", "/donations/dates/{date}/"})
-    public List<DonationDto> getDonationsByDateOfPayment(@PathVariable("dateOfPayment") Date dateOfPayment) {
-        List<Donation> donations = donationService.getDonationsByDateOfPayment(dateOfPayment);
-        List<DonationDto> dtos = new ArrayList<>();
-        for(Donation donation : donations) {
-            dtos.add(convertToDto(donation));
-        }
-        return dtos;
-    }
-
     @GetMapping(value = {"/donations/users/{userID}", "/donations/users/{userID}/"})
     public List<DonationDto> getDonationsByDonor(@PathVariable("userID") String userEmail) {
             List<DonationDto> userDonationDtos = new ArrayList<>();
