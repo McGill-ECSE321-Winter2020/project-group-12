@@ -17,7 +17,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,21 +40,18 @@ public class AdvertisementTest {
     private static final String USER_EMAIL_2 = "user2@mcgill.ca";
     private static final String NON_EXISTING_APP_USER = "user3@mcgill.ca";
 
-    private static final boolean IS_EXPIRED_1 = false;
     private static final String PET_NAME_1 = "Rusty";
     private static final Integer PET_AGE_1 = 10;
     private static final String PET_DESCRIPTION_1 = "Not Rusty at all";
     private static final Sex PET_SEX_1 = Sex.M;
     private static final Species PET_SPECIES_1 = Species.dog;
 
-    private static final boolean IS_EXPIRED_2 = false;
     private static final String PET_NAME_2 = "Snow";
     private static final Integer PET_AGE_2 = 15;
     private static final String PET_DESCRIPTION_2 = "Not Snowy at all";
     private static final Sex PET_SEX_2 = Sex.F;
     private static final Species PET_SPECIES_2 = Species.cat;
 
-    private static final boolean IS_EXPIRED_3 = false;
     private static final String PET_NAME_3 = "Chirpy";
     private static final Integer PET_AGE_3 = 20;
     private static final String PET_DESCRIPTION_3 = "Not Chirpy at all";
@@ -67,10 +63,6 @@ public class AdvertisementTest {
     private static final Date DATE_1 = Date.valueOf("2020-07-02");
     private static final Date DATE_2 = Date.valueOf("2020-06-07");
 
-    //Mock unique ID keys for advertisements
-    private static final String ADVERTISEMENT_1_ID = "zwVC9mb";
-    private static final String ADVERTISEMENT_2_ID = "3klFrbp";
-    private static final String ADVERTISEMENT_3_ID = "MEM6jFl";
     private static final String INVALID_ID = "a47sxj9";
 
     private static final String INVALID_AD_ID_MESSAGE = "Invalid advertisement requested. Please check advertisement ID.";
@@ -83,17 +75,6 @@ public class AdvertisementTest {
     private static final String PET_SPECIES_ERROR_MESSAGE = "Pet Species is invalid! ";
     private static final String AD_REQUIRE_ID_MESSAGE = "Advertisement must have an ID";
     private static final String PROFILE_NOT_FOUND_MESSAGE = "User profile not found. App user does not exist!";
-
-    private static final AppUser APP_USER_1 = new AppUser();
-    private static final AppUser APP_USER_2 = new AppUser();
-
-    //Create Mock Advertisement Objects
-    private static final Advertisement ADVERTISEMENT_1 = createAdvertisement(APP_USER_1, DATE_1, ADVERTISEMENT_1_ID,
-            IS_EXPIRED_1, PET_NAME_1, PET_AGE_1, PET_DESCRIPTION_1, PET_SEX_1, PET_SPECIES_1);
-    private static final Advertisement ADVERTISEMENT_2 = createAdvertisement(APP_USER_2, DATE_1, ADVERTISEMENT_2_ID,
-            IS_EXPIRED_2, PET_NAME_2, PET_AGE_2, PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
-    private static final Advertisement ADVERTISEMENT_3 = createAdvertisement(APP_USER_2, DATE_2, ADVERTISEMENT_3_ID,
-            IS_EXPIRED_3, PET_NAME_3, PET_AGE_3, PET_DESCRIPTION_3, PET_SEX_3, PET_SPECIES_3);
 
     @Autowired
     private AdvertisementService advertisementService;
@@ -712,6 +693,36 @@ public class AdvertisementTest {
     }
 
     @Test
+    public void testGetAllAdvertisements() {
+        Advertisement advertisement = createAppUserThenAdvertisement();
+        AppUser appUser = advertisement.getPostedBy();
+        AppUser appUser2 = createAppUser2();
+
+        Advertisement advertisement2 = null;
+        Advertisement advertisement3 = null;
+        Advertisement advertisement4 = null;
+        try {
+            advertisement2 = advertisementService.createAdvertisement(appUser.getEmail(), DATE_2, PET_NAME_2, PET_AGE_2,
+                    PET_DESCRIPTION_2, PET_SEX_2, PET_SPECIES_2);
+            advertisement3 = advertisementService.createAdvertisement(appUser.getEmail(), DATE_2, PET_NAME_3, PET_AGE_3,
+                    PET_DESCRIPTION_3, PET_SEX_3, PET_SPECIES_3);
+            advertisement4 = advertisementService.createAdvertisement(appUser2.getEmail(), DATE_1, PET_NAME_3, PET_AGE_3,
+                    PET_DESCRIPTION_3, PET_SEX_3, PET_SPECIES_3);
+
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+
+        appUser.addAdvertisement(advertisement2);
+        appUser.addAdvertisement(advertisement3);
+        appUser2.addAdvertisement(advertisement4);
+        List<Advertisement> advertisements = advertisementService.getAllAdvertisements();
+
+        assertNotNull(advertisements);
+        assertEquals(4, advertisements.size());
+    }
+
+    @Test
     public void testDeleteAdvertisement() {
         Advertisement advertisement = createAppUserThenAdvertisement();
         String advertisementId = advertisement.getAdvertisementId();
@@ -759,6 +770,17 @@ public class AdvertisementTest {
         return appUser;
     }
 
+    private AppUser createAppUser2() {
+        AppUser appUser = null;
+        try {
+            appUser = appUserService.createAppUser(USER_NAME_1, USER_EMAIL_2,USER_PASSWORD_1, USER_BIO_1, USER_HOME_1,
+                    USER_AGE_1, USER_ADMIN_1, USER_SEX_1);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        return appUser;
+    }
+
     private Advertisement createAppUserThenAdvertisement() {
         Advertisement advertisement = null;
         AppUser appUser = createAppUser();
@@ -773,24 +795,6 @@ public class AdvertisementTest {
         return advertisement;
     }
 
-    private static Advertisement createAdvertisement(AppUser appUser, Date datePosted, String id, boolean isExpired, String petName,
-                                                     Integer petAge, String petDescription, Sex petSex, Species petSpecies) {
-        Advertisement advertisement = new Advertisement();
-        advertisement.setDatePosted(datePosted);
-        advertisement.setAdvertisementId(id);
-        advertisement.setIsExpired(isExpired);
-        advertisement.setPetName(petName);
-        advertisement.setPetAge(petAge);
-        advertisement.setPetDescription(petDescription);
-        advertisement.setPetSex(petSex);
-        advertisement.setPetSpecies(petSpecies);
-
-        advertisement.setPostedBy(appUser);
-        advertisement.setPetImages(new HashSet<>());
-        advertisement.setApplications(new HashSet<>());
-
-        return advertisement;
-    }
 
     private static void assertAdvertisementEquality(Advertisement expected, Advertisement actual) {
         assertEquals(expected.getPostedBy().getEmail(), actual.getPostedBy().getEmail());
