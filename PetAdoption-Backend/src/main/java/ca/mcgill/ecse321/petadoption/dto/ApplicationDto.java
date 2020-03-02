@@ -3,6 +3,8 @@ package ca.mcgill.ecse321.petadoption.dto;
 import ca.mcgill.ecse321.petadoption.model.Application;
 import ca.mcgill.ecse321.petadoption.model.Advertisement;
 import ca.mcgill.ecse321.petadoption.model.AppUser;
+import ca.mcgill.ecse321.petadoption.model.Status;
+
 import java.sql.Date;
 
 public class ApplicationDto {
@@ -11,16 +13,18 @@ public class ApplicationDto {
     private String advertisementId;
     private String applicantEmail;
     private String applicationId;
+    private Status status;
 
     public ApplicationDto(){
     }
 
-    public ApplicationDto(Date date, String note, String  advertisementId, String applicantEmail, String id){
+    public ApplicationDto(Date date, String note, String  advertisementId, String applicantEmail, String id, Status status){
         this.dateOfSubmission = date;
         this.note = note;
         this.advertisementId = advertisementId;
         this.applicantEmail = applicantEmail;
         this.applicationId = id;
+        this.status = status;
     }
 
     public void setDateOfSubmission(Date dat){
@@ -39,7 +43,7 @@ public class ApplicationDto {
         return note;
     }
 
-    public void setAdvertisement(String advertisementId) {
+    public void setAdvertisementId(String advertisementId) {
         this.advertisementId = advertisementId;
     }
 
@@ -47,7 +51,7 @@ public class ApplicationDto {
         return this.advertisementId;
     }
 
-    public void setApplicant(String applicantEmail) {
+    public void setApplicantEmail(String applicantEmail) {
         this.applicantEmail = applicantEmail;
     }
 
@@ -61,6 +65,14 @@ public class ApplicationDto {
 
     public String getApplicationId(){
         return this.applicationId;
+    }
+
+    public void setStatus(Status status){
+        this.status = status;
+    }
+
+    public Status getStatus(){
+        return this.status;
     }
 
 }

@@ -44,7 +44,8 @@ public class ApplicationService {
         Advertisement advertisement = advertisementRepository.findAdvertisementByAdvertisementId(advertisementId);
         AppUser aUser = appUserRepository.findAppUserByEmail(appUserEmail);
         String error = "";
-        if (advertisementId == null || appUserEmail == null || appUserEmail == "" || appUserEmail.trim().length() == 0) {
+        System.out.println("ad : "+ advertisementId + "   user  " + appUserEmail);
+        if (advertisementId == null || appUserEmail == null || advertisementId.trim().length() == 0 || appUserEmail.trim().length() == 0) {
             error = error + "An Application must have an Advertisement and a AppUser ";
         } else if (advertisement.isIsExpired()) {
             error = error + "The Advertisement has expired";
@@ -75,7 +76,6 @@ public class ApplicationService {
         if (error.length() != 0) {
             throw new IllegalArgumentException(error);
         }
-        app.setApplicant(aUser);
         app.setApplicationId();
         app.setApplicant(aUser);
         app.setAdvertisement(advertisement);
@@ -84,9 +84,7 @@ public class ApplicationService {
         app.setStatus(status);
         apps.add(app);
         advertisement.setApplications((apps));
-
-        applicationRepository.save(app);
-        return app;
+        return applicationRepository.save(app);
     }
 
     /**

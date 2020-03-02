@@ -172,6 +172,7 @@ public class ApplicationUnitTest { //application test service
                     return TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS);
                 }
         );
+
     }
 
     @Test
