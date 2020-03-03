@@ -4,6 +4,6 @@ script:
 deploy:
   provider: heroku
   api_key:
-    secure: ae1d1a20-023c-4bf7-bf82-6e9d5a818e67
+    secure: 721c96b6-fb7a-4ee0-80b7-0eaf3cc87724
   app: petadoption-backend
   on: master
