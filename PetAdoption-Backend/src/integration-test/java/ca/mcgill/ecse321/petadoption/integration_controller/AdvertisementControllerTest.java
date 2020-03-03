@@ -1,8 +1,7 @@
 package ca.mcgill.ecse321.petadoption.integration_controller;
 
 import ca.mcgill.ecse321.petadoption.PetAdoptionApplication;
-import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
-import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
+import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.dto.AdvertisementDto;
 import ca.mcgill.ecse321.petadoption.dto.AppUserDto;
 import ca.mcgill.ecse321.petadoption.model.Sex;
@@ -44,6 +43,12 @@ public class AdvertisementControllerTest {
     private AdvertisementRepository advertisementRepository;
     @Autowired
     private AppUserRepository appUserRepository;
+    @Autowired
+    private ImageRepository imageRepository;
+    @Autowired
+    private ApplicationRepository applicationRepository;
+    @Autowired
+    private DonationRepository donationRepository;
 
     // Constants to create test appUser and advertisement objects
     private static final String USER_NAME_1 = "user 1";
@@ -80,7 +85,10 @@ public class AdvertisementControllerTest {
 
     @BeforeEach
     public void cleanDataBase() {
+        imageRepository.deleteAll();
+        applicationRepository.deleteAll();
         advertisementRepository.deleteAll();
+        donationRepository.deleteAll();
         appUserRepository.deleteAll();
     }
 

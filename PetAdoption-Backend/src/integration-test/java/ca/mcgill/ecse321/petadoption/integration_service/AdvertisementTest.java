@@ -1,13 +1,13 @@
 package ca.mcgill.ecse321.petadoption.integration_service;
 
-import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
-import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
+import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.model.Advertisement;
 import ca.mcgill.ecse321.petadoption.model.AppUser;
 import ca.mcgill.ecse321.petadoption.model.Sex;
 import ca.mcgill.ecse321.petadoption.model.Species;
 import ca.mcgill.ecse321.petadoption.service.AdvertisementService;
 import ca.mcgill.ecse321.petadoption.service.AppUserService;
+import ca.mcgill.ecse321.petadoption.service.DonationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,14 +83,26 @@ public class AdvertisementTest {
     private AppUserService appUserService;
 
     @Autowired
-    AdvertisementRepository advertisementRepository;
+    private ImageRepository imageRepository;
 
     @Autowired
-    AppUserRepository appUserRepository;
+    private AdvertisementRepository advertisementRepository;
+
+    @Autowired
+    private AppUserRepository appUserRepository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private DonationRepository donationRepository;
 
     @BeforeEach
     public void cleanDB() {
+        imageRepository.deleteAll();
+        applicationRepository.deleteAll();
         advertisementRepository.deleteAll();
+        donationRepository.deleteAll();
         appUserRepository.deleteAll();
     }
 

@@ -1,9 +1,7 @@
 package ca.mcgill.ecse321.petadoption.integration_service;
 
 import ca.mcgill.ecse321.petadoption.TestSuits.Utils.TestUtils;
-import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
-import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
-import ca.mcgill.ecse321.petadoption.dao.ImageRepository;
+import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.model.*;
 import ca.mcgill.ecse321.petadoption.service.ImageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,11 +66,20 @@ public class ImageTest {
     @Autowired
     private AppUserRepository appUserRepository;
 
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private DonationRepository donationRepository;
+
     @BeforeEach
     public void cleanAndSetup(){
         imageRepository.deleteAll();
+        applicationRepository.deleteAll();
         advertisementRepository.deleteAll();
+        donationRepository.deleteAll();
         appUserRepository.deleteAll();
+
         appUserRepository.save(user);
         advertisementRepository.save(ad);
     }
