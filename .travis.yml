@@ -5,4 +5,5 @@ deploy:
 - provider: heroku
   api_key: b90d25f7-f962-4cf8-971b-abd2a5ba1db8
   app: petadoption-backend
-  on: master
+  on: 
+    repo: McGill-ECSE321-Winter2020/project-group-12
