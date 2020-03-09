@@ -1,8 +1,13 @@
 package ca.mcgill.ecse321.petadoption.service;
 
-import ca.mcgill.ecse321.petadoption.dao.*;
+import ca.mcgill.ecse321.petadoption.controller.SecurityConfigurer;
+import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
+import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
+import ca.mcgill.ecse321.petadoption.dao.ApplicationRepository;
+import ca.mcgill.ecse321.petadoption.dao.DonationRepository;
 import ca.mcgill.ecse321.petadoption.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +36,14 @@ public class AppUserService {
     @Autowired
     AdvertisementService advertisementService;
 
+    @Autowired
+    SecurityConfigurer secConfigurer;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
+
     /**
-     * Creates and adds a new AppUser object to the database.
+     * Creates and adds a new AppUser object to the database ie registers a user.
      *
      * @param name(String)
      * @param email(String)
@@ -67,6 +78,39 @@ public class AppUserService {
     }
 
     /**
+     * Checks if a user exists in the database and the inputs are valid
+     * @param email
+     * @param password
+     * @return
+     */
+    public void login(String email, String password){
+        String error = "";
+        if(email == null || email.trim().length() == 0){
+            error = "name cannot be empty! ";
+        }
+        if (password == null || password.trim().length() == 0) {
+            error = error + "password cannot be empty ";
+        }
+        if (error.length() != 0) {
+            throw new IllegalArgumentException(error);
+        }
+
+        // idk if this is needed
+//         try {
+//             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+//         } catch (BadCredentialsException e) {
+//             throw new IllegalArgumentException("Incorrect username or password");
+//         }
+
+        AppUser user = appUserRepository.findAppUserByEmail(email);
+        if(user!= null && user.getPassword().equals(password)){
+            return;
+        } else { // so either user == null or (user != null and passwordGiven != userPassword in DB)
+            throw new IllegalArgumentException("Incorrect username or password");
+        }
+    }
+
+    /**
      * Returns the AppUser with specified email from the database.
      *
      * @param email
@@ -84,6 +128,24 @@ public class AppUserService {
         return user;
     }
 
+    /**
+     * Returns the AppUser with the specified jwt from the database.
+     *
+     * @param jwt
+     * @return AppUser with specified jwt
+     */
+    @Transactional
+    public AppUser getAppUserByJwt(String jwt) {
+        if (jwt == null || jwt.trim().length() == 0) {
+            throw new IllegalArgumentException("The jwt entered is not valid");
+        }
+
+        AppUser user = appUserRepository.findAppUserByJwt(jwt);
+        if(user == null) {
+            throw new IllegalArgumentException("The user with this token does not exist");
+        }
+        return user;
+    }
     /**
      * Returns all AppUsers in the database.
      *
@@ -129,7 +191,7 @@ public class AppUserService {
      */
      @Transactional
     public AppUser updateAppUser(String name, String email, String password, String biography,
-                                  String homeDescription, Integer age, boolean isAdmin, Sex sex){
+                                  String homeDescription, Integer age, boolean isAdmin, Sex sex, String jwt){
 
          userParamCheck(name, email, password, biography, homeDescription, age, sex);
          AppUser user = appUserRepository.findAppUserByEmail(email);
@@ -145,31 +207,8 @@ public class AppUserService {
          user.setAge(age);
          user.setEmail(email);
          user.setName(name);
+         user.setJwt(jwt);
          return appUserRepository.save(user);
-     }
-
-    /**
-     * Checks if the email,password pair matches a user.
-     * @param email
-     * @param password
-     * @return
-     */
-     public boolean checkLoginParam(String email, String password){
-         String error = "";
-         if(email == null || email.trim().length() == 0){
-             error = "name cannot be empty! ";
-         }
-         if (password == null || password.trim().length() == 0) {
-             error = error + "password cannot be empty ";
-         }
-         if (error.length() != 0) {
-             throw new IllegalArgumentException(error);
-         }
-         AppUser user = appUserRepository.findAppUserByEmail(email);
-         if(user!= null && user.getPassword().equals(password)){
-             return true;
-         }
-         return false;
      }
 
     private void userParamCheck(String name, String email, String password, String biography,

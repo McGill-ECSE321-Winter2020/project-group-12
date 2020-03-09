@@ -9,4 +9,5 @@ public interface AppUserRepository extends CrudRepository<AppUser, String>{
 
     void deleteAppUserByEmail(String email);
 
+    AppUser findAppUserByJwt(String jwt);
 }

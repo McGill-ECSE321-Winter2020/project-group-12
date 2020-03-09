@@ -11,9 +11,10 @@ public class AppUserDto {
     private Integer age;
     private boolean isAdmin;
     private Sex sex;
+    private String jwt;
 
     public AppUserDto(String name, String email,String password, String biography, String homeDescription, int age, boolean isAdmin,
-                      Sex sex)
+                      Sex sex, String jwt)
     {
         this.name = name;
         this.email = email;
@@ -23,6 +24,15 @@ public class AppUserDto {
         this.age =age;
         this.isAdmin = isAdmin;
         this.sex = sex;
+        this.jwt = jwt;
+    }
+
+    public void setJwt(String jwt) {
+        this.jwt = jwt;
+    }
+
+    public String getJwt() {
+        return this.jwt;
     }
 
     public void setName(String value) {

@@ -341,7 +341,7 @@ public class AppUserUnitTest {
         AppUser user = null;
         try{
             user = service.updateAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
-                    USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2);
+                    USER_HOME_2,USER_AGE_2,USER_ADMIN_2, USER_SEX_2, null);
         }catch (IllegalArgumentException e){
             fail();
         }
@@ -355,7 +355,7 @@ public class AppUserUnitTest {
         String error = "";
         try{
             user = service.updateAppUser(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
-                    USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1);
+                    USER_HOME_1,USER_AGE_1,USER_ADMIN_1, USER_SEX_1, null);
         }catch (IllegalArgumentException e){
             error = e.getMessage();
         }
@@ -372,22 +372,22 @@ public class AppUserUnitTest {
 
     @Test
     public void testLoginValid(){
-        assertTrue(service.checkLoginParam(USER_EMAIL_2, USER_PASSWORD_2));
+        assertTrue(service.login(USER_EMAIL_2, USER_PASSWORD_2));
     }
 
     @Test
     public void testLoginInexistent(){
-        assertFalse(service.checkLoginParam(USER_EMAIL_1, USER_PASSWORD_1));
+        assertFalse(service.login(USER_EMAIL_1, USER_PASSWORD_1));
     }
     @Test
     public void testLoginWrongPassword(){
-        assertFalse(service.checkLoginParam(USER_EMAIL_2, USER_PASSWORD_1));
+        assertFalse(service.login(USER_EMAIL_2, USER_PASSWORD_1));
     }
     @Test
     public void testLoginNullEmail(){
         String error = "";
         try{
-            service.checkLoginParam(null, USER_PASSWORD_1);
+            service.login(null, USER_PASSWORD_1);
         }catch (IllegalArgumentException e){
             error = e.getMessage();
         }
@@ -397,7 +397,7 @@ public class AppUserUnitTest {
     public void testLoginEmptyEmail(){
         String error = "";
         try{
-            service.checkLoginParam("", USER_PASSWORD_1);
+            service.login("", USER_PASSWORD_1);
         }catch (IllegalArgumentException e){
             error = e.getMessage();
         }
@@ -407,7 +407,7 @@ public class AppUserUnitTest {
     public void testLoginNullPassword(){
         String error = "";
         try{
-            service.checkLoginParam(USER_EMAIL_1, null);
+            service.login(USER_EMAIL_1, null);
         }catch (IllegalArgumentException e){
             error = e.getMessage();
         }
@@ -417,7 +417,7 @@ public class AppUserUnitTest {
     public void testLoginEmptyPassword(){
         String error = "";
         try{
-            service.checkLoginParam(USER_EMAIL_1, "");
+            service.login(USER_EMAIL_1, "");
         }catch (IllegalArgumentException e){
             error = e.getMessage();
         }
