@@ -1,18 +1,25 @@
 package ca.mcgill.ecse321.petadoption.controller;
 
+import ca.mcgill.ecse321.petadoption.service.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.stereotype.Component;
 
-@Component
+//@Component
+@Configuration
+@EnableWebSecurity
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     @Autowired
     JwtProvider jwtProvider;
+
+    @Autowired
+    AppUserService appUserService;
 
     // this is because we cannot perform @autowired authManager anymore cuz its only compatible w/ older Spring Boot
     @Bean

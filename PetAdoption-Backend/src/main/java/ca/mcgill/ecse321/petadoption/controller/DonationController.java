@@ -1,13 +1,13 @@
 package ca.mcgill.ecse321.petadoption.controller;
 
 import ca.mcgill.ecse321.petadoption.dto.DonationDto;
+import ca.mcgill.ecse321.petadoption.model.AppUser;
 import ca.mcgill.ecse321.petadoption.model.Donation;
 import ca.mcgill.ecse321.petadoption.service.AppUserService;
 import ca.mcgill.ecse321.petadoption.service.DonationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +29,9 @@ public class DonationController {
 
 
     @PostMapping(value ={"/{userId}/donations","/{userId}/donations/"})
-    public DonationDto createDonation(@RequestBody DonationDto don, @PathVariable("userId") String userEmail) throws IllegalArgumentException {
-        Donation donation = donationService.createDonation(userEmail, don.getAmount(), don.getDateOfPayment());
+    public DonationDto createDonation(@RequestBody DonationDto don, @PathVariable("userId") String userEmail, @RequestHeader String jwt) throws IllegalArgumentException {
+        appUserService.getAppUserByJwt(jwt);
+        Donation donation = donationService.createDonation(userEmail, don.getAmount(), don.getDateOfPayment(), jwt);
         return convertToDto(donation);
     }
 
@@ -41,16 +42,24 @@ public class DonationController {
     }
 
     @GetMapping(value = {"/donations/users/{userID}", "/donations/users/{userID}/"})
-    public List<DonationDto> getDonationsByDonor(@PathVariable("userID") String userEmail) {
-            List<DonationDto> userDonationDtos = new ArrayList<>();
-            for(Donation don: donationService.getDonationsByUser(userEmail)) {
-                userDonationDtos.add(convertToDto(don));
-            }
-            return userDonationDtos;
+    public List<DonationDto> getDonationsByDonor(@PathVariable("userID") String userEmail, @RequestHeader String jwt) {
+        AppUser requester = appUserService.getAppUserByJwt(jwt);
+        if(!(requester.isIsAdmin()) || (requester.getEmail() != userEmail)) {
+            throw new IllegalArgumentException("You are not authorized to view donations made by this user.");
+        }
+        List<DonationDto> userDonationDtos = new ArrayList<>();
+        for(Donation don: donationService.getDonationsByUser(userEmail)) {
+            userDonationDtos.add(convertToDto(don));
+        }
+        return userDonationDtos;
     }
 
     @GetMapping(value = {"/donations", "/donations/" })
-    public List<DonationDto> getAllDonations() {
+    public List<DonationDto> getAllDonations(@RequestHeader String jwt) {
+        AppUser requester = appUserService.getAppUserByJwt(jwt);
+        if(!requester.isIsAdmin()) {
+            throw new IllegalArgumentException("You are not authorized to view donations");
+        }
         List<DonationDto> donationDtos = new ArrayList<>();
         for(Donation don : donationService.getAllDonations()) {
             donationDtos.add(convertToDto(don));

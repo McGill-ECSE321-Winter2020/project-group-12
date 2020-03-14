@@ -34,7 +34,7 @@ public class DonationService {
      * @return Donation object
      */
     @Transactional
-    public Donation createDonation(String userEmail, Integer amount, Date dateOfPayment) {
+    public Donation createDonation(String userEmail, Integer amount, Date dateOfPayment, String jwt) {
         Donation donation = null;
         String error = "";
         if(userEmail == null || userEmail.trim().length() == 0) {
@@ -45,6 +45,10 @@ public class DonationService {
 
         if (user == null) {
             throw new IllegalArgumentException("Donation cannot be created without a donor!");
+        }
+
+        if(user.getJwt() != jwt) {
+            throw new IllegalArgumentException("Unauthorized request");
         }
 
         if(amount == null) {

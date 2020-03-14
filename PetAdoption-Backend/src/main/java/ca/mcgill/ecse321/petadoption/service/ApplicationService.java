@@ -119,7 +119,11 @@ public class ApplicationService {
      * @return A list of application for that advertisement
      */
     @Transactional
-    public List<Application> getAllApplicationsForAdvertisement(String id) {
+    public List<Application> getAllApplicationsForAdvertisement(String id, String userEmail) {
+        Advertisement ad = advertisementRepository.findAdvertisementByAdvertisementId(id);
+        if(ad.getPostedBy().getEmail() != userEmail) {
+            throw new IllegalArgumentException("You are not authorized to view applications for this ad");
+        }
         return new ArrayList<>((Collection<? extends Application>) applicationRepository.findApplicationByAdvertisement_AdvertisementId(id));
     }
     /////////////////////////////Application Delete Method////////////////////////////////////////
@@ -130,7 +134,12 @@ public class ApplicationService {
      * @param id
      */
     @Transactional
-    public void deleteApplication(String id) {
+    public void deleteApplication(String id, String userEmail) {
+        Application ap = applicationRepository.findApplicationByApplicationId(id);
+        Advertisement ad = advertisementRepository.findAdvertisementByAdvertisementId(ap.getAdvertisement().getAdvertisementId());
+        if(ad.getPostedBy().getEmail() != userEmail) {
+            throw new IllegalArgumentException("You are not authorized to delete applications for this ad");
+        }
         applicationRepository.deleteApplicationByApplicationId(id);
     }
 
@@ -144,8 +153,12 @@ public class ApplicationService {
      * @return Application
      */
     @Transactional
-    public Application updateApplicationStatus(String applicationId, Status status) {
+    public Application updateApplicationStatus(String applicationId, Status status, String userEmail) {
         Application app = getApplicationByID(applicationId);
+        Advertisement ad = advertisementRepository.findAdvertisementByAdvertisementId(app.getAdvertisement().getAdvertisementId());
+        if(ad.getPostedBy().getEmail() != userEmail) {
+            throw new IllegalArgumentException("You are not authorized to update the application status");
+        }
         app.setStatus(status);
         return applicationRepository.save(app);
     }

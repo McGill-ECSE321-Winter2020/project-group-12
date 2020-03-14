@@ -115,11 +115,15 @@ public class AdvertisementService {
      * @param id
      */
     @Transactional
-    public void deleteAdvertisement(String id) {
+    public void deleteAdvertisement(String id, String userEmail) {
         Advertisement adToDelete = advertisementRepository.findAdvertisementByAdvertisementId(id);
         if (adToDelete == null) {
             throw new IllegalArgumentException("Invalid advertisement requested. Please check advertisement ID.");
         }
+        if (adToDelete.getPostedBy().getEmail() != userEmail) {
+            throw new IllegalArgumentException("You are not authorized to delete this ad");
+        }
+
         //Delete all multiple associations with an application
         for (Application application : adToDelete.getApplications()) {
             applicationRepository.deleteApplicationByApplicationId(application.getApplicationId());
@@ -139,10 +143,13 @@ public class AdvertisementService {
      * @return Advertisement
      */
     @Transactional
-    public Advertisement updateAdvertisementIsExpired(String adId, boolean isExpired) {
+    public Advertisement updateAdvertisementIsExpired(String adId, boolean isExpired, String userEmail) {
         Advertisement advertisement = advertisementRepository.findAdvertisementByAdvertisementId(adId);
         if (advertisement == null) {
             throw new IllegalArgumentException("Invalid advertisement requested. Please check advertisement ID.");
+        }
+        if(advertisement.getPostedBy().getEmail() != userEmail) {
+            throw new IllegalArgumentException("You are not authorized to update this advertisement");
         }
         advertisement.setIsExpired(isExpired);
         advertisementRepository.save(advertisement);
@@ -162,11 +169,15 @@ public class AdvertisementService {
      */
     @Transactional
     public Advertisement updateAdvertisement(String adId, String petName, Integer petAge, String petDescription,
-                                             Sex petSex, Species petSpecies) {
+                                             Sex petSex, Species petSpecies, String userEmail) {
         Advertisement advertisement = advertisementRepository.findAdvertisementByAdvertisementId(adId);
         if (advertisement == null) {
             throw new IllegalArgumentException("Invalid advertisement requested. Please check advertisement ID.");
         }
+        if(advertisement.getPostedBy().getEmail() != userEmail) {
+            throw new IllegalArgumentException("You are not authorized to update this advertisement");
+        }
+
         advertisementParamCheck(petName, petAge, petDescription, petSex, petSpecies);
         advertisement.setPetName(petName);
         advertisement.setPetAge(petAge);

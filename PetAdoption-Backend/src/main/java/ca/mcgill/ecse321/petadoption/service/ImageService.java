@@ -96,7 +96,7 @@ public class ImageService {
      * @param id
      */
     @Transactional
-    public boolean deleteImage(String id) {
+    public boolean deleteImage(String id, String userEmail) {
         boolean b = false ;
         if (id == null || id.trim().length() == 0) {
             throw new IllegalArgumentException("You must provide an ID in order to delete!");
@@ -104,10 +104,14 @@ public class ImageService {
         Image image = imageRepository.findImageByImageId(id);
         if(image == null){
             throw new IllegalArgumentException("The id you provided doesn't exist");
-        }else{
-            imageRepository.deleteImageByImageId(id);
-            b = true;
         }
+        Advertisement ad = advertisementRepository.findAdvertisementByAdvertisementId(image.getAdvertisement().getAdvertisementId());
+        if(ad.getPostedBy().getEmail() != userEmail) {
+            throw new IllegalArgumentException("You are not authorized to delete this image");
+        }
+
+        imageRepository.deleteImageByImageId(id);
+        b = true;
         return b;
     }
 }

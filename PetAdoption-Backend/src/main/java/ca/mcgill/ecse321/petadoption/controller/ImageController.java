@@ -2,9 +2,11 @@ package ca.mcgill.ecse321.petadoption.controller;
 
 import ca.mcgill.ecse321.petadoption.dto.ImageDto;
 import ca.mcgill.ecse321.petadoption.model.Advertisement;
+import ca.mcgill.ecse321.petadoption.model.AppUser;
 import ca.mcgill.ecse321.petadoption.model.Image;
-import ca.mcgill.ecse321.petadoption.service.ImageService;
 import ca.mcgill.ecse321.petadoption.service.AdvertisementService;
+import ca.mcgill.ecse321.petadoption.service.AppUserService;
+import ca.mcgill.ecse321.petadoption.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,10 +16,11 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 public class ImageController {
-
-
     @Autowired
     AdvertisementService advertisementService;
+
+    @Autowired
+    AppUserService appUserService;
 
     @Autowired
     ImageService imageService;
@@ -30,31 +33,30 @@ public class ImageController {
 
     //TODO: Test POST mapping for Image after implementing POST method for Advertisement
     @PostMapping(value = {"/image/create", "/image/create/"})
-    public ImageDto createImage(@RequestBody ImageDto imageDto) throws IllegalArgumentException {
+    public ImageDto createImage(@RequestBody ImageDto imageDto, @RequestHeader String jwt) throws IllegalArgumentException {
+        appUserService.getAppUserByJwt(jwt); // making sure user is logged in
         Image image = imageService.createImage(imageDto.getAdvertisementId(), imageDto.getName(), imageDto.getLink());
         return convertToDto(image);
     }
 
     @DeleteMapping(value = {"/image/delete", "/image/delete/"})
-    public boolean deleteImage(@RequestParam("imageID") String imageID) {
-        boolean returnStatement = imageService.deleteImage(imageID);
+    public boolean deleteImage(@RequestParam("imageID") String imageID, @RequestHeader String jwt) {
+        AppUser requester = appUserService.getAppUserByJwt(jwt); // making sure user is logged in
+        boolean returnStatement = imageService.deleteImage(imageID, requester.getEmail());
         return returnStatement;
     }
 
     @GetMapping(value = {"/image/{imageId}", "/image/{imageId}/"})
-    public ImageDto getImageById(@PathVariable("imageId") String imageId) {
+    public ImageDto getImageById(@PathVariable("imageId") String imageId, @RequestHeader String jwt) {
+        appUserService.getAppUserByJwt(jwt);
         return convertToDto(imageService.getImageByID(imageId));
     }
 
     @GetMapping(value = {"/{advertisementID}/images", "/{advertisementID}/images/"})
-    public List<ImageDto> getImagesByAdvertisement(@PathVariable("advertisementID") String advertisementID) {
-        try {
-            Advertisement ad = advertisementService.getAdvertisementByID(advertisementID);
-            return createImageDtosForAdvertisement(ad);
-            // Converting HashSet of Advertisements to ArrayList of Advertisements
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        }
+    public List<ImageDto> getImagesByAdvertisement(@PathVariable("advertisementID") String advertisementID, @RequestHeader String jwt) {
+        appUserService.getAppUserByJwt(jwt);
+        Advertisement ad = advertisementService.getAdvertisementByID(advertisementID);
+        return createImageDtosForAdvertisement(ad);
     }
 
     private List<ImageDto> createImageDtosForAdvertisement(Advertisement ad) {
