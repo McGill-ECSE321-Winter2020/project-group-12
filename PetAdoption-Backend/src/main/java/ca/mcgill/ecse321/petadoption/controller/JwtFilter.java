@@ -30,14 +30,18 @@ public class JwtFilter extends GenericFilterBean {
         // this call to validate ma elo 3aze.... minor fix yalla
         // to give authentication u gotta make sure the token in the db is still there ....
         // related to the user that is
-        try {
+       // try {
             if (token != null && jwtProvider.validateToken(token)) { // if token is not null and it isnt expired and its valid (ie isnt empty or just whitespace either)
                 Authentication auth = jwtProvider.getAuthentication(token); // returning the UsernamePasswordAuthenticationToken
+                // added from stack overflow
+                auth.setAuthenticated(true);
+
                 SecurityContextHolder.getContext().setAuthentication(auth); // now we have a record of who is currently logged in
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+        //    }
+        } //catch(Exception e) {
+           // System.out.println("HELLO");
+            //e.printStackTrace();
+        //}
         filterChain.doFilter(req, res);
     }
 
