@@ -47,7 +47,7 @@ public class DonationService {
             throw new IllegalArgumentException("Donation cannot be created without a donor!");
         }
 
-        if(user.getJwt() != jwt) {
+        if(!user.getJwt().equals(jwt)) {
             throw new IllegalArgumentException("Unauthorized request");
         }
 

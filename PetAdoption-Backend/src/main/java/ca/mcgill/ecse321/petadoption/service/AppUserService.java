@@ -162,8 +162,12 @@ public class AppUserService {
      * @param email
      */
     @Transactional
-    public void deleteAppUser(String email) {
+    public void deleteAppUser(String email, String jwt) {
         AppUser user1 = appUserRepository.findAppUserByEmail(email);
+        AppUser requester = getAppUserByJwt(jwt);
+        if(user1 != requester) {
+            throw new IllegalArgumentException("You are not authorized to delete this account!");
+        }
         for(Application app : user1.getApplications()){
             applicationRepository.deleteApplicationByApplicationId(app.getApplicationId());
         }

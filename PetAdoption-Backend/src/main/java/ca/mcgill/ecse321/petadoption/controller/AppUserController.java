@@ -24,8 +24,7 @@ public class AppUserController {
 
     @PostMapping(value ={"/register","/register/" })
     public AppUserDto createAppUser(@RequestBody AppUserDto appUser)throws RestClientException {
-        AppUser user = null;
-        user = service.createAppUser(appUser.getName(), appUser.getEmail(), appUser.getPassword(), appUser.getBiography(), appUser.getHomeDescription(),
+        AppUser user = service.createAppUser(appUser.getName(), appUser.getEmail(), appUser.getPassword(), appUser.getBiography(), appUser.getHomeDescription(),
                     appUser.getAge(), appUser.isIsAdmin(), appUser.getSex());
         return convertToDto(user);
     }
@@ -34,8 +33,8 @@ public class AppUserController {
     public List<AppUserDto> getAllAppUsers(@RequestHeader String jwt){
         AppUser requester = service.getAppUserByJwt(jwt);
         if(requester.isIsAdmin()) {
-            List<AppUserDto> lst = new ArrayList<AppUserDto>();
-            for(AppUser user: service.getAllAppUsers() ){
+            List<AppUserDto> lst = new ArrayList<>();
+            for(AppUser user: service.getAllAppUsers()){
                 lst.add(convertToDto(user));
             }
             return lst;
@@ -43,10 +42,11 @@ public class AppUserController {
         throw new IllegalArgumentException("You do not have the required authorization to perform this action!");
     }
 
+    // BUG: when user is updated and then tries to make another protected request, it says user w/ such token does not exist
     @PutMapping(value = {"/updateUser","/updateUser"})
     public AppUserDto updateAppUser(@RequestBody AppUserDto appUser, @RequestHeader String jwt){
         AppUser requester = service.getAppUserByJwt(jwt);
-        if(requester.getEmail() == appUser.getEmail()) {
+        if(requester.getEmail().equals(appUser.getEmail())) {
             AppUser updatedUser = service.updateAppUser(appUser.getName(), appUser.getEmail(),"password", appUser.getBiography(), appUser.getHomeDescription(),
                     appUser.getAge(), appUser.isIsAdmin(), appUser.getSex(), appUser.getJwt());
             return convertToDto(updatedUser);
@@ -54,8 +54,16 @@ public class AppUserController {
         throw new IllegalArgumentException("You do not have the required authorization to perform this action!");
     }
 
+    /**
+     * Allows access to a user's general information (any logged in user must be able to see this).
+     * Functionality: viewing a user profile essentially
+     * @param email
+     * @param jwt
+     * @return AppUserDto encapsulating this user's information
+     */
     @GetMapping(value = {"/getUser/{email}","/getUser/{email}/"})
-    public AppUserDto getAppUser(@PathVariable("email") String email) {
+    public AppUserDto getAppUser(@PathVariable("email") String email, @RequestHeader String jwt) {
+        service.getAppUserByJwt(jwt);
         AppUser user = service.getAppUserByEmail(email);
         return convertToDto(user);
     }
@@ -82,8 +90,7 @@ public class AppUserController {
 
     @DeleteMapping(value = {"/delete/user/{email}", "/delete/user/{email}/"})
     public void deleteAppUser(@PathVariable("email") String email, @RequestHeader String jwt) {
-        AppUser requester = service.getAppUserByJwt(jwt); // validating the jwt
-        service.deleteAppUser(email);
+        service.deleteAppUser(email, jwt);
     }
 
     private AppUserDto convertToDto(AppUser appUser){

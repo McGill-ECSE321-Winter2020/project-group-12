@@ -57,13 +57,12 @@ public class AdvertisementController {
 
     @GetMapping(value = {"/advertisements", "/advertisements/"})
     public List<AdvertisementDto> getAllAdvertisements(@RequestHeader String jwt) {
-        throw new IllegalArgumentException("in get all ads");
-//        appUserService.getAppUserByJwt(jwt); // making sure user is logged in; thats all
-//        List<AdvertisementDto> advertisementDtoList = new ArrayList<>();
-//        for (Advertisement advertisement : advertisementService.getAllAdvertisements()) {
-//            advertisementDtoList.add(convertToDto(advertisement));
-//        }
-//        return advertisementDtoList;
+        appUserService.getAppUserByJwt(jwt); // making sure user is logged in; thats all
+        List<AdvertisementDto> advertisementDtoList = new ArrayList<>();
+        for (Advertisement advertisement : advertisementService.getAllAdvertisements()) {
+            advertisementDtoList.add(convertToDto(advertisement));
+        }
+        return advertisementDtoList;
     }
 
     @GetMapping(value = {"/{userID}/advertisements", "/{userID}/advertisements/"})
