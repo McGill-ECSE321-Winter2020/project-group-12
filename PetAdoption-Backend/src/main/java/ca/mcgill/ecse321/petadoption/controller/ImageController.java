@@ -34,8 +34,8 @@ public class ImageController {
     //TODO: Test POST mapping for Image after implementing POST method for Advertisement
     @PostMapping(value = {"/image/create", "/image/create/"})
     public ImageDto createImage(@RequestBody ImageDto imageDto, @RequestHeader String jwt) throws IllegalArgumentException {
-        appUserService.getAppUserByJwt(jwt); // making sure user is logged in
-        Image image = imageService.createImage(imageDto.getAdvertisementId(), imageDto.getName(), imageDto.getLink());
+        AppUser requester = appUserService.getAppUserByJwt(jwt); // making sure user is logged in
+        Image image = imageService.createImage(imageDto.getAdvertisementId(), imageDto.getName(), imageDto.getLink(), requester.getEmail());
         return convertToDto(image);
     }
 

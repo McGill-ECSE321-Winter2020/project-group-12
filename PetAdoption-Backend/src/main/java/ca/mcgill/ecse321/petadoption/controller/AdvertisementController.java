@@ -25,9 +25,8 @@ public class AdvertisementController {
     @PostMapping(value = {"/{userId}/advertisement/create", "/{userId}/advertisement/create/"})
     public AdvertisementDto createAdvertisement(@RequestBody AdvertisementDto ad, @RequestParam Date date,
                                                 @PathVariable("userId") String userEmail, @RequestHeader String jwt) throws IllegalArgumentException {
-        appUserService.getAppUserByJwt(jwt);
         Advertisement advertisement = advertisementService.createAdvertisement(userEmail, date, ad.getPetName(),
-                ad.getPetAge(), ad.getPetDescription(), ad.getPetSex(), ad.getPetSpecies());
+                ad.getPetAge(), ad.getPetDescription(), ad.getPetSex(), ad.getPetSpecies(), jwt);
         return convertToDto(advertisement);
     }
 

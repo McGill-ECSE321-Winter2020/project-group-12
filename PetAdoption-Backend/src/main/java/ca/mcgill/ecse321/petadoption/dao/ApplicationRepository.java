@@ -5,10 +5,9 @@ import ca.mcgill.ecse321.petadoption.model.Application;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
-import java.util.Set;
 
 
-public interface ApplicationRepository extends CrudRepository<Application, Long> {
+public interface ApplicationRepository extends CrudRepository<Application, String> {
 
     Application findApplicationByApplicationId(String id);
 

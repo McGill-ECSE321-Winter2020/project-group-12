@@ -24,7 +24,8 @@ public class DonationService {
     DonationRepository donationRepository;
     @Autowired(required = true)
     ImageRepository imageRepository;
-
+    @Autowired
+    AppUserService appUserService;
 
     /**
      * Creates and adds a new Donation object to the database.
@@ -81,13 +82,17 @@ public class DonationService {
      * @return Donation object
      */
     @Transactional
-    public Donation getDonationByTransactionID(String transactionID) {
+    public Donation getDonationByTransactionID(String transactionID, String jwt) {
         if (transactionID == null || transactionID.trim().length() == 0) {
             throw new IllegalArgumentException("Donation must have a valid transactionID!");
         }
         Donation donation = donationRepository.findDonationByTransactionID(transactionID);
         if(donation == null) {
             throw new IllegalArgumentException("A Donation with such an ID does not exist");
+        }
+        AppUser requester = appUserService.getAppUserByJwt(jwt);
+        if(!(donation.getDonor().getEmail().equals(requester.getEmail())) && !(requester.isIsAdmin())) {
+            throw new IllegalArgumentException("You are not authorized to view this donation");
         }
         return donation;
     }

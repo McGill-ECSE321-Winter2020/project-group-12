@@ -37,8 +37,8 @@ public class ApplicationController {
 
     @PostMapping(value = {"/applications/create/", "/applications/create"})
     public ApplicationDto createApplication(@RequestBody ApplicationDto ap, @RequestHeader String jwt) throws IllegalArgumentException {
-        appUserService.getAppUserByJwt(jwt);
-        Application appl = service.createApplication(ap.getAdvertisementId(), ap.getApplicantEmail(), ap.getDateOfSubmission(), ap.getNote(), Status.pending);
+        AppUser requester = appUserService.getAppUserByJwt(jwt);
+        Application appl = service.createApplication(ap.getAdvertisementId(), ap.getApplicantEmail(), ap.getDateOfSubmission(), ap.getNote(), Status.pending, requester.getEmail());
         return convertToDto(appl);
     }
 
@@ -48,12 +48,15 @@ public class ApplicationController {
         service.deleteApplication(applicationID, requester.getEmail());
     }
 
+    // gotta test these
     @GetMapping(value = {"/application/{applicationID}", "/application/{applicationID}/"})
-    public ApplicationDto getApplicationById(@PathVariable String applicationID) {
-        Application app = service.getApplicationByID(applicationID);
+    public ApplicationDto getApplicationById(@PathVariable String applicationID, @RequestHeader String jwt) {
+        AppUser requester = appUserService.getAppUserByJwt(jwt);
+        Application app = service.getApplicationByID(applicationID, requester.getEmail());
         return convertToDto(app);
     }
 
+    // gave bugs that jwt column was non-existent for user
     @PutMapping(value = {"/application/update", "/application/update/"})
     public ApplicationDto updateApplication(@RequestBody ApplicationDto application, @RequestHeader String jwt) {
         AppUser requester = appUserService.getAppUserByJwt(jwt); // checking user is logged in; thats all

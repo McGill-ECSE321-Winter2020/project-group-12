@@ -31,7 +31,7 @@ public class ApplicationService {
      * @return Application object
      */
     @Transactional
-    public Application createApplication(String advertisementId, String appUserEmail, Date dateOfSubmission, String note, Status status) {
+    public Application createApplication(String advertisementId, String appUserEmail, Date dateOfSubmission, String note, Status status, String requesterEmail) {
         Application app = new Application();
         Advertisement advertisement = advertisementRepository.findAdvertisementByAdvertisementId(advertisementId);
         AppUser aUser = appUserRepository.findAppUserByEmail(appUserEmail);
@@ -46,6 +46,10 @@ public class ApplicationService {
             AppUser owner = advertisement.getPostedBy();
             String ownerEmail = owner.getEmail();
             app.setApplicant(aUser);
+
+            if(!requesterEmail.equals(appUserEmail)) {
+                error += "You are not authorized to apply on behalf of this user!";
+            }
 
             if (appUserEmail.equals(ownerEmail)) {
                 error = error + "You cannot adopt your own pet!";
@@ -91,7 +95,7 @@ public class ApplicationService {
      * @return Application object
      */
     @Transactional
-    public Application getApplicationByID(String id) {
+    public Application getApplicationByID(String id, String requesterEmail) {
         if (id == null || id.trim().length() == 0) {
             throw new IllegalArgumentException("Application must have an ID");
         }
@@ -99,17 +103,11 @@ public class ApplicationService {
         if (application == null) {
             throw new IllegalArgumentException("This application does not exist.");
         }
-        return application;
-    }
+        if(!(requesterEmail.equals(application.getApplicant().getEmail()) || !(requesterEmail.equals(application.getAdvertisement().getPostedBy().getEmail())))) {
+            throw new IllegalArgumentException("You are not authorized to view this application!");
+        }
 
-    /**
-     * Returns all Applications in the database.
-     *
-     * @return List of Application objects
-     */
-    @Transactional
-    public List<Application> getAllApplications() {
-        return new ArrayList<>((Collection<? extends Application>) applicationRepository.findAll());
+        return application;
     }
 
     /**
@@ -121,7 +119,7 @@ public class ApplicationService {
     @Transactional
     public List<Application> getAllApplicationsForAdvertisement(String id, String userEmail) {
         Advertisement ad = advertisementRepository.findAdvertisementByAdvertisementId(id);
-        if(ad.getPostedBy().getEmail() != userEmail) {
+        if(!ad.getPostedBy().getEmail().equals(userEmail)) {
             throw new IllegalArgumentException("You are not authorized to view applications for this ad");
         }
         return new ArrayList<>((Collection<? extends Application>) applicationRepository.findApplicationByAdvertisement_AdvertisementId(id));
@@ -137,7 +135,7 @@ public class ApplicationService {
     public void deleteApplication(String id, String userEmail) {
         Application ap = applicationRepository.findApplicationByApplicationId(id);
         Advertisement ad = advertisementRepository.findAdvertisementByAdvertisementId(ap.getAdvertisement().getAdvertisementId());
-        if(ad.getPostedBy().getEmail() != userEmail) {
+        if(!(ad.getPostedBy().getEmail().equals(userEmail)) || !(ap.getApplicant().getEmail().equals(userEmail))) {
             throw new IllegalArgumentException("You are not authorized to delete applications for this ad");
         }
         applicationRepository.deleteApplicationByApplicationId(id);
@@ -153,10 +151,10 @@ public class ApplicationService {
      * @return Application
      */
     @Transactional
-    public Application updateApplicationStatus(String applicationId, Status status, String userEmail) {
-        Application app = getApplicationByID(applicationId);
+    public Application updateApplicationStatus(String applicationId, Status status, String requesterEmail) {
+        Application app = getApplicationByID(applicationId, requesterEmail);
         Advertisement ad = advertisementRepository.findAdvertisementByAdvertisementId(app.getAdvertisement().getAdvertisementId());
-        if(ad.getPostedBy().getEmail() != userEmail) {
+        if(!ad.getPostedBy().getEmail().equals(requesterEmail)) {
             throw new IllegalArgumentException("You are not authorized to update the application status");
         }
         app.setStatus(status);

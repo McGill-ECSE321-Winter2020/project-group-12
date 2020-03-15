@@ -36,8 +36,8 @@ public class DonationController {
     }
 
     @GetMapping(value = {"/donations/ids/{transactionID}", "/donations/ids/{transactionID}/"})
-    public DonationDto getDonationByTransactionId(@PathVariable("transactionID") String transactionID) {
-        Donation donation = donationService.getDonationByTransactionID(transactionID);
+    public DonationDto getDonationByTransactionId(@PathVariable("transactionID") String transactionID, @RequestHeader String jwt) {
+        Donation donation = donationService.getDonationByTransactionID(transactionID, jwt);
         return convertToDto(donation);
     }
 

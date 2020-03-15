@@ -26,7 +26,7 @@ public class ImageService {
      * @return Image object
      */
     @Transactional
-    public Image createImage(String advertisement_id, String name, String link) {
+    public Image createImage(String advertisement_id, String name, String link, String requesterEmail) {
         Image image = new Image();
         String error = "";
         //validate input
@@ -39,16 +39,20 @@ public class ImageService {
         if (name == null || name.trim().length() == 0) {
             error = error + "name can not be empty ";
         }
-
+        Advertisement ad = advertisementRepository.findAdvertisementByAdvertisementId(advertisement_id);
+        if(!(ad.getPostedBy().getEmail().equals(requesterEmail))) {
+            error += "You are not authorized to add an image to this advertisement";
+        }
         if (error.length() != 0) {
             throw new IllegalArgumentException(error);
         }
+
         //assign attributes
         image.setImageId();
         image.setName(name);
         image.setLink(link);
 
-        Advertisement ad = advertisementRepository.findAdvertisementByAdvertisementId(advertisement_id);
+
         image.setAdvertisement(ad);
         return imageRepository.save(image);
     }
@@ -96,8 +100,7 @@ public class ImageService {
      * @param id
      */
     @Transactional
-    public boolean deleteImage(String id, String userEmail) {
-        boolean b = false ;
+    public boolean deleteImage(String id, String requesterEmail) {
         if (id == null || id.trim().length() == 0) {
             throw new IllegalArgumentException("You must provide an ID in order to delete!");
         }
@@ -106,12 +109,11 @@ public class ImageService {
             throw new IllegalArgumentException("The id you provided doesn't exist");
         }
         Advertisement ad = advertisementRepository.findAdvertisementByAdvertisementId(image.getAdvertisement().getAdvertisementId());
-        if(ad.getPostedBy().getEmail() != userEmail) {
+        if(!ad.getPostedBy().getEmail().equals(requesterEmail)) {
             throw new IllegalArgumentException("You are not authorized to delete this image");
         }
 
         imageRepository.deleteImageByImageId(id);
-        b = true;
-        return b;
+        return true;
     }
 }

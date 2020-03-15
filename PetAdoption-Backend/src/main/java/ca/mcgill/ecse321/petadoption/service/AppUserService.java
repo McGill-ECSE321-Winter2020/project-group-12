@@ -1,13 +1,12 @@
 package ca.mcgill.ecse321.petadoption.service;
 
-import ca.mcgill.ecse321.petadoption.controller.SecurityConfigurer;
+import ca.mcgill.ecse321.petadoption.controller.JwtProvider;
 import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
 import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
 import ca.mcgill.ecse321.petadoption.dao.ApplicationRepository;
 import ca.mcgill.ecse321.petadoption.dao.DonationRepository;
 import ca.mcgill.ecse321.petadoption.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,10 +36,7 @@ public class AppUserService {
     AdvertisementService advertisementService;
 
     @Autowired
-    SecurityConfigurer secConfigurer;
-
-    @Autowired
-    AuthenticationManager authenticationManager;
+    JwtProvider jwtProvider;
 
     /**
      * Creates and adds a new AppUser object to the database ie registers a user.
@@ -144,6 +140,7 @@ public class AppUserService {
         if(user == null) {
             throw new IllegalArgumentException("The user with this token does not exist");
         }
+        jwtProvider.validateToken(jwt);
         return user;
     }
     /**

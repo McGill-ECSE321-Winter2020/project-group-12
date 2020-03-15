@@ -25,6 +25,8 @@ public class AdvertisementService {
     ApplicationService applicationService;
     @Autowired
     ImageService imageService;
+    @Autowired
+    AppUserService appUserService;
 
     /**
      * Creates and adds a new Advertisement object to the database.
@@ -40,10 +42,14 @@ public class AdvertisementService {
      */
     @Transactional
     public Advertisement createAdvertisement(String userEmail, Date datePosted, String petName,
-                                             Integer petAge, String petDescription, Sex petSex, Species petSpecies) {
+                                             Integer petAge, String petDescription, Sex petSex, Species petSpecies, String jwt) {
         AppUser user = appUserRepository.findAppUserByEmail(userEmail);
+        AppUser requester = appUserService.getAppUserByJwt(jwt);
         if (user == null) {
             throw new IllegalArgumentException("User not found. Cannot make advertisement without user profile!");
+        }
+        if(!(user.getEmail().equals(requester.getEmail()))) {
+            throw new IllegalArgumentException("You are not authorized to create this advertisement for such a user!");
         }
         //TODO: Check if date posted upon advertisement creation can be null or not
         if (datePosted == null) {
@@ -120,7 +126,7 @@ public class AdvertisementService {
         if (adToDelete == null) {
             throw new IllegalArgumentException("Invalid advertisement requested. Please check advertisement ID.");
         }
-        if (adToDelete.getPostedBy().getEmail() != userEmail) {
+        if (!adToDelete.getPostedBy().getEmail().equals(userEmail)) {
             throw new IllegalArgumentException("You are not authorized to delete this ad");
         }
 
@@ -148,7 +154,7 @@ public class AdvertisementService {
         if (advertisement == null) {
             throw new IllegalArgumentException("Invalid advertisement requested. Please check advertisement ID.");
         }
-        if(advertisement.getPostedBy().getEmail() != userEmail) {
+        if(!advertisement.getPostedBy().getEmail().equals(userEmail)) {
             throw new IllegalArgumentException("You are not authorized to update this advertisement");
         }
         advertisement.setIsExpired(isExpired);
@@ -174,7 +180,7 @@ public class AdvertisementService {
         if (advertisement == null) {
             throw new IllegalArgumentException("Invalid advertisement requested. Please check advertisement ID.");
         }
-        if(advertisement.getPostedBy().getEmail() != userEmail) {
+        if(!advertisement.getPostedBy().getEmail().equals(userEmail)) {
             throw new IllegalArgumentException("You are not authorized to update this advertisement");
         }
 
