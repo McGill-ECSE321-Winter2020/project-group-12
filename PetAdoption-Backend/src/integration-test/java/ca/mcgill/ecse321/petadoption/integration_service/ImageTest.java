@@ -1,38 +1,29 @@
-package ca.mcgill.ecse321.petadoption.TestSuits.UnitTests;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.lenient;
-
-import java.sql.Date;
-import java.time.LocalDate;
+package ca.mcgill.ecse321.petadoption.integration_service;
 
 import ca.mcgill.ecse321.petadoption.TestSuits.Utils.TestUtils;
-
+import ca.mcgill.ecse321.petadoption.dao.*;
+import ca.mcgill.ecse321.petadoption.model.*;
 import ca.mcgill.ecse321.petadoption.service.ImageService;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import ca.mcgill.ecse321.petadoption.model.Advertisement;
-import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
-import ca.mcgill.ecse321.petadoption.dao.ImageRepository;
-import ca.mcgill.ecse321.petadoption.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
-
-import static org.junit.jupiter.api.Assertions.fail;
-
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
-public class ImageUnitTest {
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@ActiveProfiles("test")
+public class ImageTest {
 
     private static final String USER_NAME_1 = "user 1";
     private static final String USER_EMAIL_1 = "user1@mcgill.ca";
@@ -52,7 +43,7 @@ public class ImageUnitTest {
     private static final String IMAGE_ID_2 = "id2";
 
     private static final Date ADVERTISEMENT_POSTDATE_1 = Date.valueOf(LocalDate.of(2020, Month.FEBRUARY, 7));
-    private static final String ADVERTISEMENT_ID_1 = "Ad_id1";
+    private static final String ADVERTISEMENT_ID_1 = "ad-id";
     private static final boolean ADVERTISEMENT_ISEXPIRED_1 = false;
     private static final String PET_NAME = "";
     private static final int  PET_AGE = 3;
@@ -62,76 +53,35 @@ public class ImageUnitTest {
 
     private static final AppUser user = TestUtils.createAppUser(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1, USER_HOME_1, USER_AGE_1, USER_ADMIN_1, USER_SEX_1);
     private static Advertisement ad = TestUtils.createAdvertisement(user, ADVERTISEMENT_POSTDATE_1, ADVERTISEMENT_ID_1, ADVERTISEMENT_ISEXPIRED_1, PET_NAME, PET_AGE, PET_DESCRIPTION, PET_SEX, PET_SPECIE );
-    private static Image image1 = TestUtils.createImage(ad, IMAGE_NAME_1, IMAGE_LINK_1, IMAGE_ID_1);
-    private static Image image2 = TestUtils.createImage(ad, IMAGE_NAME_2, IMAGE_LINK_2, IMAGE_ID_2);
 
-
-    @InjectMocks
+    @Autowired
     private ImageService imageservice;
 
-    @Mock
+    @Autowired
     private ImageRepository imageRepository;
 
-    @Mock
+    @Autowired
     private AdvertisementRepository advertisementRepository;
 
-    /**
-     * create the needed mock objects before each test
-     */
+    @Autowired
+    private AppUserRepository appUserRepository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private DonationRepository donationRepository;
+
     @BeforeEach
-    public void mockSetUp() {
-        lenient().when(imageRepository.save(any(Image.class))).thenAnswer(
-                (InvocationOnMock invocation) -> {
-                    if (((Image) invocation.getArgument(0)).getName().equals(IMAGE_NAME_1)) {
-                        return image1;
-                    } else if (((Image) invocation.getArgument(0)).getName().equals(IMAGE_NAME_2)) {
-                        return image2;
-                    } else {
-                        return null;
-                    }
-                }
-        );
+    public void cleanAndSetup(){
+        imageRepository.deleteAll();
+        applicationRepository.deleteAll();
+        advertisementRepository.deleteAll();
+        donationRepository.deleteAll();
+        appUserRepository.deleteAll();
 
-
-
-        lenient().when(imageRepository.findImageByImageId(anyString())).thenAnswer(
-                (InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(IMAGE_ID_1)) {
-                        return image1;
-                    } else {
-                        return null;
-                    }
-                }
-        );
-        lenient().when(imageRepository.findAll()).thenAnswer(
-                (InvocationOnMock invocation) -> {
-                    ArrayList<Image> list = new ArrayList<Image>();
-                    list.add(image1);
-                    list.add(image2);
-                    return list;
-                }
-        );
-        lenient().when(imageRepository.findImagesByAdvertisement_AdvertisementId(anyString())).thenAnswer(
-                (InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(ADVERTISEMENT_ID_1)) {
-                        ArrayList<Image> list = new ArrayList<Image>();
-                        list.add(image1);
-                        list.add(image2);
-                        return list;
-                    } else {
-                        return null;
-                    }
-                }
-        );
-        lenient().when(advertisementRepository.findAdvertisementByAdvertisementId(anyString())).thenAnswer(
-                (InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(ADVERTISEMENT_ID_1)) {
-                        return ad;
-                    } else {
-                        return null;
-                    }
-                }
-        );
+        appUserRepository.save(user);
+        advertisementRepository.save(ad);
     }
 
     @Test
@@ -145,13 +95,12 @@ public class ImageUnitTest {
         }
         assertEquals(ADVERTISEMENT_ID_1, image.getAdvertisement().getAdvertisementId());
         assertEquals(IMAGE_NAME_1, image.getName());
-        assertEquals(IMAGE_ID_1, image.getImageId());
         assertEquals(IMAGE_LINK_1, image.getLink());
     }
 
 
     @Test
-    public void testCreateImageEmptyName(){
+    public void testCreateImageNullName(){
         Image image = null;
         String error ="";
         try{
@@ -162,9 +111,35 @@ public class ImageUnitTest {
         assertNull(image);
         assertEquals("name can not be empty ", error);
     }
+    @Test
+    public void testCreateImageEmptyName(){
+        Image image = null;
+        String error ="";
+        try{
+            image = imageservice.createImage(ADVERTISEMENT_ID_1, "", IMAGE_LINK_1);
+        }catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertNull(image);
+        assertEquals("name can not be empty ", error);
+    }
+
 
     @Test
     public void testCreateImageEmptyLink(){
+        Image image = null;
+        String error ="";
+        try{
+            image = imageservice.createImage(ADVERTISEMENT_ID_1, IMAGE_NAME_1, "");
+        }catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertNull(image);
+        assertEquals("link can not be empty ", error);
+    }
+
+    @Test
+    public void testCreateImageNullLink(){
         Image image = null;
         String error ="";
         try{
@@ -177,7 +152,7 @@ public class ImageUnitTest {
     }
 
     @Test
-    public void testCreateImageEmptyAdvertisementID(){
+    public void testCreateImageNullAdvertisementID(){
         Image image = null;
         String error ="";
         try{
@@ -190,16 +165,35 @@ public class ImageUnitTest {
     }
 
     @Test
+    public void testCreateImageEmptyAdvertisementID(){
+        Image image = null;
+        String error ="";
+        try{
+            image = imageservice.createImage("", IMAGE_NAME_1, IMAGE_LINK_1);
+        }catch (IllegalArgumentException e){
+            error = e.getMessage();
+        }
+        assertNull(image);
+        assertEquals("A Image must have an Advertisement", error);
+    }
+
+    @Test
     public void testGetImageByID(){
         Image image = null;
         try{
-            image = imageservice.getImageByID(IMAGE_ID_1);
+            image = imageservice.createImage(ADVERTISEMENT_ID_1, IMAGE_NAME_1, IMAGE_LINK_1);
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        String id = image.getImageId();
+        image = null;
+        try{
+            image = imageservice.getImageByID(id);
         }catch (IllegalArgumentException e){
             fail();
         }
         assertEquals(ADVERTISEMENT_ID_1, image.getAdvertisement().getAdvertisementId());
         assertEquals(IMAGE_NAME_1, image.getName());
-        assertEquals(IMAGE_ID_1, image.getImageId());
         assertEquals(IMAGE_LINK_1, image.getLink());
     }
 
@@ -244,8 +238,17 @@ public class ImageUnitTest {
     @Test
     public void testGetImagesByAdvertisementID(){
         List<Image> list = null;
-        ad.addPetImage(image1);
-        ad.addPetImage(image2);
+
+        try{
+            imageservice.createImage(ADVERTISEMENT_ID_1, IMAGE_NAME_1, IMAGE_LINK_1);
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        try{
+            imageservice.createImage(ADVERTISEMENT_ID_1, IMAGE_NAME_2, IMAGE_LINK_2);
+        }catch (IllegalArgumentException e){
+            fail();
+        }
         try{
             list = imageservice.getAllImagesOfAdvertisement(ad);
         }catch (IllegalArgumentException e){
@@ -253,15 +256,80 @@ public class ImageUnitTest {
         }
 
         assertEquals(list.get(0).getAdvertisement().getAdvertisementId(), ADVERTISEMENT_ID_1);
-        assertEquals(list.get(0).getImageId(), IMAGE_ID_1);
         assertEquals(list.get(0).getLink(), IMAGE_LINK_1);
         assertEquals(list.get(0).getName(), IMAGE_NAME_1);
 
         assertEquals(list.get(1).getAdvertisement().getAdvertisementId(), ADVERTISEMENT_ID_1);
-        assertEquals(list.get(1).getImageId(), IMAGE_ID_2);
         assertEquals(list.get(1).getLink(), IMAGE_LINK_2);
         assertEquals(list.get(1).getName(), IMAGE_NAME_2);
-
     }
+
+    @Test
+    public void testDeleteImage(){
+        Image image = null;
+        try{
+            image = imageservice.createImage(ADVERTISEMENT_ID_1, IMAGE_NAME_1, IMAGE_LINK_1);
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+        String id = image.getImageId();
+        imageservice.deleteImage(id);
+        image =null;
+        String error = "";
+        try{
+            image = imageservice.getImageByID(id);
+        } catch(Exception e){
+            error = e.getMessage();
+        }
+        assertEquals("There is no such Image!", error);
+    }
+
+    @Test
+    public void testDeleteImageEmptyId(){
+        Image image = null;
+        try{
+            image = imageservice.createImage(ADVERTISEMENT_ID_1, IMAGE_NAME_1, IMAGE_LINK_1);
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+
+        String error = "";
+        try{
+            imageservice.deleteImage("");
+        } catch(Exception e){
+            error = e.getMessage();
+        }
+        assertEquals("You must provide an ID in order to delete!", error);
+    }
+
+    @Test
+    public void testDeleteImageNullId(){
+        Image image = null;
+        try{
+            image = imageservice.createImage(ADVERTISEMENT_ID_1, IMAGE_NAME_1, IMAGE_LINK_1);
+        }catch (IllegalArgumentException e){
+            fail();
+        }
+
+        String error = "";
+        try{
+            imageservice.deleteImage(null);
+        } catch(Exception e){
+            error = e.getMessage();
+        }
+        assertEquals("You must provide an ID in order to delete!", error);
+    }
+    @Test
+    public void testDeleteImageNonExistent(){
+        String error = "";
+        try{
+            imageservice.deleteImage("some id");
+        } catch(Exception e){
+            error = e.getMessage();
+        }
+        assertEquals("The id you provided doesn't exist", error);
+    }
+
+
 
 }

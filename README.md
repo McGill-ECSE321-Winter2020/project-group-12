@@ -1,5 +1,8 @@
 # Welcome to the ECSE 321 Project of Group 12! [![Build Status](https://travis-ci.com/McGill-ECSE321-Winter2020/project-group-12.svg?token=4AcveMz5FumXG2yhkiT1&branch=master)](https://travis-ci.com/McGill-ECSE321-Winter2020/project-group-12)
 
+Our application can be found at: https://petadoption-backend.herokuapp.com/?fbclid=IwAR3aamVaN_QwZ1kp8Z7hRMu0Fh2s1jpMPxh-OWWQGjPiNeJptUfQqbNPwh0.  
+
+Click here to view our [REST API documentation](https://documenter.getpostman.com/view/10558315/SzKZtcBF)
 ### Group Members 
 | Name                 | ID         | Major |Year|
 |:--------------------:|:----------:|:-----:|:-----:|
@@ -25,3 +28,15 @@ Learn more about the project and the development process from the [Project Wiki]
 | Abdullatif Hassan   | 18| Domain model design, Test suite, Persistence testing, Report 
 
 Click to find out more about [Deliverable 1](https://github.com/McGill-ECSE321-Winter2020/project-group-12/wiki/Deliverable-1-(Requirements-model,-Use-case-diagram,-Domain-Model)) and the [Project Report](https://github.com/McGill-ECSE321-Winter2020/project-group-12/wiki/Deliverable-1-Report)!
+
+## Deliverable 2
+| Name                 | Hours | Responsibilities|
+|:--------------------:|:----------:|:----:|
+| Zakaria Essadaoui   | 30| AppUser class business methods, RESTful API, testing, Integration Test task setup
+| Christina Riachi    | 27| Donation class business methods, RESTful API, testing, Q&A Plan and Testing Documentation
+| Bozhong Lu          | 20| Image class business methods, RESTful API, testing, API Documentation
+| Abhimukth Chaudhuri | 30| Advertisement class business methods, RESTful API, testing
+| Abdullatif Hassan   | 25| Application class business methods, RESTful API, testing, Deliverable 2 Report 
+
+Click to find out more about [Deliverable 2](https://github.com/McGill-ECSE321-Winter2020/project-group-12/wiki/Deliverable-2-(Software-QA-Plan,-Test-Coverage-Results)) and the [Testing Documentation](https://github.com/McGill-ECSE321-Winter2020/project-group-12/wiki/Testing-Documentation)!
+

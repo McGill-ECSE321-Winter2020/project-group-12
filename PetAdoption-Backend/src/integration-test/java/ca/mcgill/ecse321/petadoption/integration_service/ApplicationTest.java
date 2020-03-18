@@ -1,45 +1,52 @@
-package ca.mcgill.ecse321.petadoption.TestSuits.UnitTests;
+package ca.mcgill.ecse321.petadoption.integration_service;
 
 import ca.mcgill.ecse321.petadoption.TestSuits.Utils.TestUtils;
+import ca.mcgill.ecse321.petadoption.dao.*;
 import ca.mcgill.ecse321.petadoption.model.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.lenient;
-
-import java.sql.Date;
-import java.util.*;
-
+import ca.mcgill.ecse321.petadoption.service.AdvertisementService;
+import ca.mcgill.ecse321.petadoption.service.AppUserService;
+import ca.mcgill.ecse321.petadoption.service.ApplicationService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import ca.mcgill.ecse321.petadoption.dao.AppUserRepository;
-import ca.mcgill.ecse321.petadoption.dao.AdvertisementRepository;
-import ca.mcgill.ecse321.petadoption.dao.ApplicationRepository;
+import java.sql.Date;
+import java.util.List;
+import java.util.Set;
 
-import ca.mcgill.ecse321.petadoption.service.ApplicationService;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ExtendWith(MockitoExtension.class)
-public class ApplicationUnitTest {
-    @Mock
-    private ApplicationRepository applicationDao;
-
-    @Mock
-    private AppUserRepository appUserDao;
-
-    @Mock
-    private AdvertisementRepository advertisementDao;
-
-    @InjectMocks
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@ActiveProfiles("test")
+public class ApplicationTest {
+    @Autowired
     private ApplicationService service;
+    @Autowired
+    private AppUserService userService;
+    @Autowired
+    private AdvertisementService advertisementService;
+
+    @Autowired
+    private ImageRepository imageRepository;
+
+    @Autowired
+    private AdvertisementRepository advertisementRepository;
+
+    @Autowired
+    private AppUserRepository appUserRepository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private DonationRepository donationRepository;
 
     //3 users created: User 1 posts the advertisement while user 2 and 3 apply
     private static final String USER_NAME_1 = "user 1";
@@ -69,24 +76,13 @@ public class ApplicationUnitTest {
     private static final Sex USER_SEX_3 = Sex.M;
     private static final boolean USER_ADMIN_3 = false;
 
-    private static final AppUser user1 = TestUtils.createAppUser(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
-            USER_HOME_1, USER_AGE_1, USER_ADMIN_1, USER_SEX_1);
-    private static final AppUser user2 = TestUtils.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
-            USER_HOME_2, USER_AGE_2, USER_ADMIN_2, USER_SEX_2);
-    private static final AppUser user3 = TestUtils.createAppUser(USER_NAME_3, USER_EMAIL_3, USER_PASSWORD_3, USER_BIO_3,
-            USER_HOME_3, USER_AGE_3, USER_ADMIN_3, USER_SEX_3);
-
-    //create advertisement to be posted by user 1
     private static final Date datePosted = Date.valueOf("2020-02-13");
     private static boolean isExpired = false;
     private Set<Application> applications;
-    private static final AppUser postedBy = user1;
     private static final String petName = "cookie";
     private static final Integer petAge = 2;
     private static final String petDescription = "blablabla";
     private Set<Image> petImages;
-
-    private static final Advertisement advertisement = TestUtils.createAdvertisement(datePosted, isExpired, postedBy, petName, petAge, petDescription);
 
     private static final String NOTE = "loves cats";
     private static final Date DATE_OF_SUBMISSION = Date.valueOf("2020-02-19");
@@ -98,77 +94,33 @@ public class ApplicationUnitTest {
 
     private String error;
 
-    //create the needed mock objects before each test method by default
-    @BeforeEach
-    public void setMockOutput() {
-        lenient().when(applicationDao.save(any(Application.class))).thenAnswer(
-                (InvocationOnMock invocation) -> {
-                    if (((Application) invocation.getArgument(0)).getDateOfSubmission().equals(DATE_OF_SUBMISSION)) {
-                        return TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS);
-                    } else if (((Application) invocation.getArgument(0)).getDateOfSubmission().equals(DATE_OF_SUBMISSION2)) {
-                        return TestUtils.createApplication(advertisement, user3, DATE_OF_SUBMISSION2, NOTE2, STATUS2);
-                    } else if (((Application) invocation.getArgument(0)).getDateOfSubmission().equals(datePosted)) {
-                        return TestUtils.createApplication(advertisement, user1, datePosted, NOTE, STATUS);
-                    } else {
-                        return null;
-                    }
-                }
-        );
+    private static AppUser user1;
+    private static AppUser user2;
+    private static AppUser user3;
+    private static Advertisement advertisement;
 
-        lenient().when(applicationDao.findApplicationByAdvertisement_AdvertisementIdAndApplicant_Email(anyString(), anyString())).thenAnswer(
-                (InvocationOnMock invocation) -> {
-                    return null;
-                }
-        );
-
-        lenient().when(applicationDao.findAll()).thenAnswer(
-                (InvocationOnMock invocation) -> {
-                    ArrayList<Application> arr = new ArrayList<Application>();
-                    arr.add(TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS));
-                    arr.add(TestUtils.createApplication(advertisement, user3, DATE_OF_SUBMISSION2, NOTE2, STATUS2));
-                    return arr;
-                }
-        );
-
-        lenient().when(appUserDao.findAppUserByEmail(anyString())).thenAnswer(
-                (InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(USER_EMAIL_2)) {
-                        return TestUtils.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
-                                USER_HOME_2, USER_AGE_2, USER_ADMIN_2, USER_SEX_2);
-                    } else if (invocation.getArgument(0).equals(USER_EMAIL_1)) {
-                        return TestUtils.createAppUser(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
-                                USER_HOME_1, USER_AGE_1, USER_ADMIN_1, USER_SEX_1);
-                    } else {
-                        return null;
-                    }
-                }
-        );
-        lenient().when(advertisementDao.findAdvertisementByAdvertisementId(anyString())).thenAnswer(
-                (InvocationOnMock invocation) -> {
-                    if (invocation.getArgument(0).equals(advertisement.getAdvertisementId())) {
-                        return TestUtils.createAdvertisement(datePosted, isExpired, postedBy, petName, petAge, petDescription);
-                    } else if (invocation.getArgument(0).equals(advertisement.getAdvertisementId())) {
-                        return TestUtils.createAdvertisement(datePosted, true, postedBy, petName, petAge, petDescription);
-                    } else {
-                        return null;
-                    }
-                }
-        );
-
-        lenient().when(applicationDao.findApplicationByApplicationId(anyString())).thenAnswer(
-                (InvocationOnMock invocation) -> {
-                    return TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS);
-                }
-        );
+    @AfterEach
+    public  void cleanDB(){
+        imageRepository.deleteAll();
+        applicationRepository.deleteAll();
+        advertisementRepository.deleteAll();
+        donationRepository.deleteAll();
+        appUserRepository.deleteAll();
     }
-    //only for duplicate test, we will mock a preexisting application for the same advertisement with the same applicant email
-    private void setMockOutputOnlyForDuplicateTest(){
-        lenient().when(applicationDao.findApplicationByAdvertisement_AdvertisementIdAndApplicant_Email(anyString(), anyString())).thenAnswer(
-                (InvocationOnMock invocation) -> {
-                    return TestUtils.createApplication(advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS);
-                }
-        );
 
+    @BeforeEach
+    public void setup() {
+        applicationRepository.deleteAll();
+        advertisementRepository.deleteAll();
+        appUserRepository.deleteAll();
+        user1 = userService.createAppUser(USER_NAME_1, USER_EMAIL_1, USER_PASSWORD_1, USER_BIO_1,
+                USER_HOME_1, USER_AGE_1, USER_ADMIN_1, USER_SEX_1);
+        user2 = userService.createAppUser(USER_NAME_2, USER_EMAIL_2, USER_PASSWORD_2, USER_BIO_2,
+                USER_HOME_2, USER_AGE_2, USER_ADMIN_2, USER_SEX_2);
+        user3 = userService.createAppUser(USER_NAME_3, USER_EMAIL_3, USER_PASSWORD_3, USER_BIO_3,
+                USER_HOME_3, USER_AGE_3, USER_ADMIN_3, USER_SEX_3);
+        String email = user1.getEmail();
+        advertisement = advertisementService.createAdvertisement(email, datePosted, petName, petAge, petDescription, Sex.F, Species.cat);
     }
 
     @Test
@@ -260,7 +212,8 @@ public class ApplicationUnitTest {
     @Test
     public void applicationWithExpiredAdvertisement() {
         Application app = null;
-        isExpired = true;
+        advertisement.setIsExpired(true);
+        advertisementService.updateAdvertisementIsExpired(advertisement.getAdvertisementId(), true);
         error = "";
         try {
             app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
@@ -387,6 +340,8 @@ public class ApplicationUnitTest {
 
     @Test
     public void testGetAllApplications() {
+        Application app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
+        Application app2 = service.createApplication(advertisement.getAdvertisementId(), user3.getEmail(), DATE_OF_SUBMISSION2, NOTE2, STATUS2);
         List<Application> list = service.getAllApplications();
         TestUtils.assertApplication(list.get(0), advertisement, user2, DATE_OF_SUBMISSION, NOTE, STATUS);
         TestUtils.assertApplication(list.get(1), advertisement, user3, DATE_OF_SUBMISSION2, NOTE2, STATUS2);
@@ -403,10 +358,26 @@ public class ApplicationUnitTest {
         }
     }
 
-    //the same user cannot have 2 applications for the same advertisement
+    @Test
+    public void testUpdateApplicationStatus() {
+        Application app = null;
+        try {
+            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE, STATUS);
+            app = service.updateApplicationStatus(app.getApplicationId(), Status.accepted);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        TestUtils.assertApplication(app, advertisement, user2, DATE_OF_SUBMISSION, NOTE, Status.accepted);
+        try {
+            app = service.updateApplicationStatus(app.getApplicationId(), Status.rejected);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        TestUtils.assertApplication(app, advertisement, user2, DATE_OF_SUBMISSION, NOTE, Status.rejected);
+    }
+
     @Test
     public void duplicateApplicationsPerAdvertisement() {
-        setMockOutputOnlyForDuplicateTest();
         Application app = null;
         Application app2 = null;
         Advertisement ad = null;
@@ -420,18 +391,35 @@ public class ApplicationUnitTest {
         assertEquals("You already applied for this", error);
     }
 
-    //we cannot have an application submitted before the actual advertisement
     @Test
-    public void ApplicationDateBeforeAdvertisement(){
+    public void ApplicationDateBeforeAdvertisement() {
         Application app = new Application();
         error = "";
-        try{
+        try {
             app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), Date.valueOf("2000-01-01"), NOTE, STATUS);
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             error = e.getMessage();
         }
         assertEquals("Advertisement Date Must Be Prior or Equal To Application Date", error);
-
     }
+
+    @Test
+    public void getAllApplicationsTest() {
+        Application app = null;
+        error = "";
+        try {
+            app = service.createApplication(advertisement.getAdvertisementId(), user2.getEmail(), DATE_OF_SUBMISSION, NOTE+"user2", STATUS);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        try {
+            app = service.createApplication(advertisement.getAdvertisementId(), user3.getEmail(), DATE_OF_SUBMISSION, NOTE +"user3", STATUS);
+        } catch (IllegalArgumentException e) {
+            fail();
+        }
+        List<Application> lst = service.getAllApplicationsForAdvertisement(advertisement.getAdvertisementId());
+        TestUtils.assertApplication(lst.get(0), advertisement, user2, DATE_OF_SUBMISSION, NOTE + "user2", STATUS);
+        TestUtils.assertApplication(lst.get(1), advertisement, user3, DATE_OF_SUBMISSION, NOTE + "user3", STATUS);
+    }
+
 }
