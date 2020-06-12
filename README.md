@@ -5,12 +5,12 @@ Our application can be found at: https://petadoption-backend.herokuapp.com/
 Click here to view our [REST API documentation](https://documenter.getpostman.com/view/10558315/SzKZtcBF)
 ### Group Members 
 | Name                 | ID         | Major |Year|
-|:--------------------:|:----------:|:-----:|:-----:|
-| Zakaria Essadaoui   | 260776919  | Computer Engineering   | U3 |
-| Christina Riachi    | 260778518  | Software Engineering   | U2 |
-| Bozhong Lu          | 260683363  | Software Engineering   | U3 |
-| Abhimukth Chaudhuri | 260765210  | Computer Engineering   | U2 |
-| Abdullatif Hassan   | 260780040  | Biomedical Engineering   | U2 |
+|:--------------------:|:-----:|:-----:|
+| Zakaria Essadaoui    | Computer Engineering   | U3 |
+| Christina Riachi | Software Engineering   | U2 |
+| Bozhong Lu          | Software Engineering   | U3 |
+| Abhimukth Chaudhuri | Computer Engineering   | U2 |
+| Abdullatif Hassan   | Biomedical Engineering   | U2 |
 
 ## Pet Shelter Adoption System 
 ### Project Scope:
