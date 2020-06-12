@@ -4,7 +4,7 @@ Our application can be found at: https://petadoption-backend.herokuapp.com/
 
 Click here to view our [REST API documentation](https://documenter.getpostman.com/view/10558315/SzKZtcBF)
 ### Group Members 
-| Name                 | ID         | Major |Year|
+| Name                 | Major |Year|
 |:--------------------:|:-----:|:-----:|
 | Zakaria Essadaoui    | Computer Engineering   | U3 |
 | Christina Riachi | Software Engineering   | U2 |
